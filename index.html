@@ -5,11 +5,208 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Practice Card Game</title>
   <style>
-    html, body { margin: 0; padding: 0; height: 100%; overflow: hidden; background: #000; }
-    iframe { width: 100%; height: 100%; border: none; }
+    html, body { 
+      margin: 0; 
+      padding: 0; 
+      height: 100%; 
+      overflow: hidden; 
+      background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
+      font-family: Arial, sans-serif;
+    }
+    .container {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      height: 100%;
+      color: white;
+    }
+    h1 {
+      margin-bottom: 30px;
+      font-size: 2.5em;
+      text-shadow: 2px 2px 4px rgba(0,0,0,0.5);
+    }
+    .card-area {
+      display: flex;
+      gap: 20px;
+      margin-bottom: 30px;
+      flex-wrap: wrap;
+      justify-content: center;
+      max-width: 90%;
+    }
+    .card {
+      width: 120px;
+      height: 170px;
+      background: white;
+      border-radius: 10px;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      cursor: pointer;
+      transition: transform 0.3s, box-shadow 0.3s;
+      box-shadow: 0 4px 8px rgba(0,0,0,0.3);
+      position: relative;
+    }
+    .card:hover {
+      transform: translateY(-10px);
+      box-shadow: 0 8px 16px rgba(0,0,0,0.5);
+    }
+    .card.selected {
+      border: 4px solid #ffd700;
+      transform: scale(1.05);
+    }
+    .card-value {
+      font-size: 3em;
+      color: #333;
+      font-weight: bold;
+    }
+    .card-suit {
+      font-size: 2em;
+    }
+    .red { color: #d32f2f; }
+    .black { color: #333; }
+    button {
+      padding: 15px 30px;
+      font-size: 1.2em;
+      background: #ffd700;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      font-weight: bold;
+      color: #333;
+      transition: background 0.3s;
+      margin: 10px;
+    }
+    button:hover {
+      background: #ffed4e;
+    }
+    .score {
+      font-size: 1.5em;
+      margin: 20px;
+    }
+    .message {
+      font-size: 1.3em;
+      min-height: 30px;
+      margin: 10px;
+    }
   </style>
 </head>
 <body>
-  <iframe src="https://ohara.ai/mini-apps/6c3fa7f1-3668-4a88-befc-6f2e019c6c52"></iframe>
+  <div class="container">
+    <h1>Practice Card Game</h1>
+    <div class="score">Score: <span id="score">0</span></div>
+    <div class="message" id="message">Select a card and guess if the next card will be higher or lower!</div>
+    <div class="card-area" id="cardArea"></div>
+    <div>
+      <button id="higherBtn" onclick="guess('higher')" style="display:none;">Higher</button>
+      <button id="lowerBtn" onclick="guess('lower')" style="display:none;">Lower</button>
+      <button id="newGameBtn" onclick="startGame()">New Game</button>
+    </div>
+  </div>
+
+  <script>
+    let deck = [];
+    let currentCard = null;
+    let score = 0;
+    const suits = ['♠', '♥', '♦', '♣'];
+    const values = ['A', '2', '3', '4', '5', '6', '7', '8', '9', '10', 'J', 'Q', 'K'];
+    
+    function createDeck() {
+      deck = [];
+      for (let suit of suits) {
+        for (let value of values) {
+          deck.push({ value, suit, numValue: values.indexOf(value) + 1 });
+        }
+      }
+      shuffleDeck();
+    }
+    
+    function shuffleDeck() {
+      for (let i = deck.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [deck[i], deck[j]] = [deck[j], deck[i]];
+      }
+    }
+    
+    function startGame() {
+      createDeck();
+      score = 0;
+      document.getElementById('score').textContent = score;
+      document.getElementById('message').textContent = 'Select a card and guess if the next card will be higher or lower!';
+      document.getElementById('higherBtn').style.display = 'none';
+      document.getElementById('lowerBtn').style.display = 'none';
+      document.getElementById('newGameBtn').style.display = 'none';
+      drawCard();
+    }
+    
+    function drawCard() {
+      if (deck.length === 0) {
+        document.getElementById('message').textContent = 'Game Over! Final Score: ' + score;
+        document.getElementById('newGameBtn').style.display = 'inline-block';
+        return;
+      }
+      
+      currentCard = deck.pop();
+      displayCard(currentCard);
+      document.getElementById('higherBtn').style.display = 'inline-block';
+      document.getElementById('lowerBtn').style.display = 'inline-block';
+    }
+    
+    function displayCard(card) {
+      const cardArea = document.getElementById('cardArea');
+      cardArea.innerHTML = '';
+      
+      const cardDiv = document.createElement('div');
+      cardDiv.className = 'card';
+      
+      const isRed = card.suit === '♥' || card.suit === '♦';
+      const colorClass = isRed ? 'red' : 'black';
+      
+      cardDiv.innerHTML = `
+        <div class="card-value ${colorClass}">${card.value}</div>
+        <div class="card-suit ${colorClass}">${card.suit}</div>
+      `;
+      
+      cardArea.appendChild(cardDiv);
+    }
+    
+    function guess(direction) {
+      if (deck.length === 0) {
+        document.getElementById('message').textContent = 'Game Over! Final Score: ' + score;
+        document.getElementById('higherBtn').style.display = 'none';
+        document.getElementById('lowerBtn').style.display = 'none';
+        document.getElementById('newGameBtn').style.display = 'inline-block';
+        return;
+      }
+      
+      const nextCard = deck[deck.length - 1];
+      const isHigher = nextCard.numValue > currentCard.numValue;
+      const isCorrect = (direction === 'higher' && isHigher) || (direction === 'lower' && !isHigher);
+      
+      if (nextCard.numValue === currentCard.numValue) {
+        document.getElementById('message').textContent = 'Same value! Drawing again...';
+        setTimeout(drawCard, 1000);
+        return;
+      }
+      
+      if (isCorrect) {
+        score += 10;
+        document.getElementById('score').textContent = score;
+        document.getElementById('message').textContent = 'Correct! +10 points';
+      } else {
+        document.getElementById('message').textContent = 'Wrong! Game Over. Final Score: ' + score;
+        document.getElementById('higherBtn').style.display = 'none';
+        document.getElementById('lowerBtn').style.display = 'none';
+        document.getElementById('newGameBtn').style.display = 'inline-block';
+        return;
+      }
+      
+      setTimeout(drawCard, 1000);
+    }
+    
+    // Start the game on load
+    window.onload = startGame;
+  </script>
 </body>
 </html>
