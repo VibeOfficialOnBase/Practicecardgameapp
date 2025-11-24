@@ -3,7 +3,7 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import { createPageUrl } from '../utils';
 import { base44 } from '@/api/base44Client';
-import { Home, Sparkles, Users, Trophy, Settings, Zap, Heart } from 'lucide-react';
+import { Sparkles, Users, Trophy, Settings, Zap, Heart } from 'lucide-react';
 import { motion } from 'framer-motion';
 import OfflineIndicator from '../components/OfflineIndicator';
 import InstallPrompt from '../components/InstallPrompt';
@@ -44,8 +44,11 @@ export default function Layout({ children, currentPageName }) {
     document.body.className = theme === 'dark' ? 'dark' : '';
   }, [theme]);
 
+  // Merged Practice into Home/Dashboard, so removed explicit 'Home' link if Dashboard is now part of Practice or vice versa.
+  // The user requested to "Merge the Home and PRACTICE tabs".
+  // I will point the first tab to 'Practice' and call it 'Home' or just keep 'Practice' as the main entry.
+  // Let's make 'Practice' the first tab and remove 'Home' (Dashboard).
   const navItems = [
-    { name: 'Home', icon: Home, path: 'Dashboard' },
     { name: 'Practice', icon: Sparkles, path: 'Practice' },
     { name: 'Games', icon: Zap, path: 'Games' },
     { name: 'Community', icon: Users, path: 'Community' },
@@ -170,7 +173,7 @@ export default function Layout({ children, currentPageName }) {
           <div className="flex items-center justify-between py-1.5 sm:py-3 gap-0.5">
             {navItems.map((item) => {
               const Icon = item.icon;
-              const isActive = currentPageName === item.path;
+              const isActive = currentPageName === item.path || (item.path === 'Practice' && currentPageName === 'Dashboard');
               
               return (
                 <Link

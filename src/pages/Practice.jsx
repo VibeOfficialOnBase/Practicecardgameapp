@@ -15,6 +15,8 @@ import Celebration from '../components/Celebration';
 import AchievementUnlock from '../components/AchievementUnlock';
 import CompletionFeedback from '../components/CompletionFeedback';
 import OnboardingFlow from '../components/onboarding/OnboardingFlow';
+import StreakCounter from '../components/StreakCounter';
+import WalletStatus from '../components/wallet/WalletStatus';
 import { CheckCircle } from 'lucide-react';
 import { achievements as allAchievements } from '../components/achievements';
 import { useSound } from '../components/hooks/useSound';
@@ -404,12 +406,33 @@ export default function Practice() {
 
   return (
     <div className="space-y-8">
+      {/* Merged Dashboard Elements */}
+      <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-6">
+        <motion.div
+          initial={{ opacity: 0, x: -20 }}
+          animate={{ opacity: 1, x: 0 }}
+        >
+          <h1 className="text-3xl font-bold font-heading">
+            Welcome{user?.full_name ? `, ${user.full_name.split(' ')[0]}` : ''}
+          </h1>
+          <p className="text-sm text-gray-500 dark:text-gray-400">Your daily practice awaits</p>
+        </motion.div>
+
+        <motion.div
+          initial={{ opacity: 0, x: 20 }}
+          animate={{ opacity: 1, x: 0 }}
+          className="flex items-center gap-3"
+        >
+          {userProfile && <StreakCounter streak={userProfile.current_streak || 0} longestStreak={userProfile.longest_streak || 0} />}
+        </motion.div>
+      </div>
+
+      {/* Card Pull Section */}
       <motion.div 
         className="text-center space-y-3"
         initial={{ opacity: 0, y: -20 }}
         animate={{ opacity: 1, y: 0 }}
       >
-        <h1 className="text-5xl font-bold font-heading mb-3">Daily Card Pull</h1>
         <motion.p 
           className="text-4xl font-bold font-heading tracking-[0.3em] mb-1 relative"
           style={{

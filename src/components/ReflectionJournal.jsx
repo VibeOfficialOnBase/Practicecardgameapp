@@ -120,7 +120,7 @@ export default function ReflectionJournal({ card, onComplete, isSubmitting }) {
             value={reflection}
             onChange={(e) => setReflection(e.target.value)}
             placeholder="Take your time... write whatever comes to mind..."
-            className="min-h-40 rounded-2xl bg-white/10 border-2 border-purple-400/50 focus:border-amber-400 ensure-readable-strong text-base placeholder:ensure-readable font-medium"
+            className="min-h-40 rounded-2xl bg-white/10 border-2 border-purple-400/50 focus:border-amber-400 ensure-readable-strong text-base placeholder:ensure-readable font-medium text-white placeholder:text-white/50"
           />
         </div>
 
