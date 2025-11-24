@@ -2,12 +2,43 @@
 
 A standalone mindfulness and practice card game application built with React, Vite, and Supabase.
 
+## 🚀 Quick Start (Demo Mode)
+
+Want to try the app immediately without any setup? Just run:
+
+```bash
+npm install
+npm run dev
+```
+
+The app will automatically run in **Demo Mode** with mock data and a pre-configured demo user. Perfect for exploring features without setting up a database!
+
 ## Prerequisites
 
 - Node.js (v16 or higher)
-- A Supabase account (sign up at https://supabase.com)
+- (Optional) A Supabase account for production use (sign up at https://supabase.com)
 
-## Setup
+## Setup Options
+
+### Option 1: Demo Mode (Recommended for Testing)
+
+The app works out of the box with no configuration required:
+
+1. **Install dependencies**
+   ```bash
+   npm install
+   ```
+
+2. **Run the app**
+   ```bash
+   npm run dev
+   ```
+
+That's it! The app will run with in-memory storage and mock data at `http://localhost:5173`
+
+### Option 2: Production Mode with Supabase
+
+For a production setup with persistent data:
 
 1. **Install dependencies**
    ```bash
@@ -23,6 +54,13 @@ A standalone mindfulness and practice card game application built with React, Vi
    - Run the SQL script in `supabase/schema.sql` in your Supabase SQL Editor
    - This creates all necessary tables and security policies
 
+4. **Run the app**
+   ```bash
+   npm run dev
+   ```
+
+The app will automatically detect your Supabase configuration and connect to your database.
+
 ## Running the app
 
 ```bash
@@ -30,6 +68,16 @@ npm run dev
 ```
 
 The app will be available at `http://localhost:5173`
+
+### How Demo Mode Works
+
+When environment variables are not configured, the app automatically:
+- ✅ Creates an in-memory database
+- ✅ Logs you in as a demo user
+- ✅ Enables all features with mock data
+- ✅ Shows a console warning that you're in demo mode
+
+You can switch to production mode anytime by adding your Supabase credentials to `.env.local` and restarting the server.
 
 ## Building the app
 

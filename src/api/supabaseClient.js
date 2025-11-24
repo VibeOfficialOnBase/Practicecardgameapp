@@ -4,17 +4,23 @@ import { createClient } from '@supabase/supabase-js';
 const supabaseUrl = import.meta.env.VITE_SUPABASE_URL;
 const supabaseAnonKey = import.meta.env.VITE_SUPABASE_ANON_KEY;
 
-// Validate that required environment variables are set
-if (!supabaseUrl || !supabaseAnonKey) {
-  throw new Error(
-    'Missing required Supabase configuration. ' +
-    'Please create a .env.local file with VITE_SUPABASE_URL and VITE_SUPABASE_ANON_KEY. ' +
-    'See .env.example for template.'
+// Check if we're in demo mode (no environment variables provided)
+const isDemoMode = !supabaseUrl || !supabaseAnonKey;
+
+if (isDemoMode) {
+  console.warn(
+    '🎮 Running in DEMO MODE - No Supabase configuration found.\n' +
+    'The app will work with mock data. To connect to a real database:\n' +
+    '1. Copy .env.example to .env.local\n' +
+    '2. Add your VITE_SUPABASE_URL and VITE_SUPABASE_ANON_KEY\n' +
+    '3. Restart the dev server'
   );
 }
 
-// Create Supabase client
-export const supabase = createClient(supabaseUrl, supabaseAnonKey);
+// Create Supabase client (or a dummy one for demo mode)
+export const supabase = isDemoMode 
+  ? createClient('https://demo.localhost', 'demo-key-not-used')
+  : createClient(supabaseUrl, supabaseAnonKey);
 
 // Helper function to convert table name to snake_case
 const toSnakeCase = (str) => {
@@ -24,14 +30,57 @@ const toSnakeCase = (str) => {
     .replace(/^_/, '');
 };
 
+// Demo mode in-memory storage
+const demoStorage = {
+  users: [],
+  currentUser: null,
+  data: {}
+};
+
+// Auto-create a demo user when in demo mode
+if (isDemoMode) {
+  const demoUser = {
+    id: 'demo-user-1',
+    email: 'demo@example.com',
+    user_metadata: {
+      full_name: 'Demo User'
+    },
+    created_at: new Date().toISOString()
+  };
+  demoStorage.users.push(demoUser);
+  demoStorage.currentUser = demoUser;
+}
+
 // Create a Base44-compatible wrapper for entities
 class EntityWrapper {
   constructor(tableName) {
     this.tableName = toSnakeCase(tableName);
   }
 
+  // Demo mode helpers
+  _getDemoTable() {
+    if (!demoStorage.data[this.tableName]) {
+      demoStorage.data[this.tableName] = [];
+    }
+    return demoStorage.data[this.tableName];
+  }
+
+  _generateId() {
+    // Use crypto.randomUUID if available for better uniqueness
+    if (typeof crypto !== 'undefined' && crypto.randomUUID) {
+      return `demo-${crypto.randomUUID()}`;
+    }
+    // Fallback to timestamp + random string
+    return `demo-${Date.now()}-${Math.random().toString(36).substring(2, 11)}`;
+  }
+
   // List entities with optional sorting and limit
   async list(sortBy = '-created_date', limit = 100) {
+    if (isDemoMode) {
+      const data = this._getDemoTable().slice(0, limit);
+      return data;
+    }
+
     const isDescending = sortBy.startsWith('-');
     const column = isDescending ? sortBy.substring(1) : sortBy;
     
@@ -47,6 +96,13 @@ class EntityWrapper {
 
   // Filter entities by criteria
   async filter(criteria) {
+    if (isDemoMode) {
+      const table = this._getDemoTable();
+      return table.filter(item => {
+        return Object.entries(criteria).every(([key, value]) => item[key] === value);
+      });
+    }
+
     let query = supabase.from(this.tableName).select('*');
 
     // Apply filters
@@ -61,6 +117,12 @@ class EntityWrapper {
 
   // Get a single entity by ID
   async get(id) {
+    if (isDemoMode) {
+      const item = this._getDemoTable().find(item => item.id === id);
+      if (!item) throw new Error('Not found');
+      return item;
+    }
+
     const { data, error } = await supabase
       .from(this.tableName)
       .select('*')
@@ -73,6 +135,17 @@ class EntityWrapper {
 
   // Create a new entity
   async create(entityData) {
+    if (isDemoMode) {
+      const newItem = {
+        ...entityData,
+        id: this._generateId(),
+        created_date: new Date().toISOString(),
+        updated_date: new Date().toISOString()
+      };
+      this._getDemoTable().push(newItem);
+      return newItem;
+    }
+
     const { data, error } = await supabase
       .from(this.tableName)
       .insert(entityData)
@@ -85,6 +158,19 @@ class EntityWrapper {
 
   // Update an entity
   async update(id, updates) {
+    if (isDemoMode) {
+      const table = this._getDemoTable();
+      const index = table.findIndex(item => item.id === id);
+      if (index === -1) throw new Error('Not found');
+      
+      table[index] = {
+        ...table[index],
+        ...updates,
+        updated_date: new Date().toISOString()
+      };
+      return table[index];
+    }
+
     const { data, error } = await supabase
       .from(this.tableName)
       .update({ ...updates, updated_date: new Date().toISOString() })
@@ -98,6 +184,14 @@ class EntityWrapper {
 
   // Delete an entity
   async delete(id) {
+    if (isDemoMode) {
+      const table = this._getDemoTable();
+      const index = table.findIndex(item => item.id === id);
+      if (index === -1) throw new Error('Not found');
+      table.splice(index, 1);
+      return { success: true };
+    }
+
     const { error } = await supabase
       .from(this.tableName)
       .delete()
@@ -111,6 +205,13 @@ class EntityWrapper {
 // Authentication wrapper compatible with Base44
 const authWrapper = {
   async me() {
+    if (isDemoMode) {
+      if (!demoStorage.currentUser) {
+        throw new Error('Not authenticated');
+      }
+      return demoStorage.currentUser;
+    }
+
     const { data: { user }, error } = await supabase.auth.getUser();
     if (error) throw error;
     if (!user) throw new Error('Not authenticated');
@@ -118,6 +219,18 @@ const authWrapper = {
   },
 
   async signUp(email, password, metadata = {}) {
+    if (isDemoMode) {
+      const user = {
+        id: `demo-user-${Date.now()}`,
+        email,
+        user_metadata: metadata,
+        created_at: new Date().toISOString()
+      };
+      demoStorage.users.push(user);
+      demoStorage.currentUser = user;
+      return { user, session: { access_token: 'demo-token' } };
+    }
+
     const { data, error } = await supabase.auth.signUp({
       email,
       password,
@@ -128,6 +241,22 @@ const authWrapper = {
   },
 
   async signIn(email, password) {
+    if (isDemoMode) {
+      let user = demoStorage.users.find(u => u.email === email);
+      if (!user) {
+        // Auto-create user in demo mode
+        user = {
+          id: `demo-user-${Date.now()}`,
+          email,
+          user_metadata: {},
+          created_at: new Date().toISOString()
+        };
+        demoStorage.users.push(user);
+      }
+      demoStorage.currentUser = user;
+      return { user, session: { access_token: 'demo-token' } };
+    }
+
     const { data, error } = await supabase.auth.signInWithPassword({
       email,
       password
@@ -137,18 +266,39 @@ const authWrapper = {
   },
 
   async signOut() {
+    if (isDemoMode) {
+      demoStorage.currentUser = null;
+      return { success: true };
+    }
+
     const { error } = await supabase.auth.signOut();
     if (error) throw error;
     return { success: true };
   },
 
   async resetPassword(email) {
+    if (isDemoMode) {
+      console.log('Demo mode: Password reset requested for', email);
+      return { success: true };
+    }
+
     const { error } = await supabase.auth.resetPasswordForEmail(email);
     if (error) throw error;
     return { success: true };
   },
 
   onAuthStateChange(callback) {
+    if (isDemoMode) {
+      // Return a dummy subscription object for demo mode
+      setTimeout(() => {
+        const event = demoStorage.currentUser ? 'SIGNED_IN' : 'SIGNED_OUT';
+        callback(event, { user: demoStorage.currentUser });
+      }, 0);
+      return {
+        data: { subscription: { unsubscribe: () => {} } }
+      };
+    }
+
     return supabase.auth.onAuthStateChange(callback);
   }
 };
@@ -185,6 +335,14 @@ const functionsWrapper = {
 const integrationsWrapper = {
   Core: {
     async UploadFile({ file }) {
+      if (isDemoMode) {
+        // In demo mode, return a placeholder URL
+        console.log('Demo mode: File upload simulated for', file.name);
+        return { 
+          file_url: `https://via.placeholder.com/400x400?text=${encodeURIComponent(file.name)}` 
+        };
+      }
+
       const fileName = `${Date.now()}_${file.name}`;
       const { error } = await supabase.storage
         .from('practice-cards')
