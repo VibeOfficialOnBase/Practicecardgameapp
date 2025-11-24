@@ -1,5 +1,7 @@
-// Import from supabaseClient instead of @base44/sdk
-import { base44, supabase } from './supabaseClient';
+// Import from supabaseClient
+import { appApi, supabase } from './supabaseClient';
 
-// Re-export for backwards compatibility
-export { base44, supabase };
+// Re-export as base44 for backwards compatibility during migration,
+// but code should preferably use appApi or direct imports
+export const base44 = appApi;
+export { supabase };

@@ -1,93 +1,167 @@
 // A large collection of affirmations to support 365 days of cards
 export const FALLBACK_AFFIRMATIONS = [
-  // Love (73)
-  { text: "I am worthy of love and connection.", category: "Love" },
-  { text: "My heart is open to giving and receiving love.", category: "Love" },
-  { text: "I radiate love to everyone I meet.", category: "Love" },
-  { text: "I deserve a love that is kind and patient.", category: "Love" },
-  { text: "Love surrounds me in every moment.", category: "Love" },
-  { text: "I am loved exactly as I am.", category: "Love" },
-  { text: "My capacity for love grows every day.", category: "Love" },
-  { text: "I choose to see the world through the eyes of love.", category: "Love" },
-  { text: "Love is my guiding force.", category: "Love" },
-  { text: "I attract loving and supportive relationships.", category: "Love" },
-  { text: "I love myself unconditionally.", category: "Love" },
-  { text: "My heart is a magnet for miracles.", category: "Love" },
-  { text: "I am a being of love and light.", category: "Love" },
-  { text: "Giving love is a gift to myself.", category: "Love" },
-  { text: "I am surrounded by love, even in difficult times.", category: "Love" },
-  { text: "Love flows freely through me.", category: "Love" },
-  { text: "I am grateful for the love in my life.", category: "Love" },
-  { text: "Love heals all wounds.", category: "Love" },
-  { text: "I am a channel for divine love.", category: "Love" },
-  { text: "My heart is safe to open.", category: "Love" },
+  // Love
+  {
+    text: "I am worthy of love and connection.",
+    category: "Love",
+    mission: "Reach out to someone you care about and express your love.",
+    message: "Love starts from within. When you honor your own worth, you create space for genuine connection with others."
+  },
+  {
+    text: "My heart is open to giving and receiving love.",
+    category: "Love",
+    mission: "Practice one act of self-care today.",
+    message: "An open heart is a courageous heart. Trust that you are safe to feel deeply."
+  },
+  {
+    text: "I radiate love to everyone I meet.",
+    category: "Love",
+    mission: "Smile at a stranger or offer a genuine compliment.",
+    message: "Your energy introduces you before you even speak. Let love be your signature."
+  },
+  {
+    text: "I deserve a love that is kind and patient.",
+    category: "Love",
+    mission: "Set a healthy boundary that honors your well-being.",
+    message: "You teach people how to treat you by what you accept. Choose kindness."
+  },
+  {
+    text: "Love surrounds me in every moment.",
+    category: "Love",
+    mission: "Take a moment to appreciate the beauty in your surroundings.",
+    message: "Even in silence, love is present. Tune into the frequency of gratitude."
+  },
 
-  // Empathy (73)
-  { text: "I listen with an open heart.", category: "Empathy" },
-  { text: "I seek to understand before being understood.", category: "Empathy" },
-  { text: "My compassion for others runs deep.", category: "Empathy" },
-  { text: "I honor the feelings of others.", category: "Empathy" },
-  { text: "I am present for those who need me.", category: "Empathy" },
-  { text: "I feel connected to all living beings.", category: "Empathy" },
-  { text: "Kindness is my natural state.", category: "Empathy" },
-  { text: "I offer patience and grace to others.", category: "Empathy" },
-  { text: "I can hold space for difficult emotions.", category: "Empathy" },
-  { text: "My empathy is a strength, not a weakness.", category: "Empathy" },
-  { text: "I choose gentleness in my interactions.", category: "Empathy" },
-  { text: "Understanding bridges the gap between us.", category: "Empathy" },
-  { text: "I am a safe harbor for others.", category: "Empathy" },
-  { text: "My words carry healing energy.", category: "Empathy" },
-  { text: "I see the light in everyone.", category: "Empathy" },
+  // Empathy
+  {
+    text: "I listen with an open heart.",
+    category: "Empathy",
+    mission: "Listen to someone without planning your response.",
+    message: "True listening is an act of love. It validates the other person's existence."
+  },
+  {
+    text: "I seek to understand before being understood.",
+    category: "Empathy",
+    mission: "Ask 'How are you really?' and wait for the answer.",
+    message: "Empathy bridges the gap between souls. Curiosity is the key to connection."
+  },
+  {
+    text: "My compassion for others runs deep.",
+    category: "Empathy",
+    mission: "Perform a random act of kindness.",
+    message: "Compassion is a muscle. The more you use it, the stronger your connection to humanity becomes."
+  },
+  {
+    text: "I honor the feelings of others.",
+    category: "Empathy",
+    mission: "Validate someone's feelings today without trying to 'fix' them.",
+    message: "Feelings are not problems to be solved, but experiences to be witnessed."
+  },
+  {
+    text: "I am present for those who need me.",
+    category: "Empathy",
+    mission: "Put away distractions when spending time with others.",
+    message: "Your presence is the most precious gift you can offer."
+  },
 
-  // Community (73)
-  { text: "I am an essential part of my community.", category: "Community" },
-  { text: "Together we rise.", category: "Community" },
-  { text: "I contribute my unique gifts to the world.", category: "Community" },
-  { text: "I am supported by those around me.", category: "Community" },
-  { text: "Connection nourishes my soul.", category: "Community" },
-  { text: "I belong here.", category: "Community" },
-  { text: "I lift others up as I climb.", category: "Community" },
-  { text: "My community is a source of strength.", category: "Community" },
-  { text: "I attract my tribe.", category: "Community" },
-  { text: "We are stronger together.", category: "Community" },
-  { text: "I share my light with the world.", category: "Community" },
-  { text: "Collaboration creates magic.", category: "Community" },
-  { text: "I am never truly alone.", category: "Community" },
+  // Community
+  {
+    text: "I am an essential part of my community.",
+    category: "Community",
+    mission: "Reach out to a neighbor or community member.",
+    message: "You belong here. Your unique thread strengthens the fabric of our community."
+  },
+  {
+    text: "Together we rise.",
+    category: "Community",
+    mission: "Collaborate on a task or ask for help today.",
+    message: "We are not meant to do this alone. Shared burdens are lighter; shared joys are brighter."
+  },
+  {
+    text: "I contribute my unique gifts to the world.",
+    category: "Community",
+    mission: "Share a skill or piece of knowledge with someone.",
+    message: "The world needs what only you can give. Do not hide your light."
+  },
+  {
+    text: "I am supported by those around me.",
+    category: "Community",
+    mission: "Express gratitude to someone who supports you.",
+    message: "Support is all around you. You only need to open your eyes (and heart) to receive it."
+  },
+  {
+    text: "Connection nourishes my soul.",
+    category: "Community",
+    mission: "Attend a community event or group gathering (even virtual).",
+    message: "We are wired for connection. Let your interactions today feed your spirit."
+  },
 
-  // Healing (73)
-  { text: "I am healing every day.", category: "Healing" },
-  { text: "My body knows how to heal itself.", category: "Healing" },
-  { text: "I release what no longer serves me.", category: "Healing" },
-  { text: "Peace is my priority.", category: "Healing" },
-  { text: "I forgive myself for past mistakes.", category: "Healing" },
-  { text: "Healing happens in the present moment.", category: "Healing" },
-  { text: "I am gentle with my progress.", category: "Healing" },
-  { text: "My scars are symbols of my strength.", category: "Healing" },
-  { text: "I inhale peace and exhale tension.", category: "Healing" },
-  { text: "Rest is productive.", category: "Healing" },
-  { text: "I trust the timing of my life.", category: "Healing" },
-  { text: "I am whole and complete.", category: "Healing" },
+  // Healing
+  {
+    text: "I am healing every day.",
+    category: "Healing",
+    mission: "Drink a glass of water and take 3 deep breaths.",
+    message: "Healing is a journey, not a destination. Celebrate small steps forward."
+  },
+  {
+    text: "My body knows how to heal itself.",
+    category: "Healing",
+    mission: "Move your body in a way that feels good today.",
+    message: "Trust your body's wisdom. It is always working towards balance and health."
+  },
+  {
+    text: "I release what no longer serves me.",
+    category: "Healing",
+    mission: "Declutter one small area of your physical or digital space.",
+    message: "Letting go creates space for the new. Release the old with gratitude."
+  },
+  {
+    text: "Peace is my priority.",
+    category: "Healing",
+    mission: "Spend 5 minutes in silence or meditation.",
+    message: "Peace is not the absence of chaos, but a calm amidst the storm. cultivate your inner sanctuary."
+  },
+  {
+    text: "I forgive myself for past mistakes.",
+    category: "Healing",
+    mission: "Write a letter of forgiveness to yourself.",
+    message: "You did the best you could with what you knew. Be gentle with your past self."
+  },
 
-  // Empowerment (73)
-  { text: "I am powerful beyond measure.", category: "Empowerment" },
-  { text: "I create my own reality.", category: "Empowerment" },
-  { text: "I trust my intuition.", category: "Empowerment" },
-  { text: "I am capable of achieving my dreams.", category: "Empowerment" },
-  { text: "My voice matters.", category: "Empowerment" },
-  { text: "I embrace my personal power.", category: "Empowerment" },
-  { text: "I am resilient and strong.", category: "Empowerment" },
-  { text: "I have everything I need within me.", category: "Empowerment" },
-  { text: "I stand tall in my truth.", category: "Empowerment" },
-  { text: "I am the architect of my life.", category: "Empowerment" },
-  { text: "Confidence flows through me naturally.", category: "Empowerment" },
-  { text: "I am worthy of success.", category: "Empowerment" }
+  // Empowerment
+  {
+    text: "I am powerful beyond measure.",
+    category: "Empowerment",
+    mission: "Do one thing that scares you today.",
+    message: "Your potential is limitless. Step into your power and own your space."
+  },
+  {
+    text: "I create my own reality.",
+    category: "Empowerment",
+    mission: "Set a clear intention for your day.",
+    message: "You are the artist of your life. Paint with bold colors and intentional strokes."
+  },
+  {
+    text: "I trust my intuition.",
+    category: "Empowerment",
+    mission: "Make a decision today based on your gut feeling.",
+    message: "Your inner voice is your most reliable guide. Listen closely."
+  },
+  {
+    text: "I am capable of achieving my dreams.",
+    category: "Empowerment",
+    mission: "Take one small step towards a major goal.",
+    message: "Dreams become reality through consistent action. You have what it takes."
+  },
+  {
+    text: "My voice matters.",
+    category: "Empowerment",
+    mission: "Speak up about something important to you.",
+    message: "Your perspective is unique and valuable. The world needs to hear your truth."
+  }
 ];
 
-// Helper to generate a full 365 list by repeating/varying if needed,
-// but for now we export a substantial list that covers many days.
-// Real app would likely fetch paginated from DB.
 export const getDailyAffirmation = (date) => {
-    // Deterministic selection based on date hash
     const dayOfYear = Math.floor((date - new Date(date.getFullYear(), 0, 0)) / 1000 / 60 / 60 / 24);
     const index = dayOfYear % FALLBACK_AFFIRMATIONS.length;
     return FALLBACK_AFFIRMATIONS[index];

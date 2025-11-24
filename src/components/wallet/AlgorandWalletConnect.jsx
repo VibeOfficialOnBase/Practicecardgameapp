@@ -18,7 +18,7 @@ export default function AlgorandWalletConnect({ onConnect }) {
   const connectWallet = async () => {
     setConnecting(true);
     try {
-      const PeraWalletConnect = (await import('https://esm.sh/@perawallet/connect@1.3.4')).PeraWalletConnect;
+      const { PeraWalletConnect } = await import('@perawallet/connect');
       const peraWallet = new PeraWalletConnect({ chainId: 416001 });
 
       const accounts = await peraWallet.connect();

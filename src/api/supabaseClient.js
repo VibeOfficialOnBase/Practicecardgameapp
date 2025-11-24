@@ -446,8 +446,8 @@ entityNames.forEach(name => {
   entities[name] = new EntityWrapper(name);
 });
 
-// Export a Base44-compatible client
-export const base44 = {
+// Export the app API client
+export const appApi = {
   entities,
   auth: authWrapper,
   functions: functionsWrapper,
