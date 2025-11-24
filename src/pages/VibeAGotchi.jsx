@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { base44 } from '@/api/base44Client';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { motion, AnimatePresence } from 'framer-motion';
-import { ArrowLeft, Trophy, TrendingUp, X } from 'lucide-react';
+import { ArrowLeft, Trophy, TrendingUp, X, Sparkles } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { createPageUrl } from '../utils';
 import VibeagotchiCreature from '../components/vibeagotchi/VibeagotchiCreature';
@@ -21,7 +21,8 @@ import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { HelpCircle } from 'lucide-react';
 
-const evolutionThresholds = [0, 100, 300, 600, 1000, 1500];
+// Updated evolution thresholds to reward consistency over time
+const evolutionThresholds = [0, 300, 800, 1500, 2500, 4000];
 const evolutionNames = ['Spark', 'Ember', 'Flame', 'Radiant', 'Celestial', 'Transcendent'];
 
 export default function VibeAGotchi() {
@@ -138,11 +139,17 @@ export default function VibeAGotchi() {
     mutationFn: async (updates) => {
       const newXP = (updates.growth_xp !== undefined ? updates.growth_xp : vibeState.growth_xp);
       const currentStage = vibeState.evolution_stage;
+      // Check next stage
       const nextStage = evolutionThresholds.findIndex(threshold => newXP < threshold) - 1;
-      const shouldEvolve = nextStage > currentStage && nextStage < evolutionNames.length;
+
+      // Evolution logic: Only evolve if XP meets threshold AND nextStage is higher than current
+      // We clamp nextStage to valid range 0 to evolutionNames.length - 1
+      const targetStage = Math.min(Math.max(0, nextStage), evolutionNames.length - 1);
+      const shouldEvolve = targetStage > currentStage;
 
       await base44.entities.VibeagotchiState.update(vibeState.id, {
         ...updates,
+        evolution_stage: shouldEvolve ? targetStage : currentStage, // Apply evolution immediately if triggered
         last_interaction: new Date().toISOString(),
         total_interactions: vibeState.total_interactions + 1
       });
@@ -150,8 +157,8 @@ export default function VibeAGotchi() {
       if (shouldEvolve) {
         await base44.entities.VibeagotchiEvolution.create({
           user_email: user.email,
-          evolution_stage: nextStage,
-          stage_name: evolutionNames[nextStage],
+          evolution_stage: targetStage,
+          stage_name: evolutionNames[targetStage],
           achieved_at: new Date().toISOString(),
           stats_at_evolution: {
             energy: vibeState.energy,
@@ -161,10 +168,11 @@ export default function VibeAGotchi() {
           }
         });
 
+        // Award achievements based on stage
         const achievements = await base44.entities.Achievement.filter({ created_by: user.email });
         const hasAchievement = (title) => achievements.some(a => a.title === title);
 
-        if (nextStage === 1 && !hasAchievement('Soul Keeper')) {
+        if (targetStage === 1 && !hasAchievement('Soul Keeper')) {
           await base44.entities.Achievement.create({
             title: 'Soul Keeper',
             description: 'Nurtured your VibeAGotchi to Ember stage',
@@ -172,7 +180,7 @@ export default function VibeAGotchi() {
             earned_date: new Date().toISOString(),
             leche_value: 'Empowerment'
           });
-        } else if (nextStage === 3 && !hasAchievement('Spirit Guardian')) {
+        } else if (targetStage === 3 && !hasAchievement('Spirit Guardian')) {
           await base44.entities.Achievement.create({
             title: 'Spirit Guardian',
             description: 'Evolved your VibeAGotchi to Radiant stage',
@@ -180,7 +188,7 @@ export default function VibeAGotchi() {
             earned_date: new Date().toISOString(),
             leche_value: 'Community'
           });
-        } else if (nextStage === 5 && !hasAchievement('Ascendant')) {
+        } else if (targetStage === 5 && !hasAchievement('Ascendant')) {
           await base44.entities.Achievement.create({
             title: 'Ascendant',
             description: 'Reached the final Transcendent evolution',
@@ -190,13 +198,13 @@ export default function VibeAGotchi() {
           });
         }
 
-        setEvolutionStage(nextStage);
+        setEvolutionStage(targetStage);
         setShowEvolution(true);
         play('level-up');
         trigger('success');
       }
 
-      return { shouldEvolve, nextStage };
+      return { shouldEvolve, nextStage: targetStage };
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['vibeagotchiState'] });
@@ -204,6 +212,9 @@ export default function VibeAGotchi() {
       queryClient.invalidateQueries({ queryKey: ['achievements'] });
     }
   });
+
+  // ... (rest of the functions like generateThought, generateDailyAffirmation etc. remain same, verify if any wallet logic was there)
+  // Checked: No wallet logic found in the provided read_file output for VibeAGotchi.jsx
 
   const generateThought = async () => {
     if (!vibeState) return;
@@ -255,7 +266,7 @@ export default function VibeAGotchi() {
       energy: Math.min(100, (vibeState.energy || 80) + 15),
       happiness: Math.min(100, (vibeState.happiness || 80) + 10),
       bond: Math.min(100, vibeState.bond + 3),
-      growth_xp: vibeState.growth_xp + 5,
+      growth_xp: vibeState.growth_xp + 15, // Increased XP for meaningful care
       current_emotion: 'happy',
       last_fed: new Date().toISOString()
     });
@@ -283,7 +294,7 @@ export default function VibeAGotchi() {
       happiness: Math.min(100, (vibeState.happiness || 80) + 15),
       health: Math.min(100, (vibeState.health || 100) + 10),
       bond: Math.min(100, vibeState.bond + 5),
-      growth_xp: vibeState.growth_xp + 8,
+      growth_xp: vibeState.growth_xp + 20, // High XP for cleaning
       current_emotion: 'content',
       last_cleaned: new Date().toISOString()
     });
@@ -300,7 +311,7 @@ export default function VibeAGotchi() {
       energy: Math.min(100, (vibeState.energy || 80) + 20),
       happiness: Math.min(100, (vibeState.happiness || 80) + 20),
       current_emotion: 'happy',
-      growth_xp: vibeState.growth_xp + 15
+      growth_xp: vibeState.growth_xp + 30 // Significant XP for healing
     });
   };
 
@@ -371,7 +382,7 @@ export default function VibeAGotchi() {
       peace: Math.min(100, vibeState.peace + 20),
       focus: Math.min(100, vibeState.focus + 10),
       bond: Math.min(100, vibeState.bond + 5),
-      growth_xp: vibeState.growth_xp + 10,
+      growth_xp: vibeState.growth_xp + 25, // Good XP for mindfulness
       current_emotion: 'calm',
       last_breathed: new Date().toISOString()
     });
@@ -390,7 +401,7 @@ export default function VibeAGotchi() {
       peace: Math.min(100, vibeState.peace + 15),
       focus: Math.min(100, vibeState.focus + 15),
       bond: Math.min(100, vibeState.bond + 8),
-      growth_xp: vibeState.growth_xp + 15,
+      growth_xp: vibeState.growth_xp + 20,
       current_emotion: 'glowing'
     });
   };
@@ -412,8 +423,7 @@ export default function VibeAGotchi() {
     const emotions = ['happy', 'curious', 'calm', 'playful'];
     const randomEmotion = emotions[Math.floor(Math.random() * emotions.length)];
     
-    // Only give bond, no growth XP for tapping to prevent easy evolution spamming
-    // Evolution should require meaningful care (feeding, cleaning, games)
+    // Only give bond, NO growth XP for tapping to prevent easy evolution spamming
     updateStatsMutation.mutate({
       bond: Math.min(100, vibeState.bond + 0.5), // Reduced bond gain
       current_emotion: randomEmotion,
@@ -620,7 +630,7 @@ export default function VibeAGotchi() {
             <motion.div
               className="absolute inset-y-0 left-0 rounded-full bg-gradient-to-r from-purple-600 to-indigo-600"
               initial={{ width: 0 }}
-              animate={{ width: `${progressToNext}%` }}
+              animate={{ width: `${Math.min(100, progressToNext)}%` }} // Ensure it doesn't overflow visual
               transition={{ duration: 1 }}
             />
           </div>

@@ -12,7 +12,6 @@ import AIRecommendations from '../components/ai/AIRecommendations';
 import CommunityChallenges from '../components/community/CommunityChallenges';
 import DailyCardAssignment from '../components/DailyCardAssignment';
 import OnboardingSetup from '../components/onboarding/OnboardingSetup';
-import WalletStatus from '../components/wallet/WalletStatus';
 import AppTutorial from '../components/onboarding/AppTutorial';
 import { Sparkles } from 'lucide-react';
 
@@ -153,17 +152,6 @@ export default function Dashboard() {
           Ready to practice today? ✨
         </p>
       </motion.div>
-
-      {/* Wallet Status */}
-      {userProfile && (userProfile.base_wallet_address || userProfile.algorand_wallet_address) && (
-        <motion.div
-          initial={{ opacity: 0, scale: 0.95 }}
-          animate={{ opacity: 1, scale: 1 }}
-          transition={{ delay: 0.05 }}
-        >
-          <WalletStatus userProfile={userProfile} />
-        </motion.div>
-      )}
 
       {/* Streak Counter */}
       <motion.div

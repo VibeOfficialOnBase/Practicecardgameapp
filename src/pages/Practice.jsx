@@ -16,7 +16,6 @@ import AchievementUnlock from '../components/AchievementUnlock';
 import CompletionFeedback from '../components/CompletionFeedback';
 import OnboardingFlow from '../components/onboarding/OnboardingFlow';
 import StreakCounter from '../components/StreakCounter';
-import WalletStatus from '../components/wallet/WalletStatus';
 import { CheckCircle } from 'lucide-react';
 import { achievements as allAchievements } from '../components/achievements';
 import { useSound } from '../components/hooks/useSound';
@@ -24,6 +23,7 @@ import { useHaptic } from '../components/hooks/useHaptic';
 import { useNavigate } from 'react-router-dom';
 import { createPageUrl } from '../utils';
 import { FALLBACK_AFFIRMATIONS } from '../utils/affirmations';
+import GlobalPulseTracker from '../components/GlobalPulseTracker';
 
 const calculateStreak = (lastDate, currentDate) => {
   if (!lastDate) return 0;
@@ -506,9 +506,13 @@ export default function Practice() {
         message="Your practice has been saved! 🌟"
       />
 
-      <div className="text-center mt-12 pt-8 border-t border-amber-200">
+      <div className="mt-8">
+        <GlobalPulseTracker />
+      </div>
+
+      <div className="text-center mt-12 pt-8 border-t border-amber-200/20">
         <p className="text-sm text-stone-500 mb-2">Powered by</p>
-        <p className="text-xl font-bold text-amber-600 tracking-widest">LECHE</p>
+        <p className="text-xl font-bold text-amber-600/80 tracking-widest">LECHE</p>
         <p className="text-xs text-stone-400 mt-1">Love • Empathy • Community • Healing • Empowerment</p>
       </div>
     </div>

@@ -17,7 +17,6 @@ import ShareToFeed from '../components/ShareToFeed';
 import AICardInsights from '../components/AICardInsights';
 import { useSound } from '../components/hooks/useSound';
 import { useHaptic } from '../components/hooks/useHaptic';
-import { walletConnector } from '../components/wallet/WalletConnector';
 import ProfileImageUpload from '../components/profile/ProfileImageUpload';
 import NotificationSettings from '../components/notifications/NotificationSettings';
 import ProgressDashboard from '../components/progress/ProgressDashboard';
@@ -30,9 +29,6 @@ export default function Profile() {
   const [favoriteValue, setFavoriteValue] = useState('');
   const [lookingForBuddy, setLookingForBuddy] = useState(false);
   const [buddyFocusAreas, setBuddyFocusAreas] = useState([]);
-  const [walletAddress, setWalletAddress] = useState('');
-  const [isConnecting, setIsConnecting] = useState(false);
-  const [verificationStatus, setVerificationStatus] = useState(null);
   const [pulledCard, setPulledCard] = useState(null);
 
   const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
@@ -67,7 +63,6 @@ export default function Profile() {
       setFavoriteValue(userProfile.favorite_leche_value || '');
       setLookingForBuddy(userProfile.looking_for_buddy || false);
       setBuddyFocusAreas(userProfile.buddy_focus_areas || []);
-      setWalletAddress(userProfile.wallet_address || '');
     }
   }, [userProfile]);
 
@@ -157,122 +152,6 @@ export default function Profile() {
     }
   });
 
-  const useStreakFreeze = useMutation({
-    mutationFn: async () => {
-      await base44.entities.StreakProtection.create({
-        user_email: user.email,
-        protection_type: 'freeze',
-        is_active: true,
-        used_date: new Date().toISOString()
-      });
-      if (userProfile) {
-        await base44.entities.UserProfile.update(userProfile.id, {
-          streak_freezes_available: (userProfile.streak_freezes_available || 0) - 1
-        });
-      }
-    },
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['userProfile'] });
-    }
-  });
-
-  const useStreakRevival = useMutation({
-    mutationFn: async () => {
-      if (userProfile) {
-        await base44.entities.UserProfile.update(userProfile.id, {
-          current_streak: userProfile.longest_streak,
-          streak_revivals_available: (userProfile.streak_revivals_available || 0) - 1
-        });
-      }
-    },
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['userProfile'] });
-    }
-  });
-
-  const connectWallet = async () => {
-    setIsConnecting(true);
-    try {
-      // Connect using our wallet connector utility
-      const result = await walletConnector.connect();
-      
-      setWalletAddress(result.address);
-
-      // Listen for account changes
-      walletConnector.onAccountsChanged((newAddress) => {
-        if (newAddress) {
-          setWalletAddress(newAddress);
-        } else {
-          setWalletAddress('');
-        }
-      });
-
-      // Listen for chain changes
-      walletConnector.onChainChanged(async (chainId) => {
-        if (chainId !== 8453) {
-          alert('Please switch back to Base network to continue using the app.');
-        }
-      });
-
-      // Save wallet address to profile
-      if (userProfile) {
-        await base44.entities.UserProfile.update(userProfile.id, {
-          wallet_address: result.address
-        });
-      } else {
-        await base44.entities.UserProfile.create({
-          wallet_address: result.address
-        });
-      }
-
-      queryClient.invalidateQueries({ queryKey: ['userProfile'] });
-      play('success');
-      trigger('light');
-    } catch (error) {
-      console.error('Wallet connection failed:', error);
-      alert(error.message || 'Failed to connect wallet. Please try again.');
-    }
-    setIsConnecting(false);
-  };
-
-  const verifyAndPull = useMutation({
-    mutationFn: async () => {
-      setVerificationStatus('verifying');
-      
-      const response = await base44.functions.invoke('verifyTokenBalance', {
-        walletAddress
-      });
-
-      if (!response.data.verified) {
-        setVerificationStatus('failed');
-        throw new Error('Insufficient token balance. You need at least 1000 $VibeOfficial tokens.');
-      }
-
-      setVerificationStatus('verified');
-      
-      const randomCard = practiceCards[Math.floor(Math.random() * practiceCards.length)];
-      
-      await base44.entities.BonusPull.create({
-        user_email: user?.email,
-        practice_card_id: randomCard.id,
-        pulled_date: today,
-        wallet_verified: true
-      });
-
-      return randomCard;
-    },
-    onSuccess: (card) => {
-      setPulledCard(card);
-      queryClient.invalidateQueries({ queryKey: ['bonusPulls'] });
-      play('card-flip');
-      trigger('strong');
-    },
-    onError: (error) => {
-      alert(error.message);
-      setVerificationStatus(null);
-    }
-  });
-
   const handleLogout = () => {
     localStorage.clear();
     base44.auth.logout('/Login');
@@ -290,7 +169,7 @@ export default function Profile() {
             <Gift className="w-12 h-12 text-amber-500" />
             Bonus Card!
           </h1>
-          <p className="text-slate-600 text-lg">Your exclusive holder reward</p>
+          <p className="text-slate-600 text-lg">Your exclusive reward</p>
         </motion.div>
 
         <PulledCard card={pulledCard} userEmail={user?.email} />

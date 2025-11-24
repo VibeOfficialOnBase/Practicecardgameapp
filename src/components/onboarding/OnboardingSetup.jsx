@@ -2,8 +2,6 @@ import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Sparkles, Heart, Zap, Brain, ArrowRight, Check } from 'lucide-react';
 import { base44 } from '@/api/base44Client';
-import BaseWalletConnect from '../wallet/BaseWalletConnect';
-import AlgorandWalletConnect from '../wallet/AlgorandWalletConnect';
 
 const intentions = [
   { id: 'peace', label: 'Inner Peace', icon: '🕊️' },
@@ -23,8 +21,6 @@ export default function OnboardingSetup({ userEmail, onComplete }) {
   const [step, setStep] = useState(1);
   const [intention, setIntention] = useState('');
   const [selectedGames, setSelectedGames] = useState([]);
-  const [baseWallet, setBaseWallet] = useState(null);
-  const [algoWallet, setAlgoWallet] = useState(null);
   const [saving, setSaving] = useState(false);
 
   const toggleGame = (gameId) => {
@@ -43,8 +39,6 @@ export default function OnboardingSetup({ userEmail, onComplete }) {
       const profileData = {
         daily_intention: intention,
         preferred_games: selectedGames,
-        base_wallet_address: baseWallet,
-        algorand_wallet_address: algoWallet,
         onboarding_completed: true
       };
 
@@ -70,7 +64,7 @@ export default function OnboardingSetup({ userEmail, onComplete }) {
       >
         <div className="mb-8">
           <div className="flex justify-between mb-4">
-            {[1, 2, 3].map(i => (
+            {[1, 2].map(i => (
               <div key={i} className={`h-2 flex-1 mx-1 rounded-full transition-all ${i <= step ? 'bg-purple-500' : 'bg-white/20'}`} />
             ))}
           </div>
@@ -152,48 +146,6 @@ export default function OnboardingSetup({ userEmail, onComplete }) {
               <div className="flex gap-4">
                 <button
                   onClick={() => setStep(1)}
-                  className="flex-1 bg-white/10 text-white px-6 py-3 rounded-xl font-bold"
-                >
-                  Back
-                </button>
-                <button
-                  onClick={() => setStep(3)}
-                  disabled={selectedGames.length === 0}
-                  className="flex-1 btn-primary flex items-center justify-center gap-2"
-                >
-                  Continue <ArrowRight className="w-5 h-5" />
-                </button>
-              </div>
-            </motion.div>
-          )}
-
-          {step === 3 && (
-            <motion.div
-              key="step3"
-              initial={{ opacity: 0, x: 20 }}
-              animate={{ opacity: 1, x: 0 }}
-              exit={{ opacity: 0, x: -20 }}
-            >
-              <h2 className="text-3xl font-bold mb-2 ensure-readable-strong">Connect Wallets (Optional)</h2>
-              <p className="mb-6 ensure-readable">Unlock premium features by connecting your wallets</p>
-              
-              <div className="space-y-6 mb-8">
-                <div className="card-organic p-6">
-                  <h3 className="font-bold mb-2 ensure-readable-strong">Base Wallet</h3>
-                  <p className="text-sm mb-4 ensure-readable">Hold 5000+ $VibeOfficial tokens to unlock premium perks</p>
-                  <BaseWalletConnect onConnect={setBaseWallet} />
-                </div>
-
-                <div className="card-organic p-6">
-                  <h3 className="font-bold mb-2 ensure-readable-strong">Algorand Wallet</h3>
-                  <p className="text-sm mb-4 ensure-readable">Hold Algo Leagues assets to unlock exclusive features</p>
-                  <AlgorandWalletConnect onConnect={setAlgoWallet} />
-                </div>
-              </div>
-
-              <div className="flex gap-4">
-                <button
-                  onClick={() => setStep(2)}
                   className="flex-1 bg-white/10 text-white px-6 py-3 rounded-xl font-bold"
                 >
                   Back
