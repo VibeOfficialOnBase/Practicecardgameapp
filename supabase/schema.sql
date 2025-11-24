@@ -1,12 +1,12 @@
 -- Practice Card Game App Database Schema for Supabase
 -- Run this SQL in your Supabase SQL Editor to create all tables
 
--- Enable UUID extension
-CREATE EXTENSION IF NOT EXISTS "uuid-ossp";
+-- Note: PostgreSQL 13+ includes gen_random_uuid() as a built-in function
+-- No extension needed for UUID generation
 
 -- User Profile
 CREATE TABLE user_profiles (
-    id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
     created_by TEXT NOT NULL,
     username TEXT,
     display_name TEXT,
@@ -24,7 +24,7 @@ CREATE TABLE user_profiles (
 
 -- Practice Cards
 CREATE TABLE practice_cards (
-    id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
     title TEXT NOT NULL,
     description TEXT,
     category TEXT,
@@ -38,7 +38,7 @@ CREATE TABLE practice_cards (
 
 -- Daily Practice
 CREATE TABLE daily_practices (
-    id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
     user_email TEXT NOT NULL,
     practice_date DATE DEFAULT CURRENT_DATE,
     card_id UUID REFERENCES practice_cards(id),
@@ -50,7 +50,7 @@ CREATE TABLE daily_practices (
 
 -- Achievements
 CREATE TABLE achievements (
-    id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
     created_by TEXT NOT NULL,
     achievement_type TEXT NOT NULL,
     title TEXT NOT NULL,
@@ -62,7 +62,7 @@ CREATE TABLE achievements (
 
 -- Community Posts
 CREATE TABLE community_posts (
-    id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
     created_by TEXT NOT NULL,
     content TEXT NOT NULL,
     image_url TEXT,
@@ -74,7 +74,7 @@ CREATE TABLE community_posts (
 
 -- Daily Cards Assignment
 CREATE TABLE daily_cards (
-    id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
     user_email TEXT NOT NULL,
     card_id UUID REFERENCES practice_cards(id),
     assigned_date DATE DEFAULT CURRENT_DATE,
@@ -84,7 +84,7 @@ CREATE TABLE daily_cards (
 
 -- Favorite Cards
 CREATE TABLE favorite_cards (
-    id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
     user_email TEXT NOT NULL,
     card_id UUID REFERENCES practice_cards(id),
     created_date TIMESTAMP WITH TIME ZONE DEFAULT NOW(),
@@ -93,7 +93,7 @@ CREATE TABLE favorite_cards (
 
 -- User Levels
 CREATE TABLE user_levels (
-    id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
     user_email TEXT NOT NULL UNIQUE,
     current_level INTEGER DEFAULT 1,
     current_xp INTEGER DEFAULT 0,
@@ -104,7 +104,7 @@ CREATE TABLE user_levels (
 
 -- Daily Challenges
 CREATE TABLE daily_challenges (
-    id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
     user_email TEXT NOT NULL,
     challenge_text TEXT NOT NULL,
     challenge_type TEXT,
@@ -115,7 +115,7 @@ CREATE TABLE daily_challenges (
 
 -- Card Insights
 CREATE TABLE card_insights (
-    id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
     card_id UUID REFERENCES practice_cards(id),
     user_email TEXT NOT NULL,
     insight_text TEXT NOT NULL,
@@ -124,7 +124,7 @@ CREATE TABLE card_insights (
 
 -- Game Scores
 CREATE TABLE game_scores (
-    id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
     user_email TEXT NOT NULL,
     game_type TEXT NOT NULL,
     score INTEGER NOT NULL,
@@ -134,7 +134,7 @@ CREATE TABLE game_scores (
 
 -- Daily Rewards
 CREATE TABLE daily_rewards (
-    id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
     user_email TEXT NOT NULL,
     last_claim_date DATE,
     streak_days INTEGER DEFAULT 0,
@@ -145,7 +145,7 @@ CREATE TABLE daily_rewards (
 
 -- Friends
 CREATE TABLE friends (
-    id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
     user_email TEXT NOT NULL,
     friend_email TEXT NOT NULL,
     status TEXT DEFAULT 'pending',
@@ -155,7 +155,7 @@ CREATE TABLE friends (
 
 -- Messages
 CREATE TABLE messages (
-    id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
     sender_email TEXT NOT NULL,
     recipient_email TEXT NOT NULL,
     content TEXT NOT NULL,
@@ -165,7 +165,7 @@ CREATE TABLE messages (
 
 -- User Cosmetics
 CREATE TABLE user_cosmetics (
-    id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
     user_email TEXT NOT NULL,
     cosmetic_type TEXT NOT NULL,
     cosmetic_data JSONB DEFAULT '{}',
@@ -175,7 +175,7 @@ CREATE TABLE user_cosmetics (
 
 -- Daily Practice Sessions
 CREATE TABLE daily_practice_sessions (
-    id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
     user_email TEXT NOT NULL,
     practice_date DATE DEFAULT CURRENT_DATE,
     duration_minutes INTEGER,
@@ -186,7 +186,7 @@ CREATE TABLE daily_practice_sessions (
 
 -- Game Reflections
 CREATE TABLE game_reflections (
-    id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
     user_email TEXT NOT NULL,
     game_type TEXT NOT NULL,
     reflection_text TEXT NOT NULL,
@@ -196,7 +196,7 @@ CREATE TABLE game_reflections (
 
 -- Custom Challenges
 CREATE TABLE custom_challenges (
-    id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
     created_by TEXT NOT NULL,
     title TEXT NOT NULL,
     description TEXT,
@@ -209,7 +209,7 @@ CREATE TABLE custom_challenges (
 
 -- Friend Streaks
 CREATE TABLE friend_streaks (
-    id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
     user_email TEXT NOT NULL,
     friend_email TEXT NOT NULL,
     streak_days INTEGER DEFAULT 0,
@@ -220,7 +220,7 @@ CREATE TABLE friend_streaks (
 
 -- Badges
 CREATE TABLE badges (
-    id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
     user_email TEXT NOT NULL,
     badge_type TEXT NOT NULL,
     badge_name TEXT NOT NULL,
@@ -229,7 +229,7 @@ CREATE TABLE badges (
 
 -- Chakra Achievements
 CREATE TABLE chakra_achievements (
-    id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
     user_email TEXT NOT NULL,
     chakra_type TEXT NOT NULL,
     achievement_name TEXT NOT NULL,
@@ -240,7 +240,7 @@ CREATE TABLE chakra_achievements (
 
 -- Community Challenges
 CREATE TABLE community_challenges (
-    id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
     title TEXT NOT NULL,
     description TEXT,
     start_date TIMESTAMP WITH TIME ZONE,
@@ -253,7 +253,7 @@ CREATE TABLE community_challenges (
 
 -- Challenge Participants
 CREATE TABLE challenge_participants (
-    id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
     challenge_id UUID REFERENCES community_challenges(id),
     user_email TEXT NOT NULL,
     contribution INTEGER DEFAULT 0,
@@ -262,7 +262,7 @@ CREATE TABLE challenge_participants (
 
 -- Groups
 CREATE TABLE groups (
-    id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
     name TEXT NOT NULL,
     description TEXT,
     created_by TEXT NOT NULL,
@@ -273,7 +273,7 @@ CREATE TABLE groups (
 
 -- Group Members
 CREATE TABLE group_members (
-    id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
     group_id UUID REFERENCES groups(id),
     user_email TEXT NOT NULL,
     role TEXT DEFAULT 'member',
@@ -283,7 +283,7 @@ CREATE TABLE group_members (
 
 -- Social Posts
 CREATE TABLE social_posts (
-    id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
     created_by TEXT NOT NULL,
     content TEXT NOT NULL,
     post_type TEXT DEFAULT 'status',
@@ -295,7 +295,7 @@ CREATE TABLE social_posts (
 
 -- Post Comments
 CREATE TABLE post_comments (
-    id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
     post_id UUID REFERENCES social_posts(id),
     created_by TEXT NOT NULL,
     content TEXT NOT NULL,
@@ -304,7 +304,7 @@ CREATE TABLE post_comments (
 
 -- Post Likes
 CREATE TABLE post_likes (
-    id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
     post_id UUID REFERENCES social_posts(id),
     user_email TEXT NOT NULL,
     created_date TIMESTAMP WITH TIME ZONE DEFAULT NOW(),
@@ -313,7 +313,7 @@ CREATE TABLE post_likes (
 
 -- Vibeagotchi State
 CREATE TABLE vibeagotchi_states (
-    id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
     user_email TEXT NOT NULL UNIQUE,
     name TEXT,
     level INTEGER DEFAULT 1,
@@ -327,7 +327,7 @@ CREATE TABLE vibeagotchi_states (
 
 -- Vibeagotchi Evolution
 CREATE TABLE vibeagotchi_evolutions (
-    id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
     user_email TEXT NOT NULL,
     evolution_stage TEXT NOT NULL,
     unlocked_date TIMESTAMP WITH TIME ZONE DEFAULT NOW()
@@ -335,7 +335,7 @@ CREATE TABLE vibeagotchi_evolutions (
 
 -- Notification Queue
 CREATE TABLE notification_queue (
-    id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
     user_email TEXT NOT NULL,
     notification_type TEXT NOT NULL,
     title TEXT,
@@ -347,7 +347,7 @@ CREATE TABLE notification_queue (
 
 -- Activity Pulse
 CREATE TABLE activity_pulses (
-    id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
     user_email TEXT NOT NULL,
     activity_type TEXT NOT NULL,
     description TEXT,
@@ -357,7 +357,7 @@ CREATE TABLE activity_pulses (
 
 -- Additional tables from entities
 CREATE TABLE bonus_pulls (
-    id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
     user_email TEXT NOT NULL,
     pull_count INTEGER DEFAULT 0,
     last_pull_date TIMESTAMP WITH TIME ZONE,
@@ -365,7 +365,7 @@ CREATE TABLE bonus_pulls (
 );
 
 CREATE TABLE buddy_connections (
-    id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
     user_email TEXT NOT NULL,
     buddy_email TEXT NOT NULL,
     connection_strength INTEGER DEFAULT 0,
@@ -373,7 +373,7 @@ CREATE TABLE buddy_connections (
 );
 
 CREATE TABLE personalized_recommendations (
-    id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
     user_email TEXT NOT NULL,
     recommendation_text TEXT NOT NULL,
     recommendation_type TEXT,
@@ -381,7 +381,7 @@ CREATE TABLE personalized_recommendations (
 );
 
 CREATE TABLE streak_protections (
-    id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
     user_email TEXT NOT NULL,
     protection_count INTEGER DEFAULT 0,
     last_used_date TIMESTAMP WITH TIME ZONE,
@@ -389,7 +389,7 @@ CREATE TABLE streak_protections (
 );
 
 CREATE TABLE user_preferences (
-    id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
     user_email TEXT NOT NULL UNIQUE,
     preferences JSONB DEFAULT '{}',
     created_date TIMESTAMP WITH TIME ZONE DEFAULT NOW(),
@@ -397,7 +397,7 @@ CREATE TABLE user_preferences (
 );
 
 CREATE TABLE endorsements (
-    id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
     from_user TEXT NOT NULL,
     to_user TEXT NOT NULL,
     endorsement_type TEXT,
@@ -406,7 +406,7 @@ CREATE TABLE endorsements (
 );
 
 CREATE TABLE challenge_points (
-    id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
     user_email TEXT NOT NULL,
     challenge_id UUID,
     points INTEGER DEFAULT 0,
@@ -414,7 +414,7 @@ CREATE TABLE challenge_points (
 );
 
 CREATE TABLE game_challenges (
-    id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
     challenge_name TEXT NOT NULL,
     description TEXT,
     target_score INTEGER,
@@ -422,7 +422,7 @@ CREATE TABLE game_challenges (
 );
 
 CREATE TABLE global_progressions (
-    id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
     progression_type TEXT NOT NULL,
     current_value INTEGER DEFAULT 0,
     target_value INTEGER,
@@ -431,7 +431,7 @@ CREATE TABLE global_progressions (
 );
 
 CREATE TABLE friend_gifts (
-    id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
     from_user TEXT NOT NULL,
     to_user TEXT NOT NULL,
     gift_type TEXT NOT NULL,
@@ -441,7 +441,7 @@ CREATE TABLE friend_gifts (
 );
 
 CREATE TABLE unlocked_content (
-    id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
     user_email TEXT NOT NULL,
     content_type TEXT NOT NULL,
     content_id TEXT NOT NULL,
@@ -449,7 +449,7 @@ CREATE TABLE unlocked_content (
 );
 
 CREATE TABLE ai_recommendations (
-    id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
     user_email TEXT NOT NULL,
     recommendation_text TEXT NOT NULL,
     category TEXT,
@@ -457,14 +457,14 @@ CREATE TABLE ai_recommendations (
 );
 
 CREATE TABLE generated_affirmations (
-    id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
     user_email TEXT NOT NULL,
     affirmation_text TEXT NOT NULL,
     created_date TIMESTAMP WITH TIME ZONE DEFAULT NOW()
 );
 
 CREATE TABLE personalized_challenges (
-    id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
     user_email TEXT NOT NULL,
     challenge_text TEXT NOT NULL,
     difficulty TEXT,
@@ -473,7 +473,7 @@ CREATE TABLE personalized_challenges (
 );
 
 CREATE TABLE game_masteries (
-    id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
     user_email TEXT NOT NULL,
     game_type TEXT NOT NULL,
     mastery_level INTEGER DEFAULT 1,
@@ -484,7 +484,7 @@ CREATE TABLE game_masteries (
 );
 
 CREATE TABLE weekly_challenges (
-    id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
     challenge_text TEXT NOT NULL,
     challenge_type TEXT,
     week_start_date DATE,
@@ -493,7 +493,7 @@ CREATE TABLE weekly_challenges (
 );
 
 CREATE TABLE weekly_challenge_progress (
-    id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
     user_email TEXT NOT NULL,
     challenge_id UUID REFERENCES weekly_challenges(id),
     progress INTEGER DEFAULT 0,

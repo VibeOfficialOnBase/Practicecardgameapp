@@ -44,9 +44,9 @@ These files contain hardcoded Base44 storage URLs that should be updated:
 Replace `https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/...`
 With your Supabase storage URLs: `https://YOUR-PROJECT.supabase.co/storage/v1/object/public/practice-cards/...`
 
-### 7. Implement Edge Functions (Optional)
+### 7. Implement Edge Functions (Optional - App Works with Mocks)
 
-If you need AI features, implement these as Supabase Edge Functions:
+The app currently uses mock responses for AI features. For production, implement these as Supabase Edge Functions:
 
 - [ ] `generateCardInsight` - AI insights for cards
 - [ ] `generateDailyChallenge` - Generate daily challenges

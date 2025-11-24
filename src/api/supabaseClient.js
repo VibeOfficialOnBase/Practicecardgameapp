@@ -1,8 +1,17 @@
 import { createClient } from '@supabase/supabase-js';
 
 // Get Supabase configuration from environment variables
-const supabaseUrl = import.meta.env.VITE_SUPABASE_URL || 'https://your-project.supabase.co';
-const supabaseAnonKey = import.meta.env.VITE_SUPABASE_ANON_KEY || 'your-anon-key';
+const supabaseUrl = import.meta.env.VITE_SUPABASE_URL;
+const supabaseAnonKey = import.meta.env.VITE_SUPABASE_ANON_KEY;
+
+// Validate that required environment variables are set
+if (!supabaseUrl || !supabaseAnonKey) {
+  throw new Error(
+    'Missing required Supabase configuration. ' +
+    'Please create a .env.local file with VITE_SUPABASE_URL and VITE_SUPABASE_ANON_KEY. ' +
+    'See .env.example for template.'
+  );
+}
 
 // Create Supabase client
 export const supabase = createClient(supabaseUrl, supabaseAnonKey);
@@ -147,14 +156,28 @@ const authWrapper = {
 // Functions wrapper for serverless functions
 const functionsWrapper = {
   async invoke(functionName, args) {
-    // For now, we'll implement functions client-side or as Edge Functions
-    // This is a placeholder that can be extended
-    console.warn(`Function ${functionName} called with args:`, args);
+    console.warn(`Function ${functionName} called - returning mock data. Implement as Supabase Edge Function for production.`, args);
     
-    // You can implement these as Supabase Edge Functions or client-side logic
-    // Example: const { data, error } = await supabase.functions.invoke(functionName, { body: args });
+    // Return mock/fallback responses to prevent app crashes during migration
+    // TODO: Implement these as Supabase Edge Functions for production use
+    const mockResponses = {
+      generateCardInsight: { insight: 'This card encourages mindful reflection and growth.' },
+      generateDailyChallenge: { challenge: 'Practice gratitude today by listing three things you appreciate.' },
+      generateDailyAffirmation: { affirmation: 'I am capable of achieving my goals.' },
+      suggestBuddies: { suggestions: [] },
+      analyzeEmotionalState: { mood: 'neutral', confidence: 0.5 },
+      generateAIRecommendations: { recommendations: [] },
+      getAICompanionTips: { tips: ['Take deep breaths', 'Stay hydrated'] },
+      generateVibeThoughts: { thought: 'Stay positive and keep growing!' },
+      generateVibeAffirmation: { affirmation: 'You are doing great!' },
+      generateAdaptiveChallenge: { challenge: 'Try a 5-minute meditation.' },
+      moderateContent: { approved: true, reason: 'Mock approval' },
+      verifyTokenBalance: { balance: 0, verified: false },
+      verifyVibeOfficialHoldings: { holdings: 0, verified: false },
+      verifyAlgoLeaguesHoldings: { holdings: 0, verified: false }
+    };
     
-    throw new Error(`Function ${functionName} not yet implemented. Please implement as Edge Function or client-side logic.`);
+    return mockResponses[functionName] || { status: 'not_implemented' };
   }
 };
 
@@ -176,23 +199,33 @@ const integrationsWrapper = {
       return { file_url: publicUrl };
     },
 
-    async InvokeLLM() {
-      // This should be implemented as an Edge Function that calls OpenAI
-      // For now, return a placeholder
-      console.warn('InvokeLLM called but not implemented');
-      throw new Error('InvokeLLM needs to be implemented as an Edge Function');
+    async InvokeLLM({ prompt }) {
+      // TODO: Implement as Supabase Edge Function that calls OpenAI
+      console.warn('InvokeLLM called with mock response. Implement as Edge Function for production.', { prompt });
+      return { 
+        response: 'This is a mock AI response. Please implement InvokeLLM as a Supabase Edge Function.',
+        usage: { tokens: 0 }
+      };
     },
 
-    async SendEmail() {
-      // This should be implemented as an Edge Function
-      console.warn('SendEmail called but not implemented');
-      throw new Error('SendEmail needs to be implemented as an Edge Function');
+    async SendEmail({ to, subject, body }) {
+      // TODO: Implement as Supabase Edge Function with email service
+      console.warn('SendEmail called with mock response. Implement as Edge Function for production.', { to, subject });
+      return { 
+        success: true, 
+        message: 'Mock email sent. Implement SendEmail as an Edge Function for production.',
+        to,
+        subject
+      };
     },
 
-    async GenerateImage() {
-      // This should be implemented as an Edge Function
-      console.warn('GenerateImage called but not implemented');
-      throw new Error('GenerateImage needs to be implemented as an Edge Function');
+    async GenerateImage({ prompt }) {
+      // TODO: Implement as Supabase Edge Function that calls DALL-E or similar
+      console.warn('GenerateImage called with mock response. Implement as Edge Function for production.', { prompt });
+      return { 
+        url: 'https://via.placeholder.com/512x512?text=Placeholder+Image',
+        message: 'Mock image. Implement GenerateImage as an Edge Function for production.'
+      };
     }
   }
 };
