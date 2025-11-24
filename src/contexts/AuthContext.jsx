@@ -10,11 +10,17 @@ export const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
 
+  // Helper to get registered users from localStorage in demo mode
+  const getRegisteredUsers = () => {
+    try {
+      return JSON.parse(localStorage.getItem('demo_registered_users') || '[]');
+    } catch {
+      return [];
+    }
+  };
+
   useEffect(() => {
-    // In demo mode, simulate a session if one was "stored" (not really possible without local storage mock,
-    // but for now we just start unauthenticated or let the mock login handle it)
     if (isDemoMode) {
-      // Check if we have a "demo session" in localStorage
       const demoSession = localStorage.getItem('demo_session');
       if (demoSession) {
         const parsedSession = JSON.parse(demoSession);
@@ -25,14 +31,12 @@ export const AuthProvider = ({ children }) => {
       return;
     }
 
-    // Check active sessions and sets the user
     supabase.auth.getSession().then(({ data: { session } }) => {
       setSession(session);
       setUser(session?.user ?? null);
       setLoading(false);
     });
 
-    // Listen for changes on auth state (logged in, signed out, etc.)
     const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
       setSession(session);
       setUser(session?.user ?? null);
@@ -44,37 +48,54 @@ export const AuthProvider = ({ children }) => {
 
   const signIn = async (data) => {
     if (isDemoMode) {
-      // Mock successful login
-      const mockUser = {
-        id: 'demo-user-id',
-        email: data.email,
-        user_metadata: { full_name: 'Demo User' },
-        aud: 'authenticated',
-        created_at: new Date().toISOString(),
-      };
+      const users = getRegisteredUsers();
+      const existingUser = users.find(u => u.email === data.email);
+
+      if (!existingUser) {
+        return { data: { user: null, session: null }, error: { message: "User not registered. Please sign up or use Google." } };
+      }
+
+      // Simple password check (in a real app this would be hashed, but for demo mode strictness, we can check basic match if we stored it,
+      // but to follow the prompt's spirit of "unregistered user", checking email existence is the main step.
+      // The previous implementation allowed ANY email. Now we restrict to registered ones.
+      // We didn't store passwords in the previous mock, so we'll trust the password if the user exists for now,
+      // OR we can update signUp to store the password. Let's update signUp to store it for consistency.)
+      if (existingUser.password !== data.password) {
+         return { data: { user: null, session: null }, error: { message: "Invalid credentials." } };
+      }
+
       const mockSession = {
         access_token: 'demo-token',
-        user: mockUser,
+        user: existingUser,
       };
 
       localStorage.setItem('demo_session', JSON.stringify(mockSession));
       setSession(mockSession);
-      setUser(mockUser);
-      return { data: { user: mockUser, session: mockSession }, error: null };
+      setUser(existingUser);
+      return { data: { user: existingUser, session: mockSession }, error: null };
     }
     return supabase.auth.signInWithPassword(data);
   };
 
   const signUp = async (data) => {
     if (isDemoMode) {
-      // Mock successful signup
+      const users = getRegisteredUsers();
+      if (users.find(u => u.email === data.email)) {
+        return { data: { user: null, session: null }, error: { message: "User already exists." } };
+      }
+
       const mockUser = {
-        id: 'demo-user-id',
+        id: `demo-user-${Date.now()}`,
         email: data.email,
+        password: data.password, // Storing password in local storage for demo verification
         user_metadata: data.options?.data || {},
         aud: 'authenticated',
         created_at: new Date().toISOString(),
       };
+
+      users.push(mockUser);
+      localStorage.setItem('demo_registered_users', JSON.stringify(users));
+
       const mockSession = {
         access_token: 'demo-token',
         user: mockUser,
@@ -100,23 +121,34 @@ export const AuthProvider = ({ children }) => {
 
   const signInWithGoogle = async () => {
     if (isDemoMode) {
-        const mockUser = {
-            id: 'demo-google-user-id',
-            email: 'demo@gmail.com',
-            user_metadata: { full_name: 'Google Demo User' },
-            aud: 'authenticated',
-            created_at: new Date().toISOString(),
-            app_metadata: { provider: 'google' }
-        };
+        // For Google login in demo mode, we can auto-register them if they don't exist,
+        // effectively treating it as "Sign up or Login with Google"
+        const email = 'demo@gmail.com';
+        let users = getRegisteredUsers();
+        let user = users.find(u => u.email === email);
+
+        if (!user) {
+            user = {
+                id: 'demo-google-user-id',
+                email: email,
+                user_metadata: { full_name: 'Google Demo User' },
+                aud: 'authenticated',
+                created_at: new Date().toISOString(),
+                app_metadata: { provider: 'google' }
+            };
+            users.push(user);
+            localStorage.setItem('demo_registered_users', JSON.stringify(users));
+        }
+
         const mockSession = {
             access_token: 'demo-google-token',
-            user: mockUser,
+            user: user,
         };
 
         localStorage.setItem('demo_session', JSON.stringify(mockSession));
         setSession(mockSession);
-        setUser(mockUser);
-        return { data: { user: mockUser, session: mockSession }, error: null };
+        setUser(user);
+        return { data: { user: user, session: mockSession }, error: null };
     }
     return supabase.auth.signInWithOAuth({
         provider: 'google',

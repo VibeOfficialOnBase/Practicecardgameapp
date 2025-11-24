@@ -228,10 +228,16 @@ export class BubbleGrid {
     neighbors.forEach(([r, c]) => this.markConnected(r, c, connected));
   }
   
-  hasReachedBottom() {
-    for (let col = 0; col < this.cols; col++) {
-      if (this.grid[this.rows - 1]?.[col]) {
-        return true;
+  hasReachedBottom(thresholdRow) {
+    // If no threshold is provided, default to last row
+    const checkRow = thresholdRow !== undefined ? thresholdRow : this.rows - 1;
+
+    // Check if any bubble exists at or below the threshold row
+    for (let row = checkRow; row < this.rows; row++) {
+      for (let col = 0; col < this.cols; col++) {
+        if (this.grid[row]?.[col]) {
+          return true;
+        }
       }
     }
     return false;

@@ -30,11 +30,15 @@ export default function ChakraBlaster() {
     player: { x: 0, y: 0, size: 40 },
     projectiles: [],
     enemies: [],
+    enemyProjectiles: [],
     particles: [],
     affirmations: [],
     keys: {},
     lastShot: 0,
-    enemiesDefeated: 0
+    enemiesDefeated: 0,
+    isBossActive: false,
+    boss: null,
+    bossProjectiles: []
   });
 
   useEffect(() => {
@@ -82,6 +86,21 @@ export default function ChakraBlaster() {
     };
   };
 
+  const spawnBoss = (canvas, level) => {
+    return {
+      x: canvas.width / 2,
+      y: -100, // Start off screen
+      targetY: 100,
+      size: 80,
+      type: 'anger', // Boss is "Anger" as requested
+      color: '#ef4444',
+      hp: 50 + (level * 20),
+      maxHp: 50 + (level * 20),
+      phase: 0,
+      lastAttack: 0
+    };
+  };
+
   const startGame = () => {
     const canvas = canvasRef.current;
     const ctx = canvas.getContext('2d');
@@ -91,23 +110,36 @@ export default function ChakraBlaster() {
     data.player.y = canvas.height - 80;
     data.projectiles = [];
     data.enemies = [];
+    data.enemyProjectiles = [];
     data.particles = [];
     data.affirmations = [];
     data.enemiesDefeated = 0;
+    data.isBossActive = false;
+    data.boss = null;
     
     setHp(100);
     setGameState('playing');
 
     const enemyCount = 8 + level * 3;
-    for (let i = 0; i < enemyCount; i++) {
-      setTimeout(() => {
-        if (data.enemies.length < enemyCount) {
-          data.enemies.push(spawnEnemy(canvas, level));
+    let enemiesSpawned = 0;
+
+    // Spawn enemies periodically until count reached
+    const spawner = setInterval(() => {
+        if (gameState !== 'playing' || data.isBossActive) {
+            clearInterval(spawner);
+            return;
         }
-      }, i * 800);
-    }
+        if (enemiesSpawned < enemyCount) {
+            data.enemies.push(spawnEnemy(canvas, level));
+            enemiesSpawned++;
+        } else {
+            clearInterval(spawner);
+        }
+    }, 800);
 
     const gameLoop = () => {
+      if (gameState !== 'playing') return;
+
       ctx.fillStyle = 'rgba(15, 8, 32, 0.3)';
       ctx.fillRect(0, 0, canvas.width, canvas.height);
 
@@ -131,11 +163,12 @@ export default function ChakraBlaster() {
       ctx.arc(data.player.x, data.player.y, data.player.size, 0, Math.PI * 2);
       ctx.fill();
 
-      // Player movement
-      if (data.keys['ArrowLeft'] || data.keys['a']) data.player.x = Math.max(data.player.size, data.player.x - 5);
-      if (data.keys['ArrowRight'] || data.keys['d']) data.player.x = Math.min(canvas.width - data.player.size, data.player.x + 5);
-      if (data.keys['ArrowUp'] || data.keys['w']) data.player.y = Math.max(data.player.size, data.player.y - 5);
-      if (data.keys['ArrowDown'] || data.keys['s']) data.player.y = Math.min(canvas.height - data.player.size, data.player.y + 5);
+      // Improved Player movement speed and responsiveness
+      const speed = 8; // Increased from 5
+      if (data.keys['ArrowLeft'] || data.keys['a']) data.player.x = Math.max(data.player.size, data.player.x - speed);
+      if (data.keys['ArrowRight'] || data.keys['d']) data.player.x = Math.min(canvas.width - data.player.size, data.player.x + speed);
+      if (data.keys['ArrowUp'] || data.keys['w']) data.player.y = Math.max(data.player.size, data.player.y - speed);
+      if (data.keys['ArrowDown'] || data.keys['s']) data.player.y = Math.min(canvas.height - data.player.size, data.player.y + speed);
 
       // Auto shoot every 200ms
       if (Date.now() - data.lastShot > 200) {
@@ -143,12 +176,12 @@ export default function ChakraBlaster() {
           x: data.player.x,
           y: data.player.y - data.player.size,
           size: 8,
-          speed: 8
+          speed: 10 // Faster projectiles
         });
         data.lastShot = Date.now();
       }
 
-      // Projectiles
+      // Player Projectiles
       data.projectiles = data.projectiles.filter(p => {
         p.y -= p.speed;
         
@@ -161,6 +194,121 @@ export default function ChakraBlaster() {
         ctx.shadowBlur = 0;
 
         return p.y > -p.size;
+      });
+
+      // Boss Logic
+      if (data.isBossActive && data.boss) {
+          const boss = data.boss;
+
+          // Move boss into position
+          if (boss.y < boss.targetY) {
+              boss.y += 2;
+          } else {
+              // Boss movement pattern (swaying)
+              boss.x += Math.sin(Date.now() * 0.002) * 2;
+          }
+
+          // Render Boss
+          ctx.save();
+          ctx.shadowBlur = 20;
+          ctx.shadowColor = boss.color;
+          ctx.fillStyle = boss.color;
+          ctx.beginPath();
+          ctx.arc(boss.x, boss.y, boss.size, 0, Math.PI * 2);
+          ctx.fill();
+
+          // Boss HP Bar
+          ctx.fillStyle = '#333';
+          ctx.fillRect(boss.x - 50, boss.y - boss.size - 20, 100, 10);
+          ctx.fillStyle = '#f00';
+          ctx.fillRect(boss.x - 50, boss.y - boss.size - 20, 100 * (boss.hp / boss.maxHp), 10);
+
+          ctx.fillStyle = 'white';
+          ctx.font = 'bold 16px Inter';
+          ctx.textAlign = 'center';
+          ctx.fillText("ANGER", boss.x, boss.y + 5);
+          ctx.restore();
+
+          // Boss Attacks
+          if (Date.now() - boss.lastAttack > 1500) {
+             // Shoot projectile at player
+             const angle = Math.atan2(data.player.y - boss.y, data.player.x - boss.x);
+             data.enemyProjectiles.push({
+                 x: boss.x,
+                 y: boss.y + boss.size,
+                 vx: Math.cos(angle) * 5,
+                 vy: Math.sin(angle) * 5,
+                 size: 10,
+                 color: '#ffaa00'
+             });
+             boss.lastAttack = Date.now();
+          }
+
+          // Collision with player projectiles
+           data.projectiles.forEach((p, pIndex) => {
+            const dist = Math.hypot(p.x - boss.x, p.y - boss.y);
+            if (dist < p.size + boss.size) {
+              boss.hp--;
+              data.projectiles.splice(pIndex, 1);
+
+              // Hit effect
+              ctx.fillStyle = 'white';
+              ctx.globalAlpha = 0.5;
+              ctx.beginPath();
+              ctx.arc(boss.x, boss.y, boss.size, 0, Math.PI * 2);
+              ctx.fill();
+              ctx.globalAlpha = 1;
+
+              if (boss.hp <= 0) {
+                 // Boss Defeated
+                 for (let i = 0; i < 50; i++) {
+                    data.particles.push({
+                      x: boss.x,
+                      y: boss.y,
+                      vx: (Math.random() - 0.5) * 15,
+                      vy: (Math.random() - 0.5) * 15,
+                      size: Math.random() * 6 + 4,
+                      color: boss.color,
+                      life: 2
+                    });
+                  }
+                  data.affirmations.push({
+                    text: "I HAVE PEACE!",
+                    x: boss.x,
+                    y: boss.y,
+                    life: 2
+                  });
+                  data.boss = null;
+                  data.isBossActive = false;
+                  setScore(s => s + 500);
+
+                  // Level Complete after boss
+                  setTimeout(() => {
+                      setGameState('levelComplete');
+                  }, 2000);
+              }
+            }
+          });
+      }
+
+      // Enemy Projectiles
+      data.enemyProjectiles = data.enemyProjectiles.filter(p => {
+          p.x += p.vx;
+          p.y += p.vy;
+
+          ctx.fillStyle = p.color;
+          ctx.beginPath();
+          ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
+          ctx.fill();
+
+          // Collision with player
+          const distToPlayer = Math.hypot(p.x - data.player.x, p.y - data.player.y);
+          if (distToPlayer < p.size + data.player.size) {
+              setHp(h => Math.max(0, h - 15));
+              return false;
+          }
+
+          return p.y < canvas.height && p.y > 0 && p.x > 0 && p.x < canvas.width;
       });
 
       // Enemies
@@ -260,11 +408,10 @@ export default function ChakraBlaster() {
         return aff.life > 0;
       });
 
-      // Check level complete
-      if (data.enemies.length === 0 && data.enemiesDefeated >= 8 + level * 3) {
-        setGameState('levelComplete');
-        cancelAnimationFrame(gameLoopRef.current);
-        return;
+      // Check for Boss Spawn
+      if (data.enemies.length === 0 && data.enemiesDefeated >= enemyCount && !data.isBossActive && !data.boss) {
+         data.isBossActive = true;
+         data.boss = spawnBoss(canvas, level);
       }
 
       gameLoopRef.current = requestAnimationFrame(gameLoop);
@@ -328,7 +475,7 @@ export default function ChakraBlaster() {
       <h2 className="text-3xl font-bold text-white mb-6">Release Your Challenges</h2>
       <p className="text-slate-300 mb-4">Use arrow keys or WASD to move</p>
       <p className="text-slate-300 mb-4">Auto-fires light beams rapidly</p>
-      <p className="text-amber-300 mb-8 font-semibold">Defeat all emotional enemies to level up!</p>
+      <p className="text-amber-300 mb-8 font-semibold">Defeat the Anger Boss to level up!</p>
     </BaseGame>
   );
 }

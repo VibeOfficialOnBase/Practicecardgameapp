@@ -62,10 +62,10 @@ export default function Login() {
   }
 
   return (
-    <div className="flex items-center justify-center min-h-screen bg-gray-100 p-4">
-      <Card className="w-full max-w-md">
+    <div className="flex items-center justify-center min-h-screen p-4">
+      <Card className="w-full max-w-md bg-white/90 backdrop-blur-sm shadow-xl">
         <CardHeader>
-          <CardTitle className="text-2xl text-center">Welcome Back</CardTitle>
+          <CardTitle className="text-2xl text-center">Welcome back to your PRACTICE</CardTitle>
           <CardDescription className="text-center">Enter your credentials to access your account</CardDescription>
         </CardHeader>
         <CardContent>

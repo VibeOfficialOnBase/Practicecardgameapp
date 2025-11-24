@@ -412,9 +412,12 @@ export default function VibeAGotchi() {
     const emotions = ['happy', 'curious', 'calm', 'playful'];
     const randomEmotion = emotions[Math.floor(Math.random() * emotions.length)];
     
+    // Only give bond, no growth XP for tapping to prevent easy evolution spamming
+    // Evolution should require meaningful care (feeding, cleaning, games)
     updateStatsMutation.mutate({
-      bond: Math.min(100, vibeState.bond + 1),
-      current_emotion: randomEmotion
+      bond: Math.min(100, vibeState.bond + 0.5), // Reduced bond gain
+      current_emotion: randomEmotion,
+      // No growth_xp increase here
     });
   };
 

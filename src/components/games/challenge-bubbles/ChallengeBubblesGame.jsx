@@ -163,8 +163,8 @@ export class ChallengeBubblesGame {
       return aff.alpha > 0;
     });
     
-    // Check game over
-    if (this.grid.hasReachedBottom()) {
+    // Check game over - only if bubbles reach much lower (row 8 of 10), giving more forgiveness
+    if (this.grid.hasReachedBottom(8)) {
       this.gameOver();
     }
   }

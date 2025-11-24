@@ -21,6 +21,7 @@ import { useSound } from '../components/hooks/useSound';
 import { useHaptic } from '../components/hooks/useHaptic';
 import { useNavigate } from 'react-router-dom';
 import { createPageUrl } from '../utils';
+import { FALLBACK_AFFIRMATIONS } from '../utils/affirmations';
 
 const calculateStreak = (lastDate, currentDate) => {
   if (!lastDate) return 0;
@@ -98,7 +99,28 @@ export default function Practice() {
 
   const { data: practiceCards = [] } = useQuery({
     queryKey: ['practiceCards'],
-    queryFn: () => base44.entities.PracticeCard.list('-created_date', 50),
+    queryFn: async () => {
+      try {
+        const cards = await base44.entities.PracticeCard.list('-created_date', 50);
+        if (cards && cards.length > 0) return cards;
+        // Fallback to local 365 list if DB is empty or fails
+        return FALLBACK_AFFIRMATIONS.map((a, i) => ({
+             id: `local-card-${i}`,
+             title: a.category + " Practice",
+             affirmation: a.text,
+             leche_value: a.category,
+             message: "Reflect on this today."
+        }));
+      } catch (e) {
+         return FALLBACK_AFFIRMATIONS.map((a, i) => ({
+             id: `local-card-${i}`,
+             title: a.category + " Practice",
+             affirmation: a.text,
+             leche_value: a.category,
+             message: "Reflect on this today."
+        }));
+      }
+    },
   });
 
   const { data: userPreferences = [] } = useQuery({
