@@ -4,7 +4,7 @@ const supabaseUrl = import.meta.env.VITE_SUPABASE_URL
 const supabaseAnonKey = import.meta.env.VITE_SUPABASE_ANON_KEY
 
 // Check if we're in demo mode (no environment variables provided)
-const isDemoMode = !supabaseUrl || !supabaseAnonKey
+export const isDemoMode = !supabaseUrl || !supabaseAnonKey
 
 if (isDemoMode) {
   console.warn(
