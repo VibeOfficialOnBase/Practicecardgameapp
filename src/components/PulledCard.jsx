@@ -26,8 +26,6 @@ const lecheColors = {
 export default function PulledCard({ card, userEmail }) {
   const [isFlipped, setIsFlipped] = React.useState(false);
   const [showConfetti, setShowConfetti] = React.useState(false);
-
-  // Fallback logic for card data
   const Icon = lecheIcons[card.leche_value] || Heart;
   const missionText = card.mission || "Reflect on how this value manifests in your life today.";
 
@@ -63,17 +61,8 @@ export default function PulledCard({ card, userEmail }) {
     }
   });
 
-  React.useEffect(() => {
-    play('card-flip');
-    trigger('strong');
-    setShowConfetti(true);
-    setTimeout(() => setShowConfetti(false), 3000);
-  }, [play, trigger]);
-
   const handleFlip = () => {
-    if (soundManager.isEnabled()) {
-      play('card-flip');
-    }
+    if (soundManager.isEnabled()) play('card-flip');
     trigger('light');
     setIsFlipped(!isFlipped);
     if (!isFlipped) {
@@ -86,11 +75,7 @@ export default function PulledCard({ card, userEmail }) {
     <motion.div
       initial={{ scale: 0.8, rotateY: -180, opacity: 0, y: 50 }}
       animate={{ scale: 1, rotateY: 0, opacity: 1, y: 0 }}
-      transition={{ 
-        type: "spring", 
-        duration: 0.8,
-        bounce: 0.3
-      }}
+      transition={{ type: "spring", duration: 0.8, bounce: 0.3 }}
       className="mx-auto relative w-full max-w-[320px] aspect-[2/3]"
       style={{ perspective: '1000px' }}
     >
@@ -113,10 +98,7 @@ export default function PulledCard({ card, userEmail }) {
                 opacity: [1, 1, 0],
                 rotate: Math.random() * 360,
               }}
-              transition={{
-                duration: 1 + Math.random(),
-                ease: "easeOut",
-              }}
+              transition={{ duration: 1 + Math.random(), ease: "easeOut" }}
             />
           ))}
         </>
@@ -124,78 +106,81 @@ export default function PulledCard({ card, userEmail }) {
 
       <motion.div
         className="absolute inset-0"
-        style={{
-          transformStyle: 'preserve-3d',
-          width: '100%',
-          height: '100%',
-        }}
+        style={{ transformStyle: 'preserve-3d', width: '100%', height: '100%' }}
         animate={{ rotateY: isFlipped ? 180 : 0 }}
         transition={{ duration: 0.6, ease: 'easeInOut' }}
       >
-        {/* Front (technically back of card before flip) */}
+        {/* Front (Back of card) */}
         <div
-          className="absolute inset-0 rounded-[32px] shadow-2xl overflow-hidden cursor-pointer bg-gradient-to-br from-purple-900 to-indigo-900 border border-white/10"
-          style={{ 
-            backfaceVisibility: 'hidden',
-            WebkitBackfaceVisibility: 'hidden',
-          }}
+          className="absolute inset-0 rounded-[32px] shadow-2xl overflow-hidden cursor-pointer border border-white/10"
+          style={{ backfaceVisibility: 'hidden', WebkitBackfaceVisibility: 'hidden' }}
           onClick={handleFlip}
         >
-          <div className="absolute inset-0 bg-[url('https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/6921dea06e8f58657363a952/43aec5bff_PRACTICECARDBACK.jpg')] bg-cover bg-center opacity-80" />
+          <img
+            src="https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/6921dea06e8f58657363a952/43aec5bff_PRACTICECARDBACK.jpg"
+            alt="Card Back"
+            className="w-full h-full object-cover"
+          />
           <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent" />
           <div className="absolute bottom-8 left-0 right-0 text-center">
-             <p className="text-white/70 text-sm font-medium animate-pulse">Tap to Reveal</p>
+             <p className="text-white/90 text-sm font-bold tracking-widest uppercase animate-pulse">Tap to Reveal</p>
           </div>
         </div>
 
-        {/* Back (Content Side) */}
+        {/* Back (Content Side - Restored Visual Design) */}
         <div
-          className="absolute inset-0 rounded-[32px] shadow-2xl overflow-hidden cursor-pointer bg-white dark:bg-slate-900 border border-black/5 dark:border-white/10"
-          style={{
-            backfaceVisibility: 'hidden',
-            WebkitBackfaceVisibility: 'hidden',
-            transform: 'rotateY(180deg)',
-          }}
+          className="absolute inset-0 rounded-[32px] shadow-2xl overflow-hidden cursor-pointer border border-white/10 bg-black"
+          style={{ backfaceVisibility: 'hidden', WebkitBackfaceVisibility: 'hidden', transform: 'rotateY(180deg)' }}
           onClick={handleFlip}
         >
-            {/* Card Art Background (Using gradient/pattern instead of potentially broken image) */}
-            <div className={`absolute inset-0 bg-gradient-to-br ${lecheColors[card.leche_value] || 'from-purple-500 to-indigo-600'} opacity-10`} />
-            <div className="absolute top-0 left-0 right-0 h-32 bg-gradient-to-b from-white/20 to-transparent" />
+            {/* Full Image Background */}
+            <img
+              src="https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/6921dea06e8f58657363a952/ff516bb3a_PRACTICECARDFRONT.jpg"
+              alt="Card Art"
+              className="w-full h-full object-cover opacity-60"
+            />
 
-            <div className="absolute inset-0 flex flex-col p-6">
-                {/* Header Icon */}
-                <div className="flex justify-center mb-4">
-                    <div className={`w-12 h-12 rounded-full bg-gradient-to-br ${lecheColors[card.leche_value] || 'from-gray-400 to-gray-600'} flex items-center justify-center shadow-lg`}>
-                        <Icon className="w-6 h-6 text-white" />
+            {/* Gradient Overlay for Readability */}
+            <div className="absolute inset-0 bg-gradient-to-b from-black/30 via-transparent to-black/80" />
+
+            {/* Content Overlay */}
+            <div className="absolute inset-0 flex flex-col p-6 z-10">
+                {/* Header Badge */}
+                <div className="flex justify-center mb-auto pt-4">
+                    <div className={`px-4 py-1.5 rounded-full bg-white/20 backdrop-blur-md border border-white/30 flex items-center gap-2 shadow-lg`}>
+                        <Icon className="w-4 h-4 text-white drop-shadow-md" />
+                        <span className="text-xs font-bold uppercase tracking-widest text-white drop-shadow-md">
+                            {card.leche_value}
+                        </span>
                     </div>
                 </div>
 
-                {/* Content */}
-                <div className="flex-1 flex flex-col items-center text-center justify-center gap-4">
-                    <h2 className="text-2xl font-bold text-slate-800 dark:text-white leading-tight">
+                {/* Main Text */}
+                <div className="text-center space-y-4 mb-8">
+                    <h2 className="text-2xl font-bold text-white drop-shadow-lg leading-tight">
                         {card.title}
                     </h2>
 
-                    <div className="relative py-4 px-2">
-                        <Sparkles className="absolute top-0 left-0 w-4 h-4 text-amber-400 opacity-50" />
-                        <p className="text-lg font-serif italic text-slate-600 dark:text-slate-300">
+                    <div className="relative px-2">
+                        <Sparkles className="absolute -top-2 -left-1 w-3 h-3 text-amber-300 opacity-80" />
+                        <p className="text-lg font-serif italic text-white/90 drop-shadow-md leading-relaxed">
                             "{card.affirmation}"
                         </p>
-                        <Sparkles className="absolute bottom-0 right-0 w-4 h-4 text-amber-400 opacity-50" />
-                    </div>
-
-                    {/* Mission Bubble */}
-                    <div className="bg-white/50 dark:bg-black/20 backdrop-blur-sm rounded-2xl p-4 border border-black/5 dark:border-white/10 shadow-sm w-full">
-                        <p className="text-xs font-bold text-slate-400 uppercase tracking-widest mb-2">Your Mission</p>
-                        <p className="text-sm font-medium text-slate-700 dark:text-slate-200 leading-relaxed">
-                            {missionText}
-                        </p>
+                        <Sparkles className="absolute -bottom-2 -right-1 w-3 h-3 text-amber-300 opacity-80" />
                     </div>
                 </div>
 
-                {/* Footer */}
-                <div className="mt-auto pt-4 flex items-center justify-between">
-                     <div className="text-xs font-medium text-slate-400 flex items-center gap-1">
+                {/* Mission Box */}
+                <div className="bg-black/40 backdrop-blur-md rounded-xl p-4 border border-white/20 mb-4">
+                    <p className="text-[10px] font-bold text-white/60 uppercase tracking-widest mb-1 text-center">Mission</p>
+                    <p className="text-xs font-medium text-white text-center leading-relaxed">
+                        {missionText}
+                    </p>
+                </div>
+
+                {/* Footer Actions */}
+                <div className="flex items-center justify-between mt-auto">
+                     <div className="text-xs font-bold text-white/80 flex items-center gap-1 bg-black/30 px-2 py-1 rounded-lg backdrop-blur-sm">
                         <span>⏱️ {card.estimated_time || '5m'}</span>
                      </div>
                      <button
@@ -203,9 +188,9 @@ export default function PulledCard({ card, userEmail }) {
                             e.stopPropagation();
                             toggleFavorite.mutate();
                         }}
-                        className="p-2 rounded-full hover:bg-black/5 dark:hover:bg-white/10 transition-colors"
+                        className="p-2 rounded-full bg-black/30 backdrop-blur-sm hover:bg-white/20 transition-all border border-white/10"
                      >
-                        <Heart className={`w-5 h-5 ${isFavorited ? 'fill-rose-500 text-rose-500' : 'text-slate-400'}`} />
+                        <Heart className={`w-5 h-5 ${isFavorited ? 'fill-rose-500 text-rose-500' : 'text-white'}`} />
                      </button>
                 </div>
             </div>
