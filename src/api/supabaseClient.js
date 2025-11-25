@@ -4,69 +4,33 @@ import { createClient } from '@supabase/supabase-js';
 const supabaseUrl = import.meta.env.VITE_SUPABASE_URL;
 const supabaseAnonKey = import.meta.env.VITE_SUPABASE_ANON_KEY;
 
-// Check if we're in demo mode (no environment variables provided)
-export const isDemoMode = !supabaseUrl || !supabaseAnonKey;
-
-if (isDemoMode) {
-  console.warn(
-    '🎮 Running in DEMO MODE - No Supabase configuration found.\n' +
-    'The app will work with mock data. To connect to a real database:\n' +
-    '1. Copy .env.example to .env.local\n' +
-    '2. Add your VITE_SUPABASE_URL and VITE_SUPABASE_ANON_KEY\n' +
-    '3. Restart the dev server'
-  );
+// Ensure strict connection mode
+if (!supabaseUrl || !supabaseAnonKey) {
+  console.error('CRITICAL: Supabase URL or Key is missing. The app cannot function.');
+  throw new Error('Supabase credentials missing. Please check your environment configuration.');
 }
 
-// Create Supabase client (or a dummy one for demo mode)
-export const supabase = isDemoMode 
-  ? createClient('https://demo.localhost', 'demo-key-not-used')
-  : createClient(supabaseUrl, supabaseAnonKey);
+// Create Supabase client
+export const supabase = createClient(supabaseUrl, supabaseAnonKey);
 
 // Helper function to convert table name to snake_case
 const toSnakeCase = (str) => {
+  // Specific mapping for requested table names
+  const mapping = {
+    'UserProfile': 'users',
+    'DailyPractice': 'practices',
+    'VibeagotchiState': 'vibagotchi',
+    'GlobalPulse': 'global_pulse',
+    // Add other mappings as needed if they deviate from simple snake_case
+  };
+
+  if (mapping[str]) return mapping[str];
+
   return str
     .replace(/([A-Z])/g, '_$1')
     .toLowerCase()
     .replace(/^_/, '');
 };
-
-// Demo mode in-memory storage (initialized from localStorage if available for persistence)
-const loadDemoStorage = () => {
-  try {
-    const stored = localStorage.getItem('demo_db');
-    return stored ? JSON.parse(stored) : {
-      users: [],
-      currentUser: null,
-      data: {}
-    };
-  } catch {
-    return {
-      users: [],
-      currentUser: null,
-      data: {}
-    };
-  }
-};
-
-const demoStorage = loadDemoStorage();
-
-const saveDemoStorage = () => {
-  localStorage.setItem('demo_db', JSON.stringify(demoStorage));
-};
-
-// Auto-create a demo user when in demo mode if empty
-if (isDemoMode && demoStorage.users.length === 0) {
-  const demoUser = {
-    id: 'demo-user-1',
-    email: 'demo@example.com',
-    user_metadata: {
-      full_name: 'Demo User'
-    },
-    created_at: new Date().toISOString()
-  };
-  demoStorage.users.push(demoUser);
-  saveDemoStorage();
-}
 
 // Create a Base44-compatible wrapper for entities
 class EntityWrapper {
@@ -74,47 +38,18 @@ class EntityWrapper {
     this.tableName = toSnakeCase(tableName);
   }
 
-  // Demo mode helpers
-  _getDemoTable() {
-    if (!demoStorage.data[this.tableName]) {
-      demoStorage.data[this.tableName] = [];
-    }
-    return demoStorage.data[this.tableName];
-  }
-
-  _generateId() {
-    // Use crypto.randomUUID if available for better uniqueness
-    if (typeof crypto !== 'undefined' && crypto.randomUUID) {
-      return `demo-${crypto.randomUUID()}`;
-    }
-    // Fallback to timestamp + random string
-    return `demo-${Date.now()}-${Math.random().toString(36).substring(2, 11)}`;
-  }
-
   // List entities with optional sorting and limit
-  async list(sortBy = '-created_date', limit = 100) {
-    if (isDemoMode) {
-      const data = this._getDemoTable();
-      // Simple sort implementation
-      if (sortBy) {
-        const field = sortBy.startsWith('-') ? sortBy.substring(1) : sortBy;
-        const dir = sortBy.startsWith('-') ? -1 : 1;
-        data.sort((a, b) => {
-            if (a[field] < b[field]) return -1 * dir;
-            if (a[field] > b[field]) return 1 * dir;
-            return 0;
-        });
-      }
-      return data.slice(0, limit);
-    }
-
+  async list(sortBy = '-created_at', limit = 100) {
     const isDescending = sortBy.startsWith('-');
     const column = isDescending ? sortBy.substring(1) : sortBy;
     
+    // Handle created_date vs created_at
+    const sortCol = column === 'created_date' ? 'created_at' : column;
+
     const { data, error } = await supabase
       .from(this.tableName)
       .select('*')
-      .order(column, { ascending: !isDescending })
+      .order(sortCol, { ascending: !isDescending })
       .limit(limit);
 
     if (error) throw error;
@@ -123,18 +58,23 @@ class EntityWrapper {
 
   // Filter entities by criteria
   async filter(criteria) {
-    if (isDemoMode) {
-      const table = this._getDemoTable();
-      return table.filter(item => {
-        return Object.entries(criteria).every(([key, value]) => item[key] === value);
-      });
-    }
-
     let query = supabase.from(this.tableName).select('*');
 
     // Apply filters
     Object.entries(criteria).forEach(([key, value]) => {
-      query = query.eq(key, value);
+      // Map legacy keys to new schema if needed
+      let dbKey = key;
+      if (key === 'created_date') dbKey = 'created_at';
+      if (key === 'created_by' && this.tableName === 'users') dbKey = 'email'; // Special case if needed
+      if (key === 'created_by') dbKey = 'user_id'; // FK mapping usually
+
+      // Handle operators
+      if (typeof value === 'object' && value !== null) {
+         if (value.$gte) query = query.gte(dbKey, value.$gte);
+         if (value.$lte) query = query.lte(dbKey, value.$lte);
+      } else {
+         query = query.eq(dbKey, value);
+      }
     });
 
     const { data, error } = await query;
@@ -144,12 +84,6 @@ class EntityWrapper {
 
   // Get a single entity by ID
   async get(id) {
-    if (isDemoMode) {
-      const item = this._getDemoTable().find(item => item.id === id);
-      if (!item) throw new Error('Not found');
-      return item;
-    }
-
     const { data, error } = await supabase
       .from(this.tableName)
       .select('*')
@@ -162,66 +96,53 @@ class EntityWrapper {
 
   // Create a new entity
   async create(entityData) {
-    if (isDemoMode) {
-      const newItem = {
-        ...entityData,
-        id: this._generateId(),
-        created_date: new Date().toISOString(),
-        updated_date: new Date().toISOString()
-      };
-      this._getDemoTable().push(newItem);
-      saveDemoStorage();
-      return newItem;
+    // Map legacy fields to new schema
+    const dataToInsert = { ...entityData };
+    if (dataToInsert.created_date) {
+        dataToInsert.created_at = dataToInsert.created_date;
+        delete dataToInsert.created_date;
+    }
+    if (dataToInsert.created_by) {
+        dataToInsert.user_id = dataToInsert.created_by; // Assumes UUID
+        delete dataToInsert.created_by;
     }
 
     const { data, error } = await supabase
       .from(this.tableName)
-      .insert(entityData)
+      .insert(dataToInsert)
       .select()
       .single();
 
     if (error) throw error;
+
+    // Log activity for verification
+    console.log(`[Supabase] Inserted into ${this.tableName}:`, data);
+
     return data;
   }
 
   // Update an entity
   async update(id, updates) {
-    if (isDemoMode) {
-      const table = this._getDemoTable();
-      const index = table.findIndex(item => item.id === id);
-      if (index === -1) throw new Error('Not found');
-      
-      table[index] = {
-        ...table[index],
-        ...updates,
-        updated_date: new Date().toISOString()
-      };
-      saveDemoStorage();
-      return table[index];
+    const dataToUpdate = { ...updates };
+    if (dataToUpdate.updated_date) {
+        dataToUpdate.updated_at = new Date().toISOString(); // Ensure updated_at exists if schema has it
+        delete dataToUpdate.updated_date;
     }
 
     const { data, error } = await supabase
       .from(this.tableName)
-      .update({ ...updates, updated_date: new Date().toISOString() })
+      .update(dataToUpdate)
       .eq('id', id)
       .select()
       .single();
 
     if (error) throw error;
+    console.log(`[Supabase] Updated ${this.tableName}:${id}`, data);
     return data;
   }
 
   // Delete an entity
   async delete(id) {
-    if (isDemoMode) {
-      const table = this._getDemoTable();
-      const index = table.findIndex(item => item.id === id);
-      if (index === -1) throw new Error('Not found');
-      table.splice(index, 1);
-      saveDemoStorage();
-      return { success: true };
-    }
-
     const { error } = await supabase
       .from(this.tableName)
       .delete()
@@ -235,20 +156,6 @@ class EntityWrapper {
 // Authentication wrapper compatible with Base44
 const authWrapper = {
   async me() {
-    if (isDemoMode) {
-      // Check localStorage for session first (AuthContext logic overlap, but useful for direct calls)
-      const session = localStorage.getItem('demo_session');
-      if (session) {
-          const s = JSON.parse(session);
-          demoStorage.currentUser = s.user;
-          return s.user;
-      }
-      if (!demoStorage.currentUser) {
-        throw new Error('Not authenticated');
-      }
-      return demoStorage.currentUser;
-    }
-
     const { data: { user }, error } = await supabase.auth.getUser();
     if (error) throw error;
     if (!user) throw new Error('Not authenticated');
@@ -256,19 +163,6 @@ const authWrapper = {
   },
 
   async signUp(email, password, metadata = {}) {
-    if (isDemoMode) {
-      const user = {
-        id: `demo-user-${Date.now()}`,
-        email,
-        user_metadata: metadata,
-        created_at: new Date().toISOString()
-      };
-      demoStorage.users.push(user);
-      demoStorage.currentUser = user;
-      saveDemoStorage();
-      return { user, session: { access_token: 'demo-token', user } };
-    }
-
     const { data, error } = await supabase.auth.signUp({
       email,
       password,
@@ -279,25 +173,6 @@ const authWrapper = {
   },
 
   async signIn(email, password) {
-    if (isDemoMode) {
-      let user = demoStorage.users.find(u => u.email === email);
-      if (!user) {
-        // Fallback for "unregistered" in demo strictness is handled in AuthContext,
-        // but here we can just create one if we want loose mode, or fail.
-        // Let's create one for ease of use in direct calls.
-        user = {
-          id: `demo-user-${Date.now()}`,
-          email,
-          user_metadata: {},
-          created_at: new Date().toISOString()
-        };
-        demoStorage.users.push(user);
-        saveDemoStorage();
-      }
-      demoStorage.currentUser = user;
-      return { user, session: { access_token: 'demo-token', user } };
-    }
-
     const { data, error } = await supabase.auth.signInWithPassword({
       email,
       password
@@ -307,39 +182,22 @@ const authWrapper = {
   },
 
   async signOut() {
-    if (isDemoMode) {
-      demoStorage.currentUser = null;
-      return { success: true };
-    }
-
     const { error } = await supabase.auth.signOut();
     if (error) throw error;
     return { success: true };
   },
 
   async resetPassword(email) {
-    if (isDemoMode) {
-      console.log('Demo mode: Password reset requested for', email);
-      return { success: true };
-    }
-
     const { error } = await supabase.auth.resetPasswordForEmail(email);
     if (error) throw error;
     return { success: true };
   },
 
-  onAuthStateChange(callback) {
-    if (isDemoMode) {
-      // Return a dummy subscription object for demo mode
-      setTimeout(() => {
-        const event = demoStorage.currentUser ? 'SIGNED_IN' : 'SIGNED_OUT';
-        callback(event, { user: demoStorage.currentUser });
-      }, 0);
-      return {
-        data: { subscription: { unsubscribe: () => {} } }
-      };
-    }
+  async signInWithOAuth(provider) {
+      return supabase.auth.signInWithOAuth(provider);
+  },
 
+  onAuthStateChange(callback) {
     return supabase.auth.onAuthStateChange(callback);
   }
 };
@@ -347,24 +205,11 @@ const authWrapper = {
 // Functions wrapper for serverless functions
 const functionsWrapper = {
   async invoke(functionName, args) {
-    console.warn(`Function ${functionName} called - returning mock data.`, args);
-    const mockResponses = {
-      generateCardInsight: { insight: 'This card encourages mindful reflection and growth.' },
-      generateDailyChallenge: { challenge: 'Practice gratitude today by listing three things you appreciate.' },
-      generateDailyAffirmation: { affirmation: 'I am capable of achieving my goals.' },
-      suggestBuddies: { suggestions: [] },
-      analyzeEmotionalState: { mood: 'neutral', confidence: 0.5 },
-      generateAIRecommendations: { recommendations: [] },
-      getAICompanionTips: { tips: ['Take deep breaths', 'Stay hydrated'] },
-      generateVibeThoughts: { thought: 'Stay positive and keep growing!' },
-      generateVibeAffirmation: { affirmation: 'You are doing great!' },
-      generateAdaptiveChallenge: { challenge: 'Try a 5-minute meditation.' },
-      moderateContent: { approved: true, reason: 'Mock approval' },
-      verifyTokenBalance: { balance: 0, verified: false },
-      verifyVibeOfficialHoldings: { holdings: 0, verified: false },
-      verifyAlgoLeaguesHoldings: { holdings: 0, verified: false }
-    };
-    return mockResponses[functionName] || { status: 'not_implemented' };
+    // Route to Supabase Functions if they exist, otherwise warn
+    console.warn(`Function ${functionName} called. Ensure Edge Function exists.`);
+    const { data, error } = await supabase.functions.invoke(functionName, { body: args });
+    if (error) console.error(error);
+    return data || { status: 'mocked_or_failed' };
   }
 };
 
@@ -372,96 +217,43 @@ const functionsWrapper = {
 const integrationsWrapper = {
   Core: {
     async UploadFile({ file }) {
-      if (isDemoMode) {
-        console.log('Demo mode: File upload simulated for', file.name);
-        return { 
-          file_url: `https://via.placeholder.com/400x400?text=${encodeURIComponent(file.name)}` 
-        };
-      }
       const fileName = `${Date.now()}_${file.name}`;
       const { error } = await supabase.storage
-        .from('practice-cards')
+        .from('uploads') // Ensure bucket exists
         .upload(fileName, file);
+
       if (error) throw error;
+
       const { data: { publicUrl } } = supabase.storage
-        .from('practice-cards')
+        .from('uploads')
         .getPublicUrl(fileName);
+
       return { file_url: publicUrl };
     },
-    async InvokeLLM({ prompt }) {
-      return { 
-        response: 'This is a mock AI response.',
-        usage: { tokens: 0 }
-      };
-    },
-    async SendEmail({ to, subject }) {
-      return { success: true };
-    },
-    async GenerateImage({ prompt }) {
-      return { 
-        url: 'https://via.placeholder.com/512x512?text=Placeholder+Image',
-        message: 'Mock image.'
-      };
-    }
+    // ... other mocks or implementations
   }
 };
 
+// Entities list
 const entityNames = [
-  'PracticeCard',
-  'DailyPractice',
-  'Achievement',
-  'CommunityPost',
-  'UserProfile',
-  'CommunityChallenge',
-  'ChallengeParticipant',
-  'BuddyConnection',
-  'PersonalizedRecommendation',
-  'StreakProtection',
-  'FavoriteCard',
-  'PostLike',
-  'UserPreferences',
-  'DailyCard',
-  'BonusPull',
-  'Message',
-  'Endorsement',
-  'UserLevel',
-  'DailyChallenge',
-  'CardInsight',
-  'Badge',
-  'GameScore',
-  'ChallengePoints',
-  'ChakraAchievement',
-  'DailyReward',
-  'Friend',
-  'GameChallenge',
-  'GlobalProgression',
-  'FriendGift',
-  'UnlockedContent',
-  'CustomChallenge',
-  'DailyPracticeSession',
-  'GameReflection',
-  'FriendStreak',
-  'AIRecommendation',
-  'GeneratedAffirmation',
-  'UserCosmetics',
-  'Group',
-  'GroupMember',
-  'PersonalizedChallenge',
-  'SocialPost',
-  'PostComment',
-  'VibeagotchiState',
-  'VibeagotchiEvolution',
-  'NotificationQueue',
-  'GameMastery',
-  'WeeklyChallenge',
-  'WeeklyChallengeProgress',
-  'ActivityPulse'
+  'UserProfile', // Mapped to 'users'
+  'DailyPractice', // Mapped to 'practices'
+  'VibeagotchiState', // Mapped to 'vibagotchi'
+  'GlobalPulse', // Mapped to 'global_pulse'
+  'WalletConnection', // Mapped to 'wallet_connections'
+  'PracticeCard', // Likely 'tarot_pulls' or separate lookup
+  'GameScore', // Needs table
+  'ActivityPulse' // Needs table
 ];
 
 const entities = {};
 entityNames.forEach(name => {
   entities[name] = new EntityWrapper(name);
 });
+
+// Explicitly map PracticeCard if it's meant to be tarot_pulls history or a static lookup
+// If 'tarot_pulls' is the history, we use that.
+entities['TarotPull'] = new EntityWrapper('TarotPull'); // Mapped to tarot_pulls via snake_case
 
 export const appApi = {
   entities,
@@ -472,5 +264,6 @@ export const appApi = {
 
 // Aliases
 export const base44 = appApi;
+export const isDemoMode = false; // Hardcoded false
 
 export default supabase;

@@ -7,7 +7,6 @@ import { useToast } from '@/components/ui/use-toast';
 import { motion } from 'framer-motion';
 import SparklesBackground from '../components/particles/SparklesBackground';
 import MagicalParticles from '../components/particles/MagicalParticles';
-import { isDemoMode } from '@/api/supabaseClient';
 
 export default function Login() {
   const [email, setEmail] = useState('');
@@ -150,11 +149,6 @@ export default function Login() {
                         Create Account
                     </Link>
                 </p>
-                {isDemoMode && (
-                    <p className="text-xs text-green-400 font-mono bg-green-400/10 py-1 px-2 rounded border border-green-400/20 inline-block">
-                        ⚠️ DEMO MODE: Use demo@example.com
-                    </p>
-                )}
             </div>
         </div>
       </motion.div>

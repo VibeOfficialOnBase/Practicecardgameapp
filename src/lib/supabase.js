@@ -1,51 +1,20 @@
-import { supabase, isDemoMode } from '@/api/supabaseClient';
+import { supabase } from '@/api/supabaseClient';
 
-// Helper to interact with the demo mock DB in localStorage if needed directly
-const getDemoDB = () => {
-    try {
-        return JSON.parse(localStorage.getItem('demo_db') || '{"data":{}}');
-    } catch {
-        return { data: {} };
-    }
-};
-
-const saveDemoDB = (db) => {
-    localStorage.setItem('demo_db', JSON.stringify(db));
-};
-
-const getDemoTable = (tableName) => {
-    const db = getDemoDB();
-    if (!db.data[tableName]) db.data[tableName] = [];
-    return db.data[tableName];
-};
-
-const saveDemoTable = (tableName, data) => {
-    const db = getDemoDB();
-    db.data[tableName] = data;
-    saveDemoDB(db);
-};
-
-// Re-export isDemoMode for consumers
-export { isDemoMode };
+// Re-export isDemoMode as false constant since we removed it
+export const isDemoMode = false;
 
 /**
  * Get user profile by User ID
- * @param {string} uid - User ID (or email if used as key)
- * @returns {Promise<Object|null>} User profile data or null
  */
 export async function getUserProfile(uid) {
-  if (isDemoMode) {
-      const profiles = getDemoTable('user_profile');
-      return profiles.find(p => p.created_by === uid) || null;
-  }
-
   const { data, error } = await supabase
-    .from('user_profile')
+    .from('users')
     .select('*')
-    .eq('created_by', uid)
+    .eq('email', uid)
     .single();
 
   if (error) {
+    if (error.code === 'PGRST116') return null;
     console.warn('Error fetching user profile:', error);
     return null;
   }
@@ -53,28 +22,29 @@ export async function getUserProfile(uid) {
 }
 
 /**
- * Save a practice entry (journal, reflection, etc.)
- * @param {string} uid - User email/ID
- * @param {Object} data - Practice data
- * @returns {Promise<Object>} Saved entry
+ * Save a practice entry
  */
 export async function savePracticeEntry(uid, data) {
-  const entry = {
-    created_by: uid,
-    created_date: new Date().toISOString(),
-    ...data
-  };
+  const profile = await getUserProfile(uid);
+  if (!profile) throw new Error("User profile not found");
 
-  if (isDemoMode) {
-      const table = getDemoTable('daily_practice');
-      const newEntry = { ...entry, id: `demo-practice-${Date.now()}` };
-      table.push(newEntry);
-      saveDemoTable('daily_practice', table);
-      return newEntry;
+  // Combine extra fields into content if needed, since schema is strict
+  let content = data.reflection || '';
+  if (data.before_mood) {
+      content = `Before: ${data.before_mood} | ${content}`;
   }
 
+  const entry = {
+    user_id: profile.id,
+    type: 'daily_practice',
+    content: content,
+    mood_value: data.rating || 0,
+    emotion: data.after_mood || 'neutral',
+    created_at: new Date().toISOString()
+  };
+
   const { data: saved, error } = await supabase
-    .from('daily_practice')
+    .from('practices')
     .insert(entry)
     .select()
     .single();
@@ -85,29 +55,30 @@ export async function savePracticeEntry(uid, data) {
 
 /**
  * Save game progress/score
- * @param {string} uid - User email/ID
- * @param {string} gameType - 'chakra_blaster', 'memory_match', etc.
- * @param {Object} data - Score, level, etc.
- * @returns {Promise<Object>} Saved score
+ * Stores in 'practices' table with type='game_[type]'
  */
 export async function saveGameProgress(uid, gameType, data) {
-  const entry = {
-    user_email: uid,
-    game_type: gameType,
-    created_date: new Date().toISOString(),
-    ...data
+  const profile = await getUserProfile(uid);
+  if (!profile) return null;
+
+  // Format content to store score/level details
+  const contentData = {
+      score: data.score,
+      level: data.level_reached || data.level,
+      ...data
   };
 
-  if (isDemoMode) {
-      const table = getDemoTable('game_score');
-      const newEntry = { ...entry, id: `demo-score-${Date.now()}` };
-      table.push(newEntry);
-      saveDemoTable('game_score', table);
-      return newEntry;
-  }
+  const entry = {
+    user_id: profile.id,
+    type: `game_${gameType}`,
+    content: JSON.stringify(contentData),
+    mood_value: data.score || 0, // Store score in mood_value int column for simple ranking if needed
+    emotion: 'excited', // Default emotion for games
+    created_at: new Date().toISOString()
+  };
 
   const { data: saved, error } = await supabase
-    .from('game_score')
+    .from('practices')
     .insert(entry)
     .select()
     .single();
@@ -117,64 +88,34 @@ export async function saveGameProgress(uid, gameType, data) {
 }
 
 /**
- * Get best game progress/score
- * @param {string} uid
- * @param {string} gameType
- * @returns {Promise<Object|null>}
- */
-export async function getGameProgress(uid, gameType) {
-  if (isDemoMode) {
-      const table = getDemoTable('game_score');
-      const scores = table.filter(s => s.user_email === uid && s.game_type === gameType);
-      scores.sort((a, b) => b.score - a.score); // Descending score
-      return scores[0] || null;
-  }
-
-  const { data, error } = await supabase
-    .from('game_score')
-    .select('*')
-    .eq('user_email', uid)
-    .eq('game_type', gameType)
-    .order('score', { ascending: false })
-    .limit(1);
-
-  if (error) return null;
-  return data && data.length > 0 ? data[0] : null;
-}
-
-/**
  * Save VibeAGotchi state
- * @param {string} uid
- * @param {Object} state
- * @returns {Promise<Object>}
  */
 export async function saveVibeGotchiState(uid, state) {
-  if (isDemoMode) {
-      const table = getDemoTable('vibeagotchi_state');
-      const existingIndex = table.findIndex(s => s.user_email === uid);
-      let result;
-      if (existingIndex >= 0) {
-          table[existingIndex] = { ...table[existingIndex], ...state, last_interaction: new Date().toISOString() };
-          result = table[existingIndex];
-      } else {
-          result = { ...state, user_email: uid, last_interaction: new Date().toISOString(), id: `demo-vibe-${Date.now()}` };
-          table.push(result);
-      }
-      saveDemoTable('vibeagotchi_state', table);
-      return result;
-  }
+  const profile = await getUserProfile(uid);
+  if (!profile) throw new Error("User profile not found");
 
   const { data: existing } = await supabase
-    .from('vibeagotchi_state')
+    .from('vibagotchi')
     .select('id')
-    .eq('user_email', uid)
+    .eq('user_id', profile.id)
     .single();
+
+  // Map app state to strict schema
+  const payload = {
+    user_id: profile.id,
+    level: state.evolution_stage || state.level || 1,
+    energy: state.energy || 100,
+    happiness: state.happiness || 100,
+    evolution_stage: state.evolution_stage_name || 'Spark',
+    // Note: hunger, cleanliness etc are not in schema, so they won't persist
+    // unless we add them. For now we follow instructions.
+  };
 
   let result;
   if (existing) {
     const { data, error } = await supabase
-      .from('vibeagotchi_state')
-      .update({ ...state, last_interaction: new Date().toISOString() })
+      .from('vibagotchi')
+      .update({ ...payload, updated_at: new Date().toISOString() }) // if updated_at column exists (added in my sql)
       .eq('id', existing.id)
       .select()
       .single();
@@ -182,8 +123,8 @@ export async function saveVibeGotchiState(uid, state) {
     result = data;
   } else {
     const { data, error } = await supabase
-      .from('vibeagotchi_state')
-      .insert({ ...state, user_email: uid, last_interaction: new Date().toISOString() })
+      .from('vibagotchi')
+      .insert(payload)
       .select()
       .single();
     if (error) throw error;
@@ -194,21 +135,29 @@ export async function saveVibeGotchiState(uid, state) {
 
 /**
  * Get VibeAGotchi state
- * @param {string} uid
- * @returns {Promise<Object|null>}
  */
 export async function getVibeGotchiState(uid) {
-  if (isDemoMode) {
-      const table = getDemoTable('vibeagotchi_state');
-      return table.find(s => s.user_email === uid) || null;
-  }
+  const profile = await getUserProfile(uid);
+  if (!profile) return null;
 
   const { data, error } = await supabase
-    .from('vibeagotchi_state')
+    .from('vibagotchi')
     .select('*')
-    .eq('user_email', uid)
+    .eq('user_id', profile.id)
     .single();
 
   if (error) return null;
-  return data;
+
+  return {
+      ...data,
+      evolution_stage: data.level, // Map level back to stage index if needed
+      evolution_stage_name: data.evolution_stage,
+      // Defaults for missing columns
+      hunger: 0,
+      cleanliness: 100,
+      health: 100,
+      focus: 50,
+      peace: 50,
+      name: 'Vibe'
+  };
 }
