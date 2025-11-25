@@ -9,8 +9,8 @@
     --bg-primary: #FDFBF9; /* Warm off-white */
     --bg-secondary: #F4F1EE; /* Slightly darker warm grey */
 
-    --text-primary: #2D2A26; /* Soft black */
-    --text-secondary: #6B665E; /* Warm grey text */
+    --text-primary: #1C1917; /* Darker for better contrast (Zinc-900 equiv) */
+    --text-secondary: #57534E; /* Stone-600 equiv */
 
     --accent-primary: #8B7355; /* Earthy Gold/Bronze */
     --accent-soft: #D4C5A9;
@@ -34,12 +34,14 @@
   }
 
   .dark {
-    --bg-primary: #1A1918;
-    --bg-secondary: #262422;
-    --text-primary: #F4F1EE;
-    --text-secondary: #A8A29C;
-    --gradient-card: linear-gradient(180deg, #262422 0%, #1F1D1B 100%);
-    --gradient-btn: linear-gradient(135deg, #F4F1EE 0%, #D4C5A9 100%);
+    --bg-primary: #0C0A09; /* Stone-950 */
+    --bg-secondary: #1C1917; /* Stone-900 */
+
+    --text-primary: #FAFAF9; /* Stone-50 */
+    --text-secondary: #A8A29E; /* Stone-400 */
+
+    --gradient-card: linear-gradient(180deg, #1C1917 0%, #151312 100%);
+    --gradient-btn: linear-gradient(135deg, #E7E5E4 0%, #D6D3D1 100%);
   }
 }
 
@@ -49,6 +51,15 @@
     font-family: 'Nunito', system-ui, sans-serif;
   }
 
+  /* Ensure readability helpers */
+  .ensure-readable {
+    @apply text-[var(--text-secondary)] dark:text-[var(--text-secondary)];
+  }
+
+  .ensure-readable-strong {
+    @apply text-[var(--text-primary)] dark:text-[var(--text-primary)];
+  }
+
   /* Typography */
   h1, h2, h3, h4 {
     @apply font-bold tracking-tight text-[var(--text-primary)];
@@ -56,7 +67,7 @@
 
   /* Cards */
   .card-base {
-    @apply bg-[var(--bg-primary)] rounded-[var(--radius-md)] shadow-[var(--shadow-soft)] border border-white/50 dark:border-white/5 overflow-hidden relative backdrop-blur-sm;
+    @apply bg-[var(--bg-primary)] rounded-[var(--radius-md)] shadow-[var(--shadow-soft)] border border-stone-200 dark:border-stone-800 overflow-hidden relative backdrop-blur-sm;
     background: var(--gradient-card);
   }
 
@@ -64,9 +75,14 @@
     @apply hover:shadow-[var(--shadow-hover)] hover:-translate-y-1 transition-all duration-300;
   }
 
+  /* Replaced .card-organic with card-base logic but cleaner */
+  .card-organic {
+    @apply bg-[var(--bg-primary)] rounded-[32px] shadow-lg border border-white/50 dark:border-white/5 p-6 relative overflow-hidden backdrop-blur-xl;
+  }
+
   /* Buttons */
   .btn-primary {
-    @apply px-6 py-3 rounded-[var(--radius-lg)] font-bold text-white shadow-lg active:scale-95 transition-all duration-200 flex items-center justify-center gap-2;
+    @apply px-6 py-3 rounded-[var(--radius-lg)] font-bold text-white dark:text-stone-900 shadow-lg active:scale-95 transition-all duration-200 flex items-center justify-center gap-2;
     background: var(--gradient-btn);
   }
 
@@ -79,8 +95,9 @@
   }
 
   /* Inputs */
+  /* Fixed: Removed problematic opacity modifiers on custom variables */
   .input-base {
-    @apply w-full px-4 py-3 rounded-[var(--radius-sm)] bg-[var(--bg-secondary)] border-none focus:ring-2 focus:ring-[var(--accent-primary)] outline-none transition-all text-[var(--text-primary)] placeholder:text-[var(--text-secondary)];
+    @apply w-full px-4 py-3 rounded-[var(--radius-sm)] bg-[var(--bg-secondary)] border border-transparent focus:border-[var(--accent-primary)] focus:ring-2 focus:ring-amber-500/20 outline-none transition-all text-[var(--text-primary)] placeholder:opacity-50;
   }
 
   /* Animations */
@@ -100,5 +117,37 @@
   @keyframes slideUp {
     from { opacity: 0; transform: translateY(20px); }
     to { opacity: 1; transform: translateY(0); }
+  }
+
+  /* Custom Scrollbar */
+  .custom-scrollbar::-webkit-scrollbar {
+    width: 6px;
+  }
+  .custom-scrollbar::-webkit-scrollbar-track {
+    background: transparent;
+  }
+  .custom-scrollbar::-webkit-scrollbar-thumb {
+    background-color: rgba(139, 115, 85, 0.3);
+    border-radius: 20px;
+  }
+  .no-scrollbar::-webkit-scrollbar {
+    display: none;
+  }
+  .no-scrollbar {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
+}
+
+@layer utilities {
+  .safe-area-top {
+    padding-top: env(safe-area-inset-top);
+  }
+  .safe-area-bottom {
+    padding-bottom: env(safe-area-inset-bottom);
+  }
+  .safe-area-x {
+    padding-left: env(safe-area-inset-left);
+    padding-right: env(safe-area-inset-right);
   }
 }

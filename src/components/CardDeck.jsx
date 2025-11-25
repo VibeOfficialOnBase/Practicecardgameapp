@@ -1,6 +1,5 @@
 import React from 'react';
 import { motion } from 'framer-motion';
-import { Sparkles } from 'lucide-react';
 import { useSound } from '../components/hooks/useSound';
 import { useHaptic } from '../components/hooks/useHaptic';
 
@@ -8,28 +7,6 @@ export default function CardDeck({ onPull, isPulling }) {
   const { play } = useSound();
   const { trigger } = useHaptic();
   const [showConfetti, setShowConfetti] = React.useState(false);
-
-  React.useEffect(() => {
-    const style = document.createElement('style');
-    style.textContent = `
-      @keyframes shimmer {
-        0% { transform: translateX(-100%) translateY(-100%) rotate(45deg); }
-        100% { transform: translateX(100%) translateY(100%) rotate(45deg); }
-      }
-      .shimmer-effect {
-        background: linear-gradient(
-          90deg,
-          transparent 0%,
-          rgba(255, 255, 255, 0.3) 50%,
-          transparent 100%
-        );
-        animation: shimmer 3s infinite;
-        pointer-events: none;
-      }
-    `;
-    document.head.appendChild(style);
-    return () => document.head.removeChild(style);
-  }, []);
 
   const handlePull = () => {
     if (isPulling) return;
@@ -41,95 +18,68 @@ export default function CardDeck({ onPull, isPulling }) {
   };
 
   return (
-    <div className="relative h-[500px] flex items-center justify-center">
-      {/* Confetti particles */}
-      {showConfetti && (
-        <>
-          {[...Array(40)].map((_, i) => (
-            <motion.div
-              key={i}
-              className="absolute w-2 h-2 rounded-full"
-              style={{
-                background: ['#fbbf24', '#f59e0b', '#8b5cf6', '#ec4899', '#06b6d4', '#10b981'][i % 6],
-                left: '50%',
-                top: '50%',
-              }}
-              initial={{ scale: 0, x: 0, y: 0, opacity: 1 }}
-              animate={{
-                scale: [0, 1, 0.5],
-                x: (Math.random() - 0.5) * 600,
-                y: Math.random() * -500 - 100,
-                opacity: [1, 1, 0],
-                rotate: Math.random() * 720,
-              }}
-              transition={{
-                duration: 1.5 + Math.random(),
-                ease: "easeOut",
-              }}
-            />
-          ))}
-        </>
-      )}
-      
-      {[...Array(5)].map((_, i) => (
+    <div className="relative h-[420px] flex items-center justify-center py-8">
+      {/* Deck Stack */}
+      {[...Array(3)].map((_, i) => (
         <motion.div
           key={i}
-          className="absolute w-72 h-[450px] rounded-3xl shadow-2xl overflow-hidden"
+          className="absolute w-[260px] h-[380px] rounded-[32px] bg-gradient-to-br from-purple-900 to-indigo-900 shadow-2xl border border-white/10"
           style={{
-            rotate: (i - 2) * 3,
-            y: i * 4,
-            x: (i - 2) * 8,
             zIndex: 5 - i,
-            pointerEvents: 'none'
           }}
-          initial={{ scale: 0.95, opacity: 0.3 }}
+          initial={{
+            scale: 0.9 - (i * 0.05),
+            y: i * 10,
+            rotate: (i % 2 === 0 ? 1 : -1) * (i * 2)
+          }}
           animate={{ 
-            scale: 0.95, 
-            opacity: 0.5 - i * 0.1,
-            rotate: isPulling ? [(i - 2) * 3, (i - 2) * 3 + 360] : (i - 2) * 3
+            scale: isPulling ? 0.8 : 0.9 - (i * 0.05),
+            y: isPulling ? i * 5 : i * 10,
           }}
-          transition={{ duration: isPulling ? 0.6 : 0 }}
-        >
-          <img
-            src="https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/6921dea06e8f58657363a952/43aec5bff_PRACTICECARDBACK.jpg"
-            alt="Card back"
-            className="w-full h-full object-cover"
-          />
-        </motion.div>
+        />
       ))}
 
+      {/* Top Card (Actionable) */}
       <motion.button
         onClick={handlePull}
         disabled={isPulling}
-        className="relative w-72 h-[450px] rounded-3xl shadow-2xl cursor-pointer overflow-hidden"
-        style={{ 
-          zIndex: 10,
-          transformStyle: 'preserve-3d'
-        }}
-        whileHover={{ scale: 1.05, rotate: 0 }}
-        whileTap={{ scale: 0.95 }}
+        className="relative w-[260px] h-[380px] rounded-[32px] shadow-[0_20px_50px_rgba(0,0,0,0.3)] cursor-pointer overflow-hidden z-10 group"
         animate={{
-          y: isPulling ? -100 : 0,
-          rotateY: isPulling ? 180 : 0,
+          y: isPulling ? -200 : 0,
+          scale: isPulling ? 0.5 : 1,
           opacity: isPulling ? 0 : 1,
-          scale: isPulling ? 1.2 : 1
+          rotate: isPulling ? 10 : 0
         }}
-        transition={{ duration: 0.6, ease: "easeInOut" }}
+        whileHover={{ y: -10, scale: 1.02 }}
+        whileTap={{ scale: 0.98 }}
+        transition={{ duration: 0.4, ease: "backOut" }}
       >
-        <img
-          src="https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/6921dea06e8f58657363a952/43aec5bff_PRACTICECARDBACK.jpg"
-          alt="PRACTICE card"
-          className="w-full h-full object-cover"
-        />
-        
-        <div className="absolute inset-0 shimmer-effect"></div>
-        
-        <div className="absolute inset-0 flex items-center justify-center bg-black/0 hover:bg-black/10 transition-colors">
-          <p className="text-white text-sm font-medium opacity-0 hover:opacity-100 transition-opacity bg-black/50 px-4 py-2 rounded-full">
-            Tap to pull
-          </p>
+        {/* Card Back Design */}
+        <div className="absolute inset-0 bg-gradient-to-br from-violet-600 to-indigo-700">
+            <div className="absolute inset-0 opacity-30 bg-[radial-gradient(circle_at_50%_50%,rgba(255,255,255,0.4),transparent_60%)]" />
+            <div className="absolute inset-0 flex items-center justify-center">
+                <div className="w-32 h-32 rounded-full border-4 border-white/20 flex items-center justify-center">
+                    <div className="w-24 h-24 rounded-full border-2 border-white/40" />
+                </div>
+            </div>
+
+            {/* Shimmer */}
+            <div className="absolute inset-0 bg-gradient-to-tr from-transparent via-white/20 to-transparent -translate-x-full group-hover:animate-[shimmer_1.5s_infinite]" />
+        </div>
+
+        {/* Label */}
+        <div className="absolute bottom-8 left-0 right-0 flex justify-center">
+             <span className="px-4 py-2 rounded-full bg-black/20 backdrop-blur-md text-white text-sm font-bold tracking-widest uppercase border border-white/10 group-hover:bg-white/20 transition-colors">
+                Draw Card
+             </span>
         </div>
       </motion.button>
+
+      <style>{`
+        @keyframes shimmer {
+          100% { transform: translateX(100%); }
+        }
+      `}</style>
     </div>
   );
 }

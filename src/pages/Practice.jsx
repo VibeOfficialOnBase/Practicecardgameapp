@@ -3,7 +3,7 @@ import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useAuth } from '../contexts/AuthContext';
 import { getUserProfile, savePracticeEntry } from '../lib/supabase';
-import { appApi } from '@/api/supabaseClient'; // Fallback for list/filter operations not yet in lib/supabase
+import { appApi } from '@/api/supabaseClient';
 import PageHeader from '../components/common/PageHeader';
 import Card from '../components/common/Card';
 import Section from '../components/common/Section';
@@ -14,9 +14,8 @@ import CompletionFeedback from '../components/CompletionFeedback';
 import StreakCounter from '../components/StreakCounter';
 import GlobalPulseTracker from '../components/GlobalPulseTracker';
 import { CheckCircle, Sparkles } from 'lucide-react';
-import { useNavigate } from 'react-router-dom';
-import { createPageUrl } from '../utils';
 import { FALLBACK_AFFIRMATIONS } from '../utils/affirmations';
+import { toast } from 'sonner'; // or useToast
 
 export default function Practice() {
   const { user } = useAuth();
@@ -26,16 +25,13 @@ export default function Practice() {
   const [showCompletionFeedback, setShowCompletionFeedback] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const queryClient = useQueryClient();
-  const navigate = useNavigate();
 
-  // Load User Profile
   const { data: userProfile } = useQuery({
     queryKey: ['userProfile', user?.email],
     queryFn: () => getUserProfile(user?.email || user?.id),
     enabled: !!user,
   });
 
-  // Load Todays Practice
   const { data: todaysPractices = [] } = useQuery({
     queryKey: ['todaysPractice', user?.email],
     queryFn: async () => {
@@ -50,7 +46,6 @@ export default function Practice() {
 
   const todaysPractice = todaysPractices[0];
 
-  // Load Practice Cards
   const { data: practiceCards = [] } = useQuery({
     queryKey: ['practiceCards'],
     queryFn: async () => {
@@ -61,7 +56,7 @@ export default function Practice() {
              title: a.category + " Practice",
              affirmation: a.text,
              leche_value: a.category,
-             message: "Reflect on this today."
+             mission: "Reflect on this today."
         }));
       } catch (e) {
          return FALLBACK_AFFIRMATIONS.map((a, i) => ({
@@ -75,7 +70,6 @@ export default function Practice() {
     },
   });
 
-  // Check Local Storage for active session
   useEffect(() => {
     const todayKey = new Date().toISOString().split('T')[0];
     const savedCard = localStorage.getItem(`practice_card_${todayKey}`);
@@ -91,18 +85,13 @@ export default function Practice() {
 
   const handlePullCard = () => {
     if (practiceCards.length === 0) return;
-
     setIsPulling(true);
-
     setTimeout(() => {
       const randomCard = practiceCards[Math.floor(Math.random() * practiceCards.length)];
       setPulledCard(randomCard);
-
       const todayKey = new Date().toISOString().split('T')[0];
       localStorage.setItem(`practice_card_${todayKey}`, JSON.stringify(randomCard));
-
       setIsPulling(false);
-
       setTimeout(() => {
         if (!todaysPractice?.completed) {
           setShowJournal(true);
@@ -114,7 +103,6 @@ export default function Practice() {
   const completePracticeMutation = useMutation({
     mutationFn: async ({ reflection, rating, beforeMood, afterMood }) => {
       setIsSubmitting(true);
-      
       const practiceData = {
         practice_card_id: pulledCard.id,
         completed: true,
@@ -124,23 +112,28 @@ export default function Practice() {
         after_mood: afterMood,
         xp_earned: 100
       };
-
       await savePracticeEntry(user.email, practiceData);
-      
-      // Update streak locally for immediate feedback (optimistic)
-      // Real update happens in background or next fetch
       return { success: true };
     },
     onSuccess: async () => {
+      // Optimistic UI update handled by state change mostly, but we trigger feedback immediately
       setShowCompletionFeedback(true);
-      await new Promise(resolve => setTimeout(resolve, 2000));
-      
+      // Also show toast for robustness
+      try { toast.success("Practice saved successfully!"); } catch(e) {}
+
+      // Sync in background
       await queryClient.invalidateQueries({ queryKey: ['todaysPractice'] });
       await queryClient.invalidateQueries({ queryKey: ['userProfile'] });
-      
-      setShowCompletionFeedback(false);
-      setShowJournal(false);
-      setIsSubmitting(false);
+
+      setTimeout(() => {
+          setShowCompletionFeedback(false);
+          setShowJournal(false);
+          setIsSubmitting(false);
+      }, 2000);
+    },
+    onError: () => {
+        setIsSubmitting(false);
+        try { toast.error("Failed to save. Please try again."); } catch(e) {}
     }
   });
 
@@ -150,24 +143,24 @@ export default function Practice() {
 
   if (todaysPractice?.completed) {
     return (
-      <div className="flex flex-col items-center justify-center min-h-[60vh] text-center space-y-6 animate-fade-in">
+      <div className="flex flex-col items-center justify-center min-h-[60vh] text-center space-y-6 animate-fade-in p-4">
         <motion.div
           initial={{ scale: 0 }}
           animate={{ scale: 1 }}
           transition={{ type: "spring", stiffness: 200 }}
-          className="w-24 h-24 rounded-full bg-green-100 dark:bg-green-900/30 flex items-center justify-center"
+          className="w-24 h-24 rounded-full bg-green-500/20 flex items-center justify-center border border-green-500/50 shadow-[0_0_30px_rgba(34,197,94,0.3)]"
         >
-          <CheckCircle className="w-12 h-12 text-green-600 dark:text-green-400" />
+          <CheckCircle className="w-12 h-12 text-green-500" />
         </motion.div>
 
         <div>
-          <h1 className="text-3xl font-bold mb-2">Practice Complete! ✨</h1>
+          <h1 className="text-3xl font-bold mb-2 text-[var(--text-primary)]">Practice Complete! ✨</h1>
           <p className="text-[var(--text-secondary)]">You've nourished your mind today.</p>
         </div>
 
-        <Card className="p-6 max-w-sm w-full mx-auto bg-gradient-to-br from-[var(--bg-secondary)] to-[var(--bg-primary)]">
-          <div className="text-sm font-medium text-[var(--text-secondary)] uppercase tracking-wider mb-2">Current Streak</div>
-          <div className="text-4xl font-bold text-[var(--accent-primary)]">{userProfile?.current_streak || 1} Days</div>
+        <Card className="p-6 max-w-sm w-full mx-auto glass-card">
+          <div className="text-xs font-bold text-[var(--text-secondary)] uppercase tracking-wider mb-2">Current Streak</div>
+          <div className="text-4xl font-bold text-[var(--accent-primary)] drop-shadow-sm">{userProfile?.current_streak || 1} Days</div>
         </Card>
 
         <p className="text-sm text-[var(--text-secondary)]">Come back tomorrow for a new insight.</p>
@@ -176,14 +169,13 @@ export default function Practice() {
   }
 
   return (
-    <div className="space-y-6 pb-20">
+    <div className="space-y-8 pb-24 animate-fade-in">
       <PageHeader
         title={`Welcome, ${user?.user_metadata?.full_name?.split(' ')[0] || 'Friend'}`}
         subtitle="Your daily practice awaits"
         rightAction={userProfile && <StreakCounter streak={userProfile.current_streak || 0} />}
       />
 
-      {/* Main Action Area */}
       <AnimatePresence mode="wait">
         {!pulledCard ? (
           <motion.div
@@ -191,14 +183,14 @@ export default function Practice() {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            className="flex flex-col items-center"
+            className="flex flex-col items-center py-4"
           >
             <div className="text-center mb-8">
-              <h2 className="text-2xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-purple-600 to-indigo-600 dark:from-purple-400 dark:to-indigo-400 mb-2">
+              <h2 className="text-2xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-indigo-400 to-purple-400 mb-2 animate-pulse">
                 Today's Intention
               </h2>
-              <p className="text-[var(--text-secondary)] max-w-xs mx-auto">
-                Pull a card to discover your daily practice and reflection.
+              <p className="text-[var(--text-secondary)] max-w-xs mx-auto text-sm">
+                Tap the deck to reveal your daily guidance card.
               </p>
             </div>
 
@@ -229,7 +221,7 @@ export default function Practice() {
         message="Practice Saved! See you tomorrow. 🌟"
       />
 
-      <Section title="Global Pulse">
+      <Section title="Community">
         <GlobalPulseTracker />
       </Section>
     </div>

@@ -1,41 +1,65 @@
 import React from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { motion } from 'framer-motion';
-import { Home, Sparkles, Zap, User, Users } from 'lucide-react';
+import { Home, BookOpen, Award, BarChart3 } from 'lucide-react';
 import { createPageUrl } from '@/utils';
 
 export default function BottomNav() {
   const location = useLocation();
 
+  // Mobile nav shows only 4 primary tabs as per requirements
   const navItems = [
-    { name: 'Home', path: 'Practice', icon: Home },
-    { name: 'Games', path: 'Games', icon: Zap },
-    { name: 'Social', path: 'Community', icon: Users },
-    { name: 'Profile', path: 'Profile', icon: User }
+    { name: 'Pull', path: 'Practice', icon: Home },
+    { name: 'Cards', path: 'MyCards', icon: BookOpen },
+    { name: 'Wins', path: 'Achievements', icon: Award },
+    { name: 'Stats', path: 'Leaderboard', icon: BarChart3 }
   ];
 
-  const isActive = (path) => location.pathname.includes(path);
+  const isActive = (path) => {
+    if (path === 'Practice' && location.pathname === '/') return true;
+    return location.pathname.includes(path);
+  };
 
   return (
-    <div className="fixed bottom-0 left-0 right-0 p-4 pb-8 z-50 pointer-events-none flex justify-center">
-      <div className="bg-[var(--bg-primary)]/80 backdrop-blur-xl border border-white/20 shadow-[0_8px_40px_rgba(0,0,0,0.15)] rounded-[32px] px-6 py-4 pointer-events-auto flex items-center gap-2 md:gap-8 w-full max-w-md justify-between">
-        {navItems.map((item) => {
-          const active = isActive(item.path);
-          return (
-            <Link to={createPageUrl(item.path)} key={item.path} className="relative group">
-              <div className={`relative z-10 p-3 rounded-2xl transition-all duration-300 flex flex-col items-center gap-1 ${active ? 'text-[var(--text-primary)]' : 'text-[var(--text-secondary)] group-hover:text-[var(--text-primary)]'}`}>
-                <item.icon className={`w-6 h-6 ${active ? 'fill-current' : ''}`} />
-              </div>
-              {active && (
+    <div className="sm:hidden fixed bottom-0 left-0 right-0 z-50 safe-area-bottom pointer-events-none">
+      <div className="absolute inset-0 bg-gradient-to-t from-black/80 to-transparent pointer-events-none" />
+
+      <div className="bg-indigo-950/90 backdrop-blur-xl border-t border-white/10 px-2 py-1 pointer-events-auto pb-safe">
+        <div className="flex items-center justify-around w-full max-w-md mx-auto">
+          {navItems.map((item) => {
+            const active = isActive(item.path);
+            const Icon = item.icon;
+
+            return (
+              <Link
+                to={createPageUrl(item.path)}
+                key={item.name}
+                className="relative flex flex-col items-center justify-center w-16 h-[52px] group"
+              >
+                {active && (
+                  <motion.div
+                    layoutId="mobile-nav-glow"
+                    className="absolute inset-0 bg-gradient-to-t from-purple-500/20 to-transparent rounded-t-xl"
+                    transition={{ type: "spring", bounce: 0.2, duration: 0.6 }}
+                  />
+                )}
+
                 <motion.div
-                  layoutId="nav-pill"
-                  className="absolute inset-0 bg-white shadow-sm rounded-2xl -z-0"
-                  transition={{ type: "spring", bounce: 0.2, duration: 0.6 }}
-                />
-              )}
-            </Link>
-          );
-        })}
+                  animate={{
+                    y: active ? -4 : 0,
+                    scale: active ? 1.1 : 1
+                  }}
+                  className={`relative z-10 flex flex-col items-center gap-0.5 ${
+                    active ? 'text-white drop-shadow-[0_0_8px_rgba(168,85,247,0.5)]' : 'text-white/50'
+                  }`}
+                >
+                  <Icon className={`w-6 h-6 ${active ? 'fill-current' : ''}`} />
+                  <span className="text-[10px] font-medium tracking-wide">{item.name}</span>
+                </motion.div>
+              </Link>
+            );
+          })}
+        </div>
       </div>
     </div>
   );

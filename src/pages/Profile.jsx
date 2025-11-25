@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { motion } from 'framer-motion';
 import { useAuth } from '../contexts/AuthContext';
-import { getUserProfile, savePracticeEntry } from '../lib/supabase';
+import { getUserProfile } from '../lib/supabase';
 import { appApi } from '@/api/supabaseClient';
 
 import PageHeader from '../components/common/PageHeader';
@@ -11,14 +11,14 @@ import Section from '../components/common/Section';
 import Button from '../components/common/Button';
 import Modal from '../components/common/Modal';
 
-import { User, Award, Shield, LogOut, Edit2, Save, Trash2, Heart, Users, Zap, Leaf } from 'lucide-react';
+import { User, Award, Shield, LogOut, Edit2, Save, Trash2, Heart, Users, Zap, Leaf, Trophy, Sparkles } from 'lucide-react';
 import EnhancedStreakDisplay from '../components/EnhancedStreakDisplay';
 import BadgeDisplay from '../components/badges/BadgeDisplay';
 import UserLevelBadge from '../components/UserLevelBadge';
 import ProfileImageUpload from '../components/profile/ProfileImageUpload';
 import NotificationSettings from '../components/notifications/NotificationSettings';
-import ProgressDashboard from '../components/progress/ProgressDashboard';
-import { Switch } from '@/components/ui/switch'; // Keeping shadcn if available, else replace
+import StatsWidget from '../components/profile/StatsWidget';
+import { Switch } from '@/components/ui/switch';
 
 export default function Profile() {
   const { user, signOut } = useAuth();
@@ -93,7 +93,6 @@ export default function Profile() {
 
   const handleLogout = async () => {
     await signOut();
-    // Redirect handled by router protection usually
   };
 
   const lecheValues = [
@@ -105,7 +104,7 @@ export default function Profile() {
   ];
 
   return (
-    <div className="space-y-6 pb-24">
+    <div className="space-y-6 pb-24 animate-fade-in">
       <PageHeader
         title="My Profile"
         subtitle="Your journey of growth"
@@ -120,42 +119,45 @@ export default function Profile() {
       />
 
       {/* Main Profile Card */}
-      <Card className="p-6 relative overflow-hidden">
+      <Card className="p-6 relative overflow-hidden glass-card">
         <div className="absolute top-0 left-0 w-full h-24 bg-gradient-to-r from-[var(--accent-primary)]/20 to-[var(--accent-soft)]/20" />
 
         <div className="relative flex flex-col items-center">
-          <div className="mb-4">
+          <div className="mb-4 -mt-2">
              <ProfileImageUpload
                 currentImageUrl={userProfile?.profile_image_url}
                 userProfile={userProfile}
              />
           </div>
 
-          <h2 className="text-2xl font-bold mb-1">{displayName || user?.user_metadata?.full_name || 'Traveler'}</h2>
+          <h2 className="text-2xl font-bold mb-1 text-[var(--text-primary)]">
+            {displayName || user?.user_metadata?.full_name || 'Traveler'}
+          </h2>
           <p className="text-[var(--text-secondary)] text-sm mb-4">{user?.email}</p>
 
-          <div className="flex items-center gap-2 mb-6">
+          <div className="flex items-center gap-3 mb-6">
             <UserLevelBadge level={userLevel.level} compact />
             {favoriteValue && (
-                <span className="px-3 py-1 rounded-full bg-[var(--bg-secondary)] text-xs font-bold text-[var(--accent-primary)] border border-[var(--accent-primary)]/20">
+                <span className="px-3 py-1 rounded-full bg-[var(--bg-secondary)] text-xs font-bold text-[var(--accent-primary)] border border-[var(--accent-primary)]/20 flex items-center gap-1">
+                    <Sparkles className="w-3 h-3" />
                     {favoriteValue}
                 </span>
             )}
           </div>
 
-          <div className="w-full grid grid-cols-3 gap-4 border-t border-black/5 dark:border-white/5 pt-6">
-            <div className="text-center">
-                <p className="text-2xl font-bold text-[var(--text-primary)]">{achievements.length}</p>
-                <p className="text-xs text-[var(--text-secondary)] uppercase font-bold">Badges</p>
-            </div>
-            <div className="text-center border-l border-r border-black/5 dark:border-white/5">
-                <p className="text-2xl font-bold text-[var(--text-primary)]">{userProfile?.total_practices_completed || 0}</p>
-                <p className="text-xs text-[var(--text-secondary)] uppercase font-bold">Practices</p>
-            </div>
-            <div className="text-center">
-                <p className="text-2xl font-bold text-[var(--text-primary)]">{userProfile?.current_streak || 0}</p>
-                <p className="text-xs text-[var(--text-secondary)] uppercase font-bold">Streak</p>
-            </div>
+          {/* XP Progress Bar */}
+          <div className="w-full max-w-xs mb-6">
+             <div className="flex justify-between text-xs font-bold text-[var(--text-secondary)] mb-1 uppercase tracking-wider">
+                <span>XP</span>
+                <span>{userLevel.experience_points} / {userLevel.points_to_next_level + userLevel.experience_points}</span>
+             </div>
+             <div className="h-2 bg-black/10 dark:bg-white/10 rounded-full overflow-hidden">
+                <motion.div
+                    className="h-full bg-[var(--accent-primary)]"
+                    initial={{ width: 0 }}
+                    animate={{ width: `${(userLevel.experience_points / (userLevel.points_to_next_level + userLevel.experience_points)) * 100}%` }}
+                />
+             </div>
           </div>
         </div>
       </Card>
@@ -169,8 +171,12 @@ export default function Profile() {
       </Section>
 
       {/* Stats Dashboard */}
-      <Section title="Progress">
-        <ProgressDashboard userEmail={user?.email} />
+      <Section title="Stats">
+        <StatsWidget
+            userProfile={userProfile}
+            achievements={achievements}
+            level={userLevel.level}
+        />
       </Section>
 
       {/* Badges */}
@@ -185,12 +191,8 @@ export default function Profile() {
       {/* Settings & Danger Zone */}
       <Section title="Account">
          <Card className="divide-y divide-black/5 dark:divide-white/5">
-            <div className="p-4 flex items-center justify-between cursor-pointer hover:bg-black/5 transition-colors">
-                <div className="flex items-center gap-3">
-                    <Shield className="w-5 h-5 text-[var(--text-secondary)]" />
-                    <span className="font-medium">Privacy Settings</span>
-                </div>
-            </div>
+            {userProfile && <NotificationSettings userProfile={userProfile} />}
+
             <button
                 onClick={handleLogout}
                 className="w-full p-4 flex items-center justify-between cursor-pointer hover:bg-red-50 dark:hover:bg-red-900/10 transition-colors text-left"
@@ -215,7 +217,7 @@ export default function Profile() {
                 <input
                     value={displayName}
                     onChange={e => setDisplayName(e.target.value)}
-                    className="w-full p-3 rounded-xl bg-[var(--bg-secondary)] border-none focus:ring-2 focus:ring-[var(--accent-primary)]"
+                    className="input-base"
                     placeholder="Enter your name"
                 />
             </div>
@@ -225,7 +227,7 @@ export default function Profile() {
                 <textarea
                     value={bio}
                     onChange={e => setBio(e.target.value)}
-                    className="w-full p-3 rounded-xl bg-[var(--bg-secondary)] border-none focus:ring-2 focus:ring-[var(--accent-primary)] min-h-[100px]"
+                    className="input-base min-h-[100px]"
                     placeholder="Share your journey..."
                 />
             </div>
@@ -239,7 +241,7 @@ export default function Profile() {
                             onClick={() => setFavoriteValue(item.value)}
                             className={`p-3 rounded-xl border flex items-center gap-2 transition-all ${
                                 favoriteValue === item.value
-                                ? 'bg-[var(--accent-primary)]/10 border-[var(--accent-primary)]'
+                                ? 'bg-[var(--accent-primary)]/10 border-[var(--accent-primary)] ring-1 ring-[var(--accent-primary)]'
                                 : 'border-black/5 dark:border-white/5 hover:bg-[var(--bg-secondary)]'
                             }`}
                         >
@@ -254,7 +256,7 @@ export default function Profile() {
 
             <div className="flex items-center justify-between p-4 bg-[var(--bg-secondary)] rounded-xl">
                 <div>
-                    <p className="font-bold text-sm">Find a Buddy</p>
+                    <p className="font-bold text-sm text-[var(--text-primary)]">Find a Buddy</p>
                     <p className="text-xs text-[var(--text-secondary)]">Show profile in buddy search</p>
                 </div>
                 <Switch checked={lookingForBuddy} onCheckedChange={setLookingForBuddy} />
