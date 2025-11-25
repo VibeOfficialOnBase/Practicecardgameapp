@@ -1,237 +1,61 @@
-
-import React from 'react';
-import { Link } from 'react-router-dom';
-import { createPageUrl } from '../utils';
-import { base44 } from '@/api/base44Client';
-import { Sparkles, Users, Trophy, Settings, Zap, Heart } from 'lucide-react';
-import { motion } from 'framer-motion';
+import React, { useEffect, useState } from 'react';
+import { useLocation } from 'react-router-dom';
+import { useAuth } from '../contexts/AuthContext';
+import { getUserProfile } from '../lib/supabase';
+import BottomNav from '../components/common/BottomNav';
 import OfflineIndicator from '../components/OfflineIndicator';
 import InstallPrompt from '../components/InstallPrompt';
-import CosmicBackground from '../components/CosmicBackground';
-import BackgroundLayers from '../components/BackgroundLayers';
-import XPBar from '../components/XPBar';
 import NotificationManager from '../components/notifications/NotificationManager';
 
 export default function Layout({ children, currentPageName }) {
-  const [theme, setTheme] = React.useState('light');
-  const [user, setUser] = React.useState(null);
+  const { user } = useAuth();
+  const location = useLocation();
+  const [userProfile, setUserProfile] = useState(null);
 
-  React.useEffect(() => {
-    const loadUser = async () => {
-      try {
-        const currentUser = await base44.auth.me();
-        setUser(currentUser);
-        
-        const profiles = await base44.entities.UserProfile.filter({ created_by: currentUser.email });
-        if (profiles[0]?.theme) {
-          setTheme(profiles[0].theme);
-          document.body.className = profiles[0].theme === 'dark' ? 'dark' : '';
+  // Determine current page name if not provided
+  // This helps finding active nav item if currentPageName prop is missing
+  const pageName = currentPageName || location.pathname.split('/').pop() || 'Practice';
+
+  useEffect(() => {
+    const loadProfile = async () => {
+      if (user) {
+        try {
+          const profile = await getUserProfile(user.id || user.email);
+          setUserProfile(profile);
+          // Apply theme if user has one saved
+          if (profile?.theme) {
+            if (profile.theme === 'dark') {
+              document.documentElement.classList.add('dark');
+            } else {
+              document.documentElement.classList.remove('dark');
+            }
+          }
+        } catch (err) {
+          console.error('Failed to load profile', err);
         }
-      } catch (error) {
-        console.error('Error loading user:', error);
       }
     };
-    loadUser();
-    
-    document.body.className = theme === 'dark' ? 'dark' : '';
-
-    if ('serviceWorker' in navigator) {
-      navigator.serviceWorker.register('/sw.js').catch(console.error);
-    }
-  }, []);
-  
-  React.useEffect(() => {
-    document.body.className = theme === 'dark' ? 'dark' : '';
-  }, [theme]);
-
-  // Merged Practice into Home/Dashboard, so removed explicit 'Home' link if Dashboard is now part of Practice or vice versa.
-  // The user requested to "Merge the Home and PRACTICE tabs".
-  // I will point the first tab to 'Practice' and call it 'Home' or just keep 'Practice' as the main entry.
-  // Let's make 'Practice' the first tab and remove 'Home' (Dashboard).
-  const navItems = [
-    { name: 'Practice', icon: Sparkles, path: 'Practice' },
-    { name: 'Games', icon: Zap, path: 'Games' },
-    { name: 'Community', icon: Users, path: 'Community' },
-    { name: 'Profile', icon: Settings, path: 'Profile' }
-  ];
-
-  const isDark = theme === 'dark';
+    loadProfile();
+  }, [user]);
 
   return (
-    <div className="min-h-screen relative overflow-hidden">
-      {isDark && <CosmicBackground />}
-      {!isDark && <BackgroundLayers />}
+    <div className="min-h-screen bg-[var(--bg-primary)] text-[var(--text-primary)] transition-colors duration-300 pb-24">
       
-      <div className="fixed inset-0 -z-10">
-        <div className={`absolute inset-0 ${isDark ? '' : 'bg-gradient-to-br from-[#FAF8FF] via-[#F5F0FF] to-[#EDE7FF]'}`}></div>
-        
-        <div className={`absolute inset-0 ${isDark ? 'opacity-40' : 'opacity-25'}`}>
-          <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_50%,rgba(169,116,255,0.4),transparent_50%)]"></div>
-          <div className="absolute inset-0 bg-[radial-gradient(circle_at_80%_20%,rgba(107,140,255,0.3),transparent_50%)]"></div>
-          <div className="absolute inset-0 bg-[radial-gradient(circle_at_20%_80%,rgba(184,153,255,0.3),transparent_50%)]"></div>
-        </div>
-        
-        {!isDark && [...Array(50)].map((_, i) => (
-          <motion.div
-            key={i}
-            className="absolute rounded-full"
-            style={{
-              width: Math.random() > 0.7 ? '4px' : '2px',
-              height: Math.random() > 0.7 ? '4px' : '2px',
-              background: 'radial-gradient(circle, rgba(169,116,255,0.6), transparent)',
-              left: `${Math.random() * 100}%`,
-              top: `${Math.random() * 100}%`,
-              filter: 'blur(1px)',
-            }}
-            animate={{
-              opacity: [0.2, 0.8, 0.2],
-              scale: [1, 1.5, 1],
-              y: [0, -30, 0],
-              x: [0, Math.random() * 20 - 10, 0],
-            }}
-            transition={{
-              duration: 4 + Math.random() * 4,
-              repeat: Infinity,
-              delay: Math.random() * 5,
-              ease: "easeInOut",
-            }}
-          />
-        ))}
-        
-        {!isDark && (
-          <>
-            <motion.div
-              className="absolute top-20 right-20 w-[500px] h-[500px] rounded-full"
-              style={{
-                background: 'radial-gradient(circle, rgba(169,116,255,0.5) 0%, rgba(107,140,255,0.3) 40%, transparent 70%)',
-                filter: 'blur(90px)',
-                opacity: 0.4,
-              }}
-              animate={{
-                scale: [1, 1.4, 1],
-                x: [0, 80, 0],
-                y: [0, -50, 0],
-                rotate: [0, 180, 360],
-              }}
-              transition={{ duration: 25, repeat: Infinity, ease: "easeInOut" }}
-            />
-            <motion.div
-              className="absolute bottom-40 left-20 w-[450px] h-[450px] rounded-full"
-              style={{
-                background: 'radial-gradient(circle, rgba(119,51,255,0.5) 0%, rgba(94,45,212,0.3) 40%, transparent 70%)',
-                filter: 'blur(90px)',
-                opacity: 0.4,
-              }}
-              animate={{
-                scale: [1, 1.5, 1],
-                x: [0, -70, 0],
-                y: [0, 70, 0],
-                rotate: [360, 180, 0],
-              }}
-              transition={{ duration: 30, repeat: Infinity, ease: "easeInOut" }}
-            />
-            <motion.div
-              className="absolute top-1/2 left-1/2 w-[600px] h-[600px] rounded-full"
-              style={{
-                background: 'radial-gradient(circle, rgba(184,153,255,0.4) 0%, rgba(230,212,255,0.2) 40%, transparent 70%)',
-                filter: 'blur(100px)',
-                transform: 'translate(-50%, -50%)',
-                opacity: 0.3,
-              }}
-              animate={{
-                scale: [1, 1.3, 1],
-                rotate: [0, 360, 0],
-              }}
-              transition={{ duration: 35, repeat: Infinity, ease: "easeInOut" }}
-            />
-          </>
-        )}
+      {/* Background Ambience - Minimal Ohara Style */}
+      <div className="fixed inset-0 pointer-events-none overflow-hidden -z-10">
+        <div className="absolute top-[-20%] left-[-10%] w-[50%] h-[50%] bg-[var(--accent-primary)] opacity-5 blur-[120px] rounded-full animate-pulse" />
+        <div className="absolute bottom-[-20%] right-[-10%] w-[60%] h-[60%] bg-[var(--accent-soft)] opacity-10 blur-[100px] rounded-full" />
       </div>
-      
+
       <OfflineIndicator />
       <InstallPrompt />
       {user && <NotificationManager userEmail={user.email} />}
-      
-      {(currentPageName === 'ChakraBlasterMax' || currentPageName === 'ChallengeBubbles' || currentPageName === 'MemoryMatch') && user && (
-        <div className="fixed top-4 right-4 z-30">
-          <XPBar userEmail={user.email} />
-        </div>
-      )}
-      
-      <main className="pb-24 pt-6 px-4 max-w-6xl mx-auto">
+
+      <main className="max-w-md mx-auto min-h-screen relative px-4 pt-4 sm:pt-6">
         {children}
       </main>
 
-      <nav className={`fixed bottom-0 left-0 right-0 backdrop-blur-2xl z-50 border-t safe-area-bottom`} style={{ 
-        background: isDark ? 'rgba(8, 3, 19, 0.95)' : 'rgba(255, 255, 255, 0.95)',
-        borderColor: isDark ? 'rgba(169, 116, 255, 0.3)' : 'rgba(119, 51, 255, 0.15)',
-        boxShadow: isDark ? '0 -4px 32px rgba(138, 75, 255, 0.4)' : '0 -4px 32px rgba(119, 51, 255, 0.1)',
-        width: '100%',
-        paddingBottom: 'env(safe-area-inset-bottom)'
-      }}>
-        <div className="w-full max-w-6xl mx-auto px-1 sm:px-4">
-          <div className="flex items-center justify-between py-1.5 sm:py-3 gap-0.5">
-            {navItems.map((item) => {
-              const Icon = item.icon;
-              const isActive = currentPageName === item.path || (item.path === 'Practice' && currentPageName === 'Dashboard');
-              
-              return (
-                <Link
-                  key={item.path}
-                  to={createPageUrl(item.path)}
-                  className={`flex flex-col items-center gap-0.5 px-1 sm:px-3 py-1 sm:py-2 rounded-xl sm:rounded-2xl transition-all duration-300 relative ${
-                    isActive
-                      ? 'scale-105 sm:scale-110'
-                      : ''
-                  }`}
-                  style={{
-                    color: isActive ? '#FFFFFF' : (isDark ? '#C7B1FF' : '#7733FF'),
-                    minWidth: 'fit-content',
-                    flex: '1 1 0',
-                    maxWidth: '80px'
-                  }}
-                >
-                  {isActive && (
-                    <motion.div
-                      layoutId="navHighlight"
-                      className="absolute inset-0 bg-gradient-to-r from-purple-500/20 to-indigo-500/20 rounded-xl sm:rounded-2xl"
-                      style={{ boxShadow: '0 0 20px rgba(169, 116, 255, 0.4)' }}
-                      transition={{ type: "spring", stiffness: 300, damping: 30 }}
-                    />
-                  )}
-                  <motion.div
-                    className="relative z-10"
-                    whileHover={{ scale: 1.05 }}
-                    whileTap={{ scale: 0.95 }}
-                    transition={{ type: "spring", stiffness: 400 }}
-                  >
-                    <Icon 
-                      className={`w-4 h-4 sm:w-6 sm:h-6 transition-all ${
-                        isActive ? 'drop-shadow-[0_0_8px_rgba(216,180,255,0.6)]' : ''
-                      }`} 
-                      style={{
-                        fill: isActive ? '#F2D6FF' : 'none'
-                      }}
-                    />
-                  </motion.div>
-                  <span className={`text-[9px] sm:text-xs font-medium font-heading relative z-10 whitespace-nowrap ${
-                    isActive ? 'font-semibold' : ''
-                  }`}
-                  style={{
-                    textShadow: isActive ? '0 0 10px rgba(216,180,255,0.5)' : 'none'
-                  }}>
-                    {item.name}
-                  </span>
-                </Link>
-              );
-            })}
-          </div>
-        </div>
-      </nav>
-
-      <div className="text-center py-4 text-xs ensure-readable" style={{ paddingBottom: 'calc(80px + env(safe-area-inset-bottom))' }}>
-        Built by Eddie Pabon
-      </div>
+      <BottomNav />
     </div>
   );
 }

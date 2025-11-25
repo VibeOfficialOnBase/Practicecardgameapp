@@ -1,7 +1,6 @@
 import React from 'react';
 import { motion } from 'framer-motion';
 import { Sparkles, Wind, BookHeart, Gamepad2, Droplets, Pill, Moon, Gift } from 'lucide-react';
-import { Button } from '@/components/ui/button';
 
 export default function VibeagotchiInteractions({ 
   onFeed, 
@@ -88,7 +87,7 @@ export default function VibeagotchiInteractions({
   ];
 
   return (
-    <div className="grid grid-cols-2 gap-2 md:gap-3">
+    <div className="flex overflow-x-auto pb-4 gap-3 px-1 no-scrollbar snap-x">
       {actions.map((action, index) => {
         const Icon = action.icon;
         const isOnCooldown = action.cooldown && action.cooldown > Date.now();
@@ -97,32 +96,41 @@ export default function VibeagotchiInteractions({
         return (
           <motion.div
             key={action.key}
-            initial={{ opacity: 0, scale: 0.8 }}
+            initial={{ opacity: 0, scale: 0.9 }}
             animate={{ opacity: 1, scale: 1 }}
             transition={{ delay: index * 0.05 }}
+            className="snap-start shrink-0"
           >
-            <Button
+            <button
               onClick={action.onClick}
               disabled={isDisabled}
-              className={`w-full h-16 md:h-20 rounded-xl md:rounded-2xl relative overflow-hidden ${
-                action.highlight ? 'animate-pulse' : ''
+              className={`flex flex-col items-center justify-center w-20 h-20 rounded-2xl shadow-lg border border-white/10 transition-all active:scale-95 relative overflow-hidden group ${
+                action.highlight ? 'animate-pulse ring-2 ring-red-400' : ''
               }`}
               style={{
                 background: isDisabled 
-                  ? '#4B5563' 
-                  : `linear-gradient(135deg, ${action.color}aa, ${action.color})`
+                  ? 'var(--bg-secondary)'
+                  : `linear-gradient(135deg, ${action.color}, ${action.color}dd)`
               }}
             >
-              <div className="flex flex-col items-center gap-0.5 md:gap-1">
-                <Icon className="w-5 h-5 md:w-6 md:h-6 text-white" />
-                <span className="text-white font-semibold text-xs md:text-sm">{action.label}</span>
-                {isOnCooldown && (
-                  <span className="text-xs text-white/70">
+              <div className={`p-2 rounded-full mb-1 ${isDisabled ? 'bg-gray-600/20' : 'bg-white/20'}`}>
+                <Icon className={`w-5 h-5 ${isDisabled ? 'text-[var(--text-secondary)]' : 'text-white'}`} />
+              </div>
+
+              <span className={`text-[10px] font-bold uppercase tracking-wider ${
+                isDisabled ? 'text-[var(--text-secondary)]' : 'text-white'
+              }`}>
+                {action.label}
+              </span>
+
+              {isOnCooldown && !isDisabled && (
+                <div className="absolute inset-0 bg-black/40 flex items-center justify-center backdrop-blur-[1px]">
+                  <span className="text-[10px] font-bold text-white">
                     {Math.ceil((action.cooldown - Date.now()) / 60000)}m
                   </span>
-                )}
-              </div>
-            </Button>
+                </div>
+              )}
+            </button>
           </motion.div>
         );
       })}

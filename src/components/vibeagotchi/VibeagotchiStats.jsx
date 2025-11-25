@@ -30,7 +30,7 @@ export default function VibeagotchiStats({ state }) {
   ];
 
   return (
-    <div className="grid grid-cols-2 gap-4">
+    <div className="grid grid-cols-4 gap-2 px-2">
       {stats.map((stat, index) => {
         const Icon = statIcons[stat.key];
         const color = statColors[stat.key];
@@ -38,29 +38,26 @@ export default function VibeagotchiStats({ state }) {
         return (
           <motion.div
             key={stat.key}
-            initial={{ opacity: 0, y: 20 }}
+            initial={{ opacity: 0, y: 10 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: index * 0.1 }}
-            className="bg-white/10 backdrop-blur-md rounded-xl md:rounded-2xl p-3 md:p-4 border border-white/20"
+            transition={{ delay: index * 0.05 }}
+            className="flex flex-col items-center gap-1 bg-[var(--bg-secondary)]/80 backdrop-blur-sm rounded-xl p-2 shadow-sm border border-white/10"
           >
-            <div className="flex items-center gap-1 md:gap-2 mb-2">
-              <Icon className="w-3 h-3 md:w-4 md:h-4" style={{ color }} />
-              <span className="text-xs md:text-sm font-semibold ensure-readable">{stat.label}</span>
-            </div>
+            <Icon className="w-4 h-4" style={{ color }} />
             
-            <div className="relative h-1.5 md:h-2 bg-black/30 rounded-full overflow-hidden">
+            <div className="w-full h-1 bg-[var(--bg-primary)] rounded-full overflow-hidden">
               <motion.div
-                className="absolute inset-y-0 left-0 rounded-full"
+                className="h-full rounded-full"
                 style={{ background: color }}
                 initial={{ width: 0 }}
                 animate={{ width: `${stat.value}%` }}
-                transition={{ duration: 1, delay: index * 0.1 }}
+                transition={{ duration: 0.8, delay: index * 0.05 }}
               />
             </div>
             
-            <p className="text-right text-xs mt-1 font-bold" style={{ color }}>
-              {stat.value}/100
-            </p>
+            <span className="text-[10px] font-bold text-[var(--text-secondary)]">
+              {Math.round(stat.value)}%
+            </span>
           </motion.div>
         );
       })}

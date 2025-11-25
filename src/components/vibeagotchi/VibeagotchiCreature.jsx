@@ -52,13 +52,13 @@ export default function VibeagotchiCreature({ state, onTap, equippedItem }) {
   }, []);
 
   return (
-    <div className="relative flex items-center justify-center" style={{ height: '400px' }}>
+    <div className="relative flex-1 w-full min-h-[300px] flex items-center justify-center overflow-hidden">
       {/* Background Aura */}
       <motion.div
         className="absolute rounded-full opacity-30 blur-3xl"
         style={{
-          width: evolution.size * 2,
-          height: evolution.size * 2,
+          width: '60%',
+          paddingBottom: '60%', // Aspect ratio hack for responsive circle
           background: `radial-gradient(circle, ${evolution.color}, transparent)`
         }}
         animate={{
@@ -75,8 +75,8 @@ export default function VibeagotchiCreature({ state, onTap, equippedItem }) {
           className="absolute w-1 h-1 rounded-full"
           style={{
             background: emotionColor,
-            left: `${50 + (Math.random() - 0.5) * 200}%`,
-            top: `${50 + (Math.random() - 0.5) * 200}%`
+            left: `${50 + (Math.random() - 0.5) * 80}%`,
+            top: `${50 + (Math.random() - 0.5) * 80}%`
           }}
           animate={{
             y: [0, -50, 0],
@@ -93,7 +93,7 @@ export default function VibeagotchiCreature({ state, onTap, equippedItem }) {
 
       {/* Main Creature */}
       <motion.div
-        className="relative cursor-pointer"
+        className="relative cursor-pointer z-10"
         onClick={onTap}
         animate={{
           y: state.is_sleeping ? [0, -5, 0] : (bounce ? [0, -40, 0] : [0, -20, 0]),
@@ -110,10 +110,10 @@ export default function VibeagotchiCreature({ state, onTap, equippedItem }) {
       >
         {/* Core Orb */}
         <div
-          className="rounded-full relative overflow-hidden"
+          className="rounded-full relative overflow-hidden transition-all duration-500"
           style={{
-            width: evolution.size,
-            height: evolution.size,
+            width: `${evolution.size}px`,
+            height: `${evolution.size}px`,
             background: `radial-gradient(circle at 30% 30%, ${emotionColor}, ${evolution.color})`,
             boxShadow: `0 0 40px ${evolution.color}, 0 0 80px ${emotionColor}`
           }}
@@ -190,8 +190,8 @@ export default function VibeagotchiCreature({ state, onTap, equippedItem }) {
         )}
 
         {/* Evolution Stage Name */}
-        <div className="absolute -bottom-8 left-1/2 transform -translate-x-1/2 whitespace-nowrap">
-          <p className="text-sm font-bold text-center" style={{ color: evolution.color, textShadow: '0 2px 8px rgba(0,0,0,0.8)' }}>
+        <div className="absolute -bottom-10 left-1/2 transform -translate-x-1/2 whitespace-nowrap">
+          <p className="text-sm font-bold text-center drop-shadow-md" style={{ color: evolution.color }}>
             {evolution.name}
           </p>
         </div>
@@ -201,7 +201,7 @@ export default function VibeagotchiCreature({ state, onTap, equippedItem }) {
       <motion.div
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
-        className="absolute bottom-0 px-4 py-2 rounded-full bg-black/60 backdrop-blur-md"
+        className="absolute bottom-4 px-4 py-2 rounded-full bg-white/10 backdrop-blur-md border border-white/20"
       >
         <p className="text-xs font-semibold capitalize" style={{ color: emotionColor }}>
           {state.current_emotion.replace('_', ' ')}

@@ -26,7 +26,8 @@ export class ChakraBlasterGame {
     this.noDamageFrames = 0;
     
     // Game entities
-    this.player = null;
+    this.player = null; // Player object (logic only)
+    this.playerRef = null; // DOM element ref for player
     this.enemies = [];
     this.bullets = [];
     this.particles = new ParticleSystem();
@@ -45,6 +46,11 @@ export class ChakraBlasterGame {
     this.setupInput();
   }
   
+  // Set the DOM element for the player
+  setPlayerElement(element) {
+    this.playerRef = element;
+  }
+
   resize() {
     // Full-screen responsive sizing
     this.canvas.width = window.innerWidth;
@@ -163,16 +169,31 @@ export class ChakraBlasterGame {
       if (this.keys['arrowup'] || this.keys['w']) dy -= 1;
       if (this.keys['arrowdown'] || this.keys['s']) dy += 1;
       
-      // Touch movement
+      // Touch movement (simple follow or relative)
       if (this.touch.active) {
+        // Simple follow logic with easing
         const targetX = this.touch.x;
         const targetY = this.touch.y;
-        dx = Math.sign(targetX - this.player.x);
-        dy = Math.sign(targetY - this.player.y);
+
+        // Move towards touch
+        const diffX = targetX - this.player.x;
+        const diffY = targetY - this.player.y;
+
+        // Normalize speed
+        const dist = Math.sqrt(diffX*diffX + diffY*diffY);
+        if (dist > 5) {
+             dx = diffX / dist;
+             dy = diffY / dist;
+        }
       }
       
       this.player.move(dx, dy, this.width, this.height);
       this.player.update();
+
+      // Sync DOM element position
+      if (this.playerRef) {
+          this.playerRef.style.transform = `translate3d(${this.player.x - 20}px, ${this.player.y - 20}px, 0)`; // Assuming 40x40 player
+      }
       
       // Update health callback
       if (this.options.onHealthUpdate) {
@@ -381,8 +402,9 @@ export class ChakraBlasterGame {
   
   render() {
     // Clear canvas
-    this.ctx.fillStyle = 'rgba(10, 5, 30, 0.3)';
-    this.ctx.fillRect(0, 0, this.width, this.height);
+    this.ctx.clearRect(0, 0, this.width, this.height);
+    // this.ctx.fillStyle = 'rgba(10, 5, 30, 0.3)';
+    // this.ctx.fillRect(0, 0, this.width, this.height);
     
     // Draw starfield effect
     this.drawStars();
@@ -390,13 +412,11 @@ export class ChakraBlasterGame {
     // Draw particles (background layer)
     this.particles.render(this.ctx);
     
-    // Draw player with premium auras
+    // Player is now a DOM element, so we don't draw it here unless we want debug info or effects under it
+    // But we might want to draw a glow or shield around the player position
     if (this.player) {
-      const premiumAura = this.options.premiumPerks ? {
-        vibe: this.options.premiumPerks.scoreMultiplier > 1,
-        algo: this.options.premiumPerks.extraLives > 0
-      } : null;
-      this.player.render(this.ctx, premiumAura);
+        // Draw shield or glow effects on canvas
+        // this.player.renderEffects(this.ctx);
     }
     
     // Draw bullets
@@ -407,9 +427,6 @@ export class ChakraBlasterGame {
     
     // Draw affirmations
     this.affirmations.forEach(aff => aff.render(this.ctx));
-    
-    // Draw HUD
-    this.drawHUD();
   }
   
   drawStars() {
@@ -419,9 +436,5 @@ export class ChakraBlasterGame {
       const y = ((this.frame + i * 20) % this.height);
       this.ctx.fillRect(x, y, 2, 2);
     }
-  }
-  
-  drawHUD() {
-    // HUD is now rendered in React component
   }
 }

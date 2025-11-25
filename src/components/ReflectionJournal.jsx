@@ -1,7 +1,8 @@
 import React, { useState } from 'react';
 import { motion } from 'framer-motion';
-import { Button } from '@/components/ui/button';
-import { Textarea } from '@/components/ui/textarea';
+import Button from './common/Button';
+import Card from './common/Card';
+import { Textarea } from '@/components/ui/textarea'; // Assuming shadcn or similar is still available, or I should replace with standard html
 import { BookOpen, CheckCircle, Sparkles } from 'lucide-react';
 import MoodTracker from './practice/MoodTracker';
 
@@ -32,21 +33,21 @@ export default function ReflectionJournal({ card, onComplete, isSubmitting }) {
     <motion.div
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
-      transition={{ delay: 1.5 }}
-      className="max-w-2xl mx-auto mt-8"
+      transition={{ delay: 0.5 }}
+      className="w-full"
     >
-      <div className="card-organic p-8">
+      <Card className="p-6 md:p-8 bg-[var(--bg-secondary)]/50 border-none shadow-inner">
         <div className="flex items-center gap-3 mb-6">
-          <div className="p-3 rounded-2xl bg-gradient-to-br from-purple-500 to-indigo-600 shadow-lg">
-            <BookOpen className="w-6 h-6 text-white" />
+          <div className="p-2.5 rounded-xl bg-gradient-to-br from-purple-500 to-indigo-600 shadow-md">
+            <BookOpen className="w-5 h-5 text-white" />
           </div>
-          <h3 className="text-2xl font-bold">Reflect & Journal</h3>
+          <h3 className="text-xl font-bold text-[var(--text-primary)]">Reflection Journal</h3>
         </div>
 
-        <div className="mb-6">
-          <div className="flex items-center justify-between mb-3">
-            <label className="text-sm font-semibold ensure-readable-strong">
-              Reflection Prompt {currentPromptIndex + 1} of {prompts.length}
+        <div className="mb-8">
+          <div className="flex items-center justify-between mb-4">
+            <label className="text-xs font-bold text-[var(--text-secondary)] uppercase tracking-wider">
+              Prompt {currentPromptIndex + 1}/{prompts.length}
             </label>
             {prompts.length > 1 && (
               <div className="flex gap-1.5">
@@ -56,8 +57,8 @@ export default function ReflectionJournal({ card, onComplete, isSubmitting }) {
                     onClick={() => setCurrentPromptIndex(idx)}
                     className={`h-1.5 rounded-full transition-all ${
                       idx === currentPromptIndex
-                        ? 'bg-amber-400 w-8'
-                        : 'bg-slate-600 w-1.5'
+                        ? 'bg-[var(--accent-primary)] w-6'
+                        : 'bg-[var(--text-secondary)]/30 w-1.5'
                     }`}
                   />
                 ))}
@@ -67,9 +68,9 @@ export default function ReflectionJournal({ card, onComplete, isSubmitting }) {
 
           {showBeforeMood && !beforeMood ? (
             <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              className="p-5 rounded-2xl bg-purple-500/30 border-2 border-purple-400/50 mb-4"
+              initial={{ opacity: 0, scale: 0.95 }}
+              animate={{ opacity: 1, scale: 1 }}
+              className="p-5 rounded-2xl bg-white/50 dark:bg-black/20 border border-[var(--accent-primary)]/20 mb-6"
             >
               <MoodTracker 
                 onMoodSelect={(mood) => {
@@ -77,56 +78,51 @@ export default function ReflectionJournal({ card, onComplete, isSubmitting }) {
                   setShowBeforeMood(false);
                 }}
                 selectedMood={beforeMood}
-                label="How were you feeling before this practice?"
+                label="How are you feeling right now?"
               />
             </motion.div>
           ) : (
             <motion.div
               key={currentPromptIndex}
-              initial={{ opacity: 0, x: 20 }}
+              initial={{ opacity: 0, x: 10 }}
               animate={{ opacity: 1, x: 0 }}
-              className="p-5 rounded-2xl bg-amber-500/30 border-2 border-amber-400/50 mb-4"
+              className="mb-6"
             >
-              <p className="ensure-readable-strong font-semibold text-lg">
-                {prompts[currentPromptIndex]}
-              </p>
+              <h4 className="text-lg font-serif italic text-[var(--text-primary)] leading-relaxed">
+                "{prompts[currentPromptIndex]}"
+              </h4>
             </motion.div>
           )}
 
-          {prompts.length > 1 && currentPromptIndex < prompts.length - 1 && (
+          {prompts.length > 1 && currentPromptIndex < prompts.length - 1 && !showBeforeMood && (
             <Button
               onClick={() => setCurrentPromptIndex(currentPromptIndex + 1)}
-              variant="outline"
+              variant="secondary"
               size="sm"
-              className="mb-4"
+              className="mb-6"
             >
-              Next Prompt →
+              Next Prompt
             </Button>
           )}
         </div>
 
-        <div className="mb-6">
-          <div className="flex items-center justify-between mb-3">
-            <label className="block text-sm font-semibold ensure-readable-strong">
-              Your Thoughts
-            </label>
-            <span className={`text-xs font-bold ${
-              reflection.length >= 20 ? 'text-green-400' : 'ensure-readable'
-            }`}>
-              {reflection.length}/20 minimum
-            </span>
-          </div>
-          <Textarea
+        <div className="mb-8 relative">
+          <textarea
             value={reflection}
             onChange={(e) => setReflection(e.target.value)}
-            placeholder="Take your time... write whatever comes to mind..."
-            className="min-h-40 rounded-2xl bg-white/10 border-2 border-purple-400/50 focus:border-amber-400 ensure-readable-strong text-base placeholder:ensure-readable font-medium text-white placeholder:text-white/50"
+            placeholder="Write your thoughts here..."
+            className="w-full min-h-[160px] p-4 rounded-xl bg-[var(--bg-primary)] border-none focus:ring-2 focus:ring-[var(--accent-primary)]/50 resize-none text-[var(--text-primary)] placeholder:text-[var(--text-secondary)]/50 shadow-sm transition-all"
           />
+          <div className={`absolute bottom-3 right-3 text-xs font-bold transition-colors ${
+            reflection.length >= 20 ? 'text-[var(--success)]' : 'text-[var(--text-secondary)]'
+          }`}>
+            {reflection.length}/20
+          </div>
         </div>
 
-        <div className="mb-6">
-          <label className="block text-sm font-semibold ensure-readable-strong mb-3 text-center">
-            How are you feeling after this practice?
+        <div className="mb-8">
+          <label className="block text-xs font-bold text-[var(--text-secondary)] uppercase tracking-wider mb-4 text-center">
+            Mood After Practice
           </label>
           <MoodTracker 
             onMoodSelect={setAfterMood}
@@ -135,54 +131,48 @@ export default function ReflectionJournal({ card, onComplete, isSubmitting }) {
           />
         </div>
 
-        <div className="mb-8">
-          <label className="block text-sm font-semibold ensure-readable-strong mb-3">
-            How impactful was this practice for you?
+        <div className="mb-8 text-center">
+          <label className="block text-xs font-bold text-[var(--text-secondary)] uppercase tracking-wider mb-4">
+            Rate this Practice
           </label>
-          <div className="flex gap-3 justify-center">
+          <div className="flex gap-4 justify-center">
             {[1, 2, 3, 4, 5].map((star) => (
               <button
                 key={star}
                 onClick={() => setRating(star)}
-                className="transition-transform hover:scale-110 active:scale-95"
+                className="group transition-transform active:scale-95"
               >
                 <Sparkles
-                  className={`w-10 h-10 ${
+                  className={`w-8 h-8 transition-colors ${
                     star <= rating
-                      ? 'text-amber-500 fill-amber-500'
-                      : 'text-stone-300'
+                      ? 'text-[var(--accent-primary)] fill-[var(--accent-primary)]'
+                      : 'text-[var(--text-secondary)]/30 group-hover:text-[var(--accent-primary)]/50'
                   }`}
                 />
               </button>
             ))}
           </div>
-          <p className="text-center text-sm font-bold mt-2" style={{ color: '#FFFFFF', textShadow: '0 2px 8px rgba(0,0,0,0.8)' }}>
-            {rating === 0 && 'Tap to rate'}
-            {rating === 1 && 'A gentle start'}
-            {rating === 2 && 'Somewhat helpful'}
-            {rating === 3 && 'Meaningful practice'}
-            {rating === 4 && 'Deeply impactful'}
-            {rating === 5 && 'Transformative experience'}
-          </p>
         </div>
 
         <Button
           onClick={handleComplete}
           disabled={isSubmitting || reflection.trim().length < 20 || rating === 0 || !afterMood}
-          className="w-full bg-gradient-to-r from-emerald-500 to-green-600 hover:from-emerald-600 hover:to-green-700 text-white font-bold py-7 rounded-2xl shadow-2xl disabled:opacity-40 disabled:cursor-not-allowed transition-all text-lg relative overflow-hidden"
-          style={{ boxShadow: '0 8px 32px rgba(16, 185, 129, 0.4)' }}
+          variant="primary"
+          className="w-full py-4 text-lg shadow-xl shadow-purple-900/10"
         >
-          {isSubmitting && (
-            <div className="absolute inset-0 bg-white/20 animate-pulse" />
+          {isSubmitting ? (
+            <span className="flex items-center gap-2">
+              <span className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin" />
+              Saving...
+            </span>
+          ) : (
+            <span className="flex items-center gap-2">
+              <CheckCircle className="w-5 h-5" />
+              Complete Practice
+            </span>
           )}
-          <CheckCircle className="w-6 h-6 mr-2" />
-          {isSubmitting ? 'Saving Your Journey...' : 'Complete Practice'}
         </Button>
-
-        <p className="text-center text-sm ensure-readable-strong font-medium mt-4">
-          Track your mood, write 20+ characters, and rate your experience
-        </p>
-      </div>
+      </Card>
     </motion.div>
   );
 }

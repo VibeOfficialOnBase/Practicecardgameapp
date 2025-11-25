@@ -1,5 +1,5 @@
 import { createContext, useContext, useEffect, useState } from 'react';
-import { supabase, isDemoMode } from '@/lib/supabase';
+import { supabase, isDemoMode } from '@/api/supabaseClient';
 
 const AuthContext = createContext({});
 
@@ -55,11 +55,6 @@ export const AuthProvider = ({ children }) => {
         return { data: { user: null, session: null }, error: { message: "User not registered. Please sign up or use Google." } };
       }
 
-      // Simple password check (in a real app this would be hashed, but for demo mode strictness, we can check basic match if we stored it,
-      // but to follow the prompt's spirit of "unregistered user", checking email existence is the main step.
-      // The previous implementation allowed ANY email. Now we restrict to registered ones.
-      // We didn't store passwords in the previous mock, so we'll trust the password if the user exists for now,
-      // OR we can update signUp to store the password. Let's update signUp to store it for consistency.)
       if (existingUser.password !== data.password) {
          return { data: { user: null, session: null }, error: { message: "Invalid credentials." } };
       }
@@ -87,7 +82,7 @@ export const AuthProvider = ({ children }) => {
       const mockUser = {
         id: `demo-user-${Date.now()}`,
         email: data.email,
-        password: data.password, // Storing password in local storage for demo verification
+        password: data.password,
         user_metadata: data.options?.data || {},
         aud: 'authenticated',
         created_at: new Date().toISOString(),
@@ -121,8 +116,6 @@ export const AuthProvider = ({ children }) => {
 
   const signInWithGoogle = async () => {
     if (isDemoMode) {
-        // For Google login in demo mode, we can auto-register them if they don't exist,
-        // effectively treating it as "Sign up or Login with Google"
         const email = 'demo@gmail.com';
         let users = getRegisteredUsers();
         let user = users.find(u => u.email === email);

@@ -1,7 +1,7 @@
 // Import from supabaseClient
 import { appApi, supabase } from './supabaseClient';
 
-// Export appApi as base44 for backwards compatibility during migration
-// but also export appApi directly if needed
+// Re-export as base44 for backwards compatibility during migration
+// but code should preferably use appApi or direct imports
 export const base44 = appApi;
-export { supabase, appApi };
+export { supabase };

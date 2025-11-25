@@ -5,7 +5,7 @@ const supabaseUrl = import.meta.env.VITE_SUPABASE_URL;
 const supabaseAnonKey = import.meta.env.VITE_SUPABASE_ANON_KEY;
 
 // Check if we're in demo mode (no environment variables provided)
-const isDemoMode = !supabaseUrl || !supabaseAnonKey;
+export const isDemoMode = !supabaseUrl || !supabaseAnonKey;
 
 if (isDemoMode) {
   console.warn(
@@ -30,15 +30,32 @@ const toSnakeCase = (str) => {
     .replace(/^_/, '');
 };
 
-// Demo mode in-memory storage
-const demoStorage = {
-  users: [],
-  currentUser: null,
-  data: {}
+// Demo mode in-memory storage (initialized from localStorage if available for persistence)
+const loadDemoStorage = () => {
+  try {
+    const stored = localStorage.getItem('demo_db');
+    return stored ? JSON.parse(stored) : {
+      users: [],
+      currentUser: null,
+      data: {}
+    };
+  } catch {
+    return {
+      users: [],
+      currentUser: null,
+      data: {}
+    };
+  }
 };
 
-// Auto-create a demo user when in demo mode
-if (isDemoMode) {
+const demoStorage = loadDemoStorage();
+
+const saveDemoStorage = () => {
+  localStorage.setItem('demo_db', JSON.stringify(demoStorage));
+};
+
+// Auto-create a demo user when in demo mode if empty
+if (isDemoMode && demoStorage.users.length === 0) {
   const demoUser = {
     id: 'demo-user-1',
     email: 'demo@example.com',
@@ -48,7 +65,7 @@ if (isDemoMode) {
     created_at: new Date().toISOString()
   };
   demoStorage.users.push(demoUser);
-  demoStorage.currentUser = demoUser;
+  saveDemoStorage();
 }
 
 // Create a Base44-compatible wrapper for entities
@@ -77,8 +94,18 @@ class EntityWrapper {
   // List entities with optional sorting and limit
   async list(sortBy = '-created_date', limit = 100) {
     if (isDemoMode) {
-      const data = this._getDemoTable().slice(0, limit);
-      return data;
+      const data = this._getDemoTable();
+      // Simple sort implementation
+      if (sortBy) {
+        const field = sortBy.startsWith('-') ? sortBy.substring(1) : sortBy;
+        const dir = sortBy.startsWith('-') ? -1 : 1;
+        data.sort((a, b) => {
+            if (a[field] < b[field]) return -1 * dir;
+            if (a[field] > b[field]) return 1 * dir;
+            return 0;
+        });
+      }
+      return data.slice(0, limit);
     }
 
     const isDescending = sortBy.startsWith('-');
@@ -143,6 +170,7 @@ class EntityWrapper {
         updated_date: new Date().toISOString()
       };
       this._getDemoTable().push(newItem);
+      saveDemoStorage();
       return newItem;
     }
 
@@ -168,6 +196,7 @@ class EntityWrapper {
         ...updates,
         updated_date: new Date().toISOString()
       };
+      saveDemoStorage();
       return table[index];
     }
 
@@ -189,6 +218,7 @@ class EntityWrapper {
       const index = table.findIndex(item => item.id === id);
       if (index === -1) throw new Error('Not found');
       table.splice(index, 1);
+      saveDemoStorage();
       return { success: true };
     }
 
@@ -206,6 +236,13 @@ class EntityWrapper {
 const authWrapper = {
   async me() {
     if (isDemoMode) {
+      // Check localStorage for session first (AuthContext logic overlap, but useful for direct calls)
+      const session = localStorage.getItem('demo_session');
+      if (session) {
+          const s = JSON.parse(session);
+          demoStorage.currentUser = s.user;
+          return s.user;
+      }
       if (!demoStorage.currentUser) {
         throw new Error('Not authenticated');
       }
@@ -228,7 +265,8 @@ const authWrapper = {
       };
       demoStorage.users.push(user);
       demoStorage.currentUser = user;
-      return { user, session: { access_token: 'demo-token' } };
+      saveDemoStorage();
+      return { user, session: { access_token: 'demo-token', user } };
     }
 
     const { data, error } = await supabase.auth.signUp({
@@ -244,7 +282,9 @@ const authWrapper = {
     if (isDemoMode) {
       let user = demoStorage.users.find(u => u.email === email);
       if (!user) {
-        // Auto-create user in demo mode
+        // Fallback for "unregistered" in demo strictness is handled in AuthContext,
+        // but here we can just create one if we want loose mode, or fail.
+        // Let's create one for ease of use in direct calls.
         user = {
           id: `demo-user-${Date.now()}`,
           email,
@@ -252,9 +292,10 @@ const authWrapper = {
           created_at: new Date().toISOString()
         };
         demoStorage.users.push(user);
+        saveDemoStorage();
       }
       demoStorage.currentUser = user;
-      return { user, session: { access_token: 'demo-token' } };
+      return { user, session: { access_token: 'demo-token', user } };
     }
 
     const { data, error } = await supabase.auth.signInWithPassword({
@@ -306,10 +347,7 @@ const authWrapper = {
 // Functions wrapper for serverless functions
 const functionsWrapper = {
   async invoke(functionName, args) {
-    console.warn(`Function ${functionName} called - returning mock data. Implement as Supabase Edge Function for production.`, args);
-    
-    // Return mock/fallback responses to prevent app crashes during migration
-    // TODO: Implement these as Supabase Edge Functions for production use
+    console.warn(`Function ${functionName} called - returning mock data.`, args);
     const mockResponses = {
       generateCardInsight: { insight: 'This card encourages mindful reflection and growth.' },
       generateDailyChallenge: { challenge: 'Practice gratitude today by listing three things you appreciate.' },
@@ -326,7 +364,6 @@ const functionsWrapper = {
       verifyVibeOfficialHoldings: { holdings: 0, verified: false },
       verifyAlgoLeaguesHoldings: { holdings: 0, verified: false }
     };
-    
     return mockResponses[functionName] || { status: 'not_implemented' };
   }
 };
@@ -336,59 +373,39 @@ const integrationsWrapper = {
   Core: {
     async UploadFile({ file }) {
       if (isDemoMode) {
-        // In demo mode, return a placeholder URL
         console.log('Demo mode: File upload simulated for', file.name);
         return { 
           file_url: `https://via.placeholder.com/400x400?text=${encodeURIComponent(file.name)}` 
         };
       }
-
       const fileName = `${Date.now()}_${file.name}`;
       const { error } = await supabase.storage
         .from('practice-cards')
         .upload(fileName, file);
-
       if (error) throw error;
-
       const { data: { publicUrl } } = supabase.storage
         .from('practice-cards')
         .getPublicUrl(fileName);
-
       return { file_url: publicUrl };
     },
-
     async InvokeLLM({ prompt }) {
-      // TODO: Implement as Supabase Edge Function that calls OpenAI
-      console.warn('InvokeLLM called with mock response. Implement as Edge Function for production.', { prompt });
       return { 
-        response: 'This is a mock AI response. Please implement InvokeLLM as a Supabase Edge Function.',
+        response: 'This is a mock AI response.',
         usage: { tokens: 0 }
       };
     },
-
-    async SendEmail({ to, subject, body }) {
-      // TODO: Implement as Supabase Edge Function with email service
-      console.warn('SendEmail called with mock response. Implement as Edge Function for production.', { to, subject });
-      return { 
-        success: true, 
-        message: 'Mock email sent. Implement SendEmail as an Edge Function for production.',
-        to,
-        subject
-      };
+    async SendEmail({ to, subject }) {
+      return { success: true };
     },
-
     async GenerateImage({ prompt }) {
-      // TODO: Implement as Supabase Edge Function that calls DALL-E or similar
-      console.warn('GenerateImage called with mock response. Implement as Edge Function for production.', { prompt });
       return { 
         url: 'https://via.placeholder.com/512x512?text=Placeholder+Image',
-        message: 'Mock image. Implement GenerateImage as an Edge Function for production.'
+        message: 'Mock image.'
       };
     }
   }
 };
 
-// Create entity proxies for all tables
 const entityNames = [
   'PracticeCard',
   'DailyPractice',
@@ -446,7 +463,6 @@ entityNames.forEach(name => {
   entities[name] = new EntityWrapper(name);
 });
 
-// Export the app API client
 export const appApi = {
   entities,
   auth: authWrapper,
@@ -454,5 +470,7 @@ export const appApi = {
   integrations: integrationsWrapper
 };
 
-// Also export the raw supabase client for direct access if needed
+// Aliases
+export const base44 = appApi;
+
 export default supabase;

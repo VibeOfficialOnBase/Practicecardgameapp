@@ -1,60 +1,43 @@
 import React, { useState, useEffect } from 'react';
-import { base44 } from '@/api/base44Client';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
-import { motion, AnimatePresence } from 'framer-motion';
-import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
-import { Textarea } from '@/components/ui/textarea';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { User, Flame, Award, LogOut, Edit2, Save, Shield, Gift, CheckCircle, XCircle, Sparkles, Trash2, Zap } from 'lucide-react';
+import { motion } from 'framer-motion';
+import { useAuth } from '../contexts/AuthContext';
+import { getUserProfile, savePracticeEntry } from '../lib/supabase';
+import { appApi } from '@/api/supabaseClient';
+
+import PageHeader from '../components/common/PageHeader';
+import Card from '../components/common/Card';
+import Section from '../components/common/Section';
+import Button from '../components/common/Button';
+import Modal from '../components/common/Modal';
+
+import { User, Award, Shield, LogOut, Edit2, Save, Trash2, Heart, Users, Zap, Leaf } from 'lucide-react';
 import EnhancedStreakDisplay from '../components/EnhancedStreakDisplay';
-import { Switch } from '@/components/ui/switch';
 import BadgeDisplay from '../components/badges/BadgeDisplay';
 import UserLevelBadge from '../components/UserLevelBadge';
-import LevelProgress from '../components/LevelProgress';
-import PulledCard from '../components/PulledCard';
-import ShareToFeed from '../components/ShareToFeed';
-import AICardInsights from '../components/AICardInsights';
-import { useSound } from '../components/hooks/useSound';
-import { useHaptic } from '../components/hooks/useHaptic';
 import ProfileImageUpload from '../components/profile/ProfileImageUpload';
 import NotificationSettings from '../components/notifications/NotificationSettings';
 import ProgressDashboard from '../components/progress/ProgressDashboard';
+import { Switch } from '@/components/ui/switch'; // Keeping shadcn if available, else replace
 
 export default function Profile() {
-  const [user, setUser] = useState(null);
+  const { user, signOut } = useAuth();
   const [isEditing, setIsEditing] = useState(false);
+
+  // Edit Form State
   const [displayName, setDisplayName] = useState('');
   const [bio, setBio] = useState('');
   const [favoriteValue, setFavoriteValue] = useState('');
   const [lookingForBuddy, setLookingForBuddy] = useState(false);
-  const [buddyFocusAreas, setBuddyFocusAreas] = useState([]);
-  const [pulledCard, setPulledCard] = useState(null);
 
   const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
   const queryClient = useQueryClient();
-  const { play } = useSound();
-  const { trigger } = useHaptic();
 
-  useEffect(() => {
-    const loadUser = async () => {
-      try {
-        const currentUser = await base44.auth.me();
-        setUser(currentUser);
-      } catch (error) {
-        console.error('Error loading user:', error);
-      }
-    };
-    loadUser();
-  }, []);
-
-  const { data: userProfiles = [] } = useQuery({
+  const { data: userProfile } = useQuery({
     queryKey: ['userProfile', user?.email],
-    queryFn: () => base44.entities.UserProfile.filter({ created_by: user?.email }),
+    queryFn: () => getUserProfile(user?.email || user?.id),
     enabled: !!user,
   });
-
-  const userProfile = userProfiles[0];
 
   useEffect(() => {
     if (userProfile) {
@@ -62,53 +45,35 @@ export default function Profile() {
       setBio(userProfile.bio || '');
       setFavoriteValue(userProfile.favorite_leche_value || '');
       setLookingForBuddy(userProfile.looking_for_buddy || false);
-      setBuddyFocusAreas(userProfile.buddy_focus_areas || []);
     }
   }, [userProfile]);
 
   const { data: achievements = [] } = useQuery({
     queryKey: ['achievements', user?.email],
-    queryFn: () => base44.entities.Achievement.filter({ created_by: user?.email }),
+    queryFn: () => appApi.entities.Achievement.filter({ created_by: user?.email }),
     enabled: !!user,
   });
 
   const { data: badges = [] } = useQuery({
     queryKey: ['badges', user?.email],
-    queryFn: () => base44.entities.Badge.filter({ user_email: user?.email }),
+    queryFn: () => appApi.entities.Badge.filter({ user_email: user?.email }),
     enabled: !!user,
   });
 
   const { data: userLevels = [] } = useQuery({
     queryKey: ['userLevel', user?.email],
-    queryFn: () => base44.entities.UserLevel.filter({ user_email: user?.email }),
+    queryFn: () => appApi.entities.UserLevel.filter({ user_email: user?.email }),
     enabled: !!user,
   });
 
   const userLevel = userLevels[0] || { level: 1, experience_points: 0 };
 
-  const { data: practiceCards = [] } = useQuery({
-    queryKey: ['practiceCards'],
-    queryFn: () => base44.entities.PracticeCard.list('-created_date', 100),
-  });
-
-  const today = new Date().toISOString().split('T')[0];
-  const { data: todaysBonusPulls = [] } = useQuery({
-    queryKey: ['bonusPulls', user?.email, today],
-    queryFn: () => base44.entities.BonusPull.filter({
-      user_email: user?.email,
-      pulled_date: today
-    }),
-    enabled: !!user
-  });
-
-  const hasPulledToday = todaysBonusPulls.length > 0;
-
   const updateProfileMutation = useMutation({
     mutationFn: async (data) => {
-      if (userProfile) {
-        return base44.entities.UserProfile.update(userProfile.id, data);
+      if (userProfile?.id) {
+        return appApi.entities.UserProfile.update(userProfile.id, data);
       } else {
-        return base44.entities.UserProfile.create(data);
+        return appApi.entities.UserProfile.create({ ...data, created_by: user.email });
       }
     },
     onSuccess: () => {
@@ -122,323 +87,185 @@ export default function Profile() {
       display_name: displayName,
       bio: bio,
       favorite_leche_value: favoriteValue,
-      looking_for_buddy: lookingForBuddy,
-      buddy_focus_areas: buddyFocusAreas
+      looking_for_buddy: lookingForBuddy
     });
   };
 
-  const deleteAllData = useMutation({
-    mutationFn: async () => {
-      const entities = [
-        'UserProfile', 'DailyPractice', 'Achievement', 'Badge',
-        'FavoriteCard', 'BonusPull', 'CommunityPost', 'PostLike',
-        'BuddyConnection', 'Message', 'Endorsement', 'CardInsight',
-        'DailyChallenge', 'UserLevel', 'StreakProtection',
-        'ChallengeParticipant', 'PersonalizedRecommendation'
-      ];
-
-      for (const entity of entities) {
-        try {
-          const records = await base44.entities[entity].filter({ created_by: user.email });
-          for (const record of records) {
-            await base44.entities[entity].delete(record.id);
-          }
-        } catch (e) {
-          console.log(`Could not delete ${entity}:`, e.message);
-        }
-      }
-      
-      base44.auth.logout();
-    }
-  });
-
-  const handleLogout = () => {
-    localStorage.clear();
-    base44.auth.logout('/Login');
+  const handleLogout = async () => {
+    await signOut();
+    // Redirect handled by router protection usually
   };
 
-  if (pulledCard) {
-    return (
-      <div className="max-w-2xl mx-auto space-y-6">
-        <motion.div
-          initial={{ opacity: 0, y: -20 }}
-          animate={{ opacity: 1, y: 0 }}
-          className="text-center"
-        >
-          <h1 className="text-5xl font-bold mb-3 flex items-center justify-center gap-3">
-            <Gift className="w-12 h-12 text-amber-500" />
-            Bonus Card!
-          </h1>
-          <p className="text-slate-600 text-lg">Your exclusive reward</p>
-        </motion.div>
-
-        <PulledCard card={pulledCard} userEmail={user?.email} />
-
-        <AICardInsights card={pulledCard} userEmail={user?.email} />
-        
-        <ShareToFeed card={pulledCard} userEmail={user?.email} cardType="bonus" />
-
-        <Button
-          onClick={() => setPulledCard(null)}
-          className="w-full bg-gradient-to-r from-amber-500 to-orange-500 hover:from-amber-600 hover:to-orange-600 text-white rounded-2xl py-6"
-        >
-          Back to Profile
-        </Button>
-      </div>
-    );
-  }
+  const lecheValues = [
+    { value: 'Love', icon: Heart, color: 'text-pink-500' },
+    { value: 'Empathy', icon: Users, color: 'text-blue-500' },
+    { value: 'Community', icon: Users, color: 'text-indigo-500' },
+    { value: 'Healing', icon: Leaf, color: 'text-green-500' },
+    { value: 'Empowerment', icon: Zap, color: 'text-amber-500' }
+  ];
 
   return (
-    <div className="max-w-2xl mx-auto space-y-6">
-      <div className="text-center mb-8">
-        <h1 className="text-5xl font-bold mb-2">Profile</h1>
-        <p className="text-body font-medium">Your PRACTICE journey</p>
-      </div>
-
-      {/* Profile Card */}
-      <motion.div
-        initial={{ opacity: 0, y: 20 }}
-        animate={{ opacity: 1, y: 0 }}
-        className="card-organic p-8"
-      >
-        <div className="mb-6">
-          <ProfileImageUpload 
-            currentImageUrl={userProfile?.profile_image_url} 
-            userProfile={userProfile}
-          />
-        </div>
-
-        <div className="flex items-start justify-between mb-6">
-          <div className="flex-1 text-center">
-            <h2 className="text-2xl font-bold ensure-readable-strong">
-              {displayName || user?.full_name || 'Anonymous'}
-            </h2>
-            <p className="text-label text-sm">{user?.email}</p>
-            <div className="mt-3 flex items-center justify-center gap-2">
-              <UserLevelBadge level={userLevel.level} compact />
-            </div>
-          </div>
-
-          <Button
-            onClick={() => setIsEditing(!isEditing)}
-            variant="outline"
-            size="icon"
-            className="rounded-xl"
+    <div className="space-y-6 pb-24">
+      <PageHeader
+        title="My Profile"
+        subtitle="Your journey of growth"
+        rightAction={
+          <button
+            onClick={() => setIsEditing(true)}
+            className="p-2 rounded-full bg-[var(--bg-secondary)] hover:bg-black/5 transition-colors"
           >
-            {isEditing ? <Save className="w-5 h-5" /> : <Edit2 className="w-5 h-5" />}
-          </Button>
-        </div>
+            <Edit2 className="w-5 h-5 text-[var(--text-primary)]" />
+          </button>
+        }
+      />
 
-        {isEditing ? (
-          <div className="space-y-4">
-            <div>
-              <label className="text-sm font-semibold text-slate-700 mb-2 block">
-                Display Name
-              </label>
-              <Input
-                value={displayName}
-                onChange={(e) => setDisplayName(e.target.value)}
-                placeholder="How should we call you?"
-                className="rounded-xl"
-              />
-            </div>
+      {/* Main Profile Card */}
+      <Card className="p-6 relative overflow-hidden">
+        <div className="absolute top-0 left-0 w-full h-24 bg-gradient-to-r from-[var(--accent-primary)]/20 to-[var(--accent-soft)]/20" />
 
-            <div>
-              <label className="text-sm font-semibold text-slate-700 mb-2 block">
-                Bio
-              </label>
-              <Textarea
-                value={bio}
-                onChange={(e) => setBio(e.target.value)}
-                placeholder="Tell us about yourself..."
-                className="rounded-xl"
-              />
-            </div>
-
-            <div>
-              <label className="text-sm font-semibold text-slate-700 mb-2 block">
-                Favorite LECHE Value
-              </label>
-              <Select value={favoriteValue} onValueChange={setFavoriteValue}>
-                <SelectTrigger className="rounded-xl">
-                  <SelectValue placeholder="Select a value" />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="Love">💗 Love</SelectItem>
-                  <SelectItem value="Empathy">🤝 Empathy</SelectItem>
-                  <SelectItem value="Community">👥 Community</SelectItem>
-                  <SelectItem value="Healing">🌿 Healing</SelectItem>
-                  <SelectItem value="Empowerment">⚡ Empowerment</SelectItem>
-                </SelectContent>
-              </Select>
-            </div>
-
-            <div className="flex items-center justify-between p-4 bg-blue-50 rounded-xl border border-blue-200">
-              <div>
-                <label className="text-sm font-semibold text-slate-900">Looking for PRACTICE Buddy</label>
-                <p className="text-xs text-slate-600">Connect with others on similar journeys</p>
-              </div>
-              <Switch checked={lookingForBuddy} onCheckedChange={setLookingForBuddy} />
-            </div>
-
-            <Button
-              onClick={handleSaveProfile}
-              disabled={updateProfileMutation.isPending}
-              className="w-full bg-amber-600 hover:bg-amber-700 rounded-xl py-6"
-            >
-              <Save className="w-5 h-5 mr-2" />
-              Save Changes
-            </Button>
+        <div className="relative flex flex-col items-center">
+          <div className="mb-4">
+             <ProfileImageUpload
+                currentImageUrl={userProfile?.profile_image_url}
+                userProfile={userProfile}
+             />
           </div>
-        ) : (
-          <div className="space-y-4 text-center">
-            {bio && (
-              <p className="ensure-readable leading-relaxed">{bio}</p>
-            )}
+
+          <h2 className="text-2xl font-bold mb-1">{displayName || user?.user_metadata?.full_name || 'Traveler'}</h2>
+          <p className="text-[var(--text-secondary)] text-sm mb-4">{user?.email}</p>
+
+          <div className="flex items-center gap-2 mb-6">
+            <UserLevelBadge level={userLevel.level} compact />
             {favoriteValue && (
-              <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-purple-500/20 border border-purple-500/30 text-sm font-semibold ensure-readable">
-                Favorite Value: {favoriteValue}
-              </div>
-            )}
-            {lookingForBuddy && (
-              <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-blue-500/20 border border-blue-500/30 text-sm font-semibold ensure-readable ml-2">
-                🤝 Open to Buddies
-              </div>
+                <span className="px-3 py-1 rounded-full bg-[var(--bg-secondary)] text-xs font-bold text-[var(--accent-primary)] border border-[var(--accent-primary)]/20">
+                    {favoriteValue}
+                </span>
             )}
           </div>
-        )}
-      </motion.div>
 
+          <div className="w-full grid grid-cols-3 gap-4 border-t border-black/5 dark:border-white/5 pt-6">
+            <div className="text-center">
+                <p className="text-2xl font-bold text-[var(--text-primary)]">{achievements.length}</p>
+                <p className="text-xs text-[var(--text-secondary)] uppercase font-bold">Badges</p>
+            </div>
+            <div className="text-center border-l border-r border-black/5 dark:border-white/5">
+                <p className="text-2xl font-bold text-[var(--text-primary)]">{userProfile?.total_practices_completed || 0}</p>
+                <p className="text-xs text-[var(--text-secondary)] uppercase font-bold">Practices</p>
+            </div>
+            <div className="text-center">
+                <p className="text-2xl font-bold text-[var(--text-primary)]">{userProfile?.current_streak || 0}</p>
+                <p className="text-xs text-[var(--text-secondary)] uppercase font-bold">Streak</p>
+            </div>
+          </div>
+        </div>
+      </Card>
 
-
-      {/* Enhanced Streak Display */}
-      <motion.div
-        initial={{ opacity: 0, y: 20 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ delay: 0.2 }}
-      >
+      {/* Streak Details */}
+      <Section title="Consistency">
         <EnhancedStreakDisplay 
           currentStreak={userProfile?.current_streak || 0}
           longestStreak={userProfile?.longest_streak || 0}
         />
-      </motion.div>
+      </Section>
 
-      {/* Progress Dashboard */}
-      <motion.div
-        initial={{ opacity: 0, y: 20 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ delay: 0.3 }}
-      >
+      {/* Stats Dashboard */}
+      <Section title="Progress">
         <ProgressDashboard userEmail={user?.email} />
-      </motion.div>
+      </Section>
 
-      {/* Notification Settings */}
-      {userProfile && (
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.4 }}
-        >
-          <NotificationSettings userProfile={userProfile} />
-        </motion.div>
-      )}
-
-      {/* Stats Grid */}
-      <div className="grid grid-cols-2 sm:grid-cols-3 gap-3 sm:gap-4">
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.3 }}
-          className="rounded-2xl bg-gradient-to-br from-green-400 to-emerald-500 p-4 sm:p-6 text-center text-white shadow-lg"
-        >
-          <Award className="w-6 h-6 sm:w-8 sm:h-8 mx-auto mb-2" />
-          <p className="text-2xl sm:text-3xl font-bold">{achievements.length}</p>
-          <p className="text-xs sm:text-sm opacity-90">Badges</p>
-        </motion.div>
-
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.4 }}
-          className="rounded-2xl bg-gradient-to-br from-blue-400 to-indigo-500 p-4 sm:p-6 text-center text-white shadow-lg"
-        >
-          <User className="w-6 h-6 sm:w-8 sm:h-8 mx-auto mb-2" />
-          <p className="text-2xl sm:text-3xl font-bold">{userProfile?.total_practices_completed || 0}</p>
-          <p className="text-xs sm:text-sm opacity-90">Practices</p>
-        </motion.div>
-
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.45 }}
-          className="rounded-2xl bg-gradient-to-br from-purple-400 to-pink-500 p-4 sm:p-6 text-center text-white shadow-lg col-span-2 sm:col-span-1"
-        >
-          <Shield className="w-6 h-6 sm:w-8 sm:h-8 mx-auto mb-2" />
-          <p className="text-2xl sm:text-3xl font-bold">{(userProfile?.streak_freezes_available || 0) + (userProfile?.streak_revivals_available || 0)}</p>
-          <p className="text-xs sm:text-sm opacity-90">Protections</p>
-        </motion.div>
-      </div>
-
-      {/* Badges Section */}
+      {/* Badges */}
       {badges.length > 0 && (
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.5 }}
-          className="card-organic p-6"
-        >
-          <h2 className="text-2xl font-bold text-slate-900 mb-4">Your Badges</h2>
-          <BadgeDisplay badges={badges} />
-        </motion.div>
+        <Section title="Collection">
+          <Card className="p-4">
+            <BadgeDisplay badges={badges} />
+          </Card>
+        </Section>
       )}
 
-      {/* Logout Button */}
-      <Button
-        onClick={handleLogout}
-        variant="outline"
-        className="w-full rounded-xl py-6 border-slate-300 text-slate-700 hover:bg-slate-50"
-      >
-        <LogOut className="w-5 h-5 mr-2" />
-        Logout
-      </Button>
-
-      {/* Delete Data Section */}
-      <div className="card-organic p-6 border-2 border-red-200">
-        <h3 className="text-lg font-bold text-red-600 mb-2">Danger Zone</h3>
-        <p className="text-sm text-slate-600 mb-4">
-          Permanently delete all your data. This action cannot be undone.
-        </p>
-        {!showDeleteConfirm ? (
-          <Button
-            onClick={() => setShowDeleteConfirm(true)}
-            variant="outline"
-            className="w-full border-red-300 text-red-600 hover:bg-red-50 rounded-xl"
-          >
-            <Trash2 className="w-4 h-4 mr-2" />
-            Delete All My Data
-          </Button>
-        ) : (
-          <div className="space-y-2">
-            <p className="text-sm font-semibold text-red-700">Are you absolutely sure?</p>
-            <div className="flex gap-2">
-              <Button
-                onClick={() => deleteAllData.mutate()}
-                disabled={deleteAllData.isPending}
-                className="flex-1 bg-red-600 hover:bg-red-700 text-white rounded-xl"
-              >
-                {deleteAllData.isPending ? 'Deleting...' : 'Yes, Delete Everything'}
-              </Button>
-              <Button
-                onClick={() => setShowDeleteConfirm(false)}
-                variant="outline"
-                className="flex-1 rounded-xl"
-              >
-                Cancel
-              </Button>
+      {/* Settings & Danger Zone */}
+      <Section title="Account">
+         <Card className="divide-y divide-black/5 dark:divide-white/5">
+            <div className="p-4 flex items-center justify-between cursor-pointer hover:bg-black/5 transition-colors">
+                <div className="flex items-center gap-3">
+                    <Shield className="w-5 h-5 text-[var(--text-secondary)]" />
+                    <span className="font-medium">Privacy Settings</span>
+                </div>
             </div>
-          </div>
-        )}
-      </div>
+            <button
+                onClick={handleLogout}
+                className="w-full p-4 flex items-center justify-between cursor-pointer hover:bg-red-50 dark:hover:bg-red-900/10 transition-colors text-left"
+            >
+                <div className="flex items-center gap-3 text-red-500">
+                    <LogOut className="w-5 h-5" />
+                    <span className="font-medium">Sign Out</span>
+                </div>
+            </button>
+         </Card>
+      </Section>
+
+      {/* Edit Profile Modal */}
+      <Modal
+        isOpen={isEditing}
+        onClose={() => setIsEditing(false)}
+        title="Edit Profile"
+      >
+        <div className="space-y-6">
+            <div>
+                <label className="text-xs font-bold text-[var(--text-secondary)] uppercase mb-2 block">Display Name</label>
+                <input
+                    value={displayName}
+                    onChange={e => setDisplayName(e.target.value)}
+                    className="w-full p-3 rounded-xl bg-[var(--bg-secondary)] border-none focus:ring-2 focus:ring-[var(--accent-primary)]"
+                    placeholder="Enter your name"
+                />
+            </div>
+
+            <div>
+                <label className="text-xs font-bold text-[var(--text-secondary)] uppercase mb-2 block">Bio</label>
+                <textarea
+                    value={bio}
+                    onChange={e => setBio(e.target.value)}
+                    className="w-full p-3 rounded-xl bg-[var(--bg-secondary)] border-none focus:ring-2 focus:ring-[var(--accent-primary)] min-h-[100px]"
+                    placeholder="Share your journey..."
+                />
+            </div>
+
+            <div>
+                <label className="text-xs font-bold text-[var(--text-secondary)] uppercase mb-2 block">Core Value</label>
+                <div className="grid grid-cols-2 gap-2">
+                    {lecheValues.map((item) => (
+                        <button
+                            key={item.value}
+                            onClick={() => setFavoriteValue(item.value)}
+                            className={`p-3 rounded-xl border flex items-center gap-2 transition-all ${
+                                favoriteValue === item.value
+                                ? 'bg-[var(--accent-primary)]/10 border-[var(--accent-primary)]'
+                                : 'border-black/5 dark:border-white/5 hover:bg-[var(--bg-secondary)]'
+                            }`}
+                        >
+                            <item.icon className={`w-4 h-4 ${item.color}`} />
+                            <span className={`text-sm font-medium ${favoriteValue === item.value ? 'text-[var(--text-primary)]' : 'text-[var(--text-secondary)]'}`}>
+                                {item.value}
+                            </span>
+                        </button>
+                    ))}
+                </div>
+            </div>
+
+            <div className="flex items-center justify-between p-4 bg-[var(--bg-secondary)] rounded-xl">
+                <div>
+                    <p className="font-bold text-sm">Find a Buddy</p>
+                    <p className="text-xs text-[var(--text-secondary)]">Show profile in buddy search</p>
+                </div>
+                <Switch checked={lookingForBuddy} onCheckedChange={setLookingForBuddy} />
+            </div>
+
+            <Button onClick={handleSaveProfile} disabled={updateProfileMutation.isPending} variant="primary" className="w-full">
+                {updateProfileMutation.isPending ? 'Saving...' : 'Save Changes'}
+            </Button>
+        </div>
+      </Modal>
+
     </div>
   );
 }
