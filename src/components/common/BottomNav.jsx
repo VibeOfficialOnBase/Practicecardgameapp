@@ -7,17 +7,12 @@ import { createPageUrl } from '@/utils';
 export default function BottomNav() {
   const location = useLocation();
 
-  // Full list of 9 items for mobile scrollable nav
   const navItems = [
-    { name: 'Pull', path: 'Practice', icon: Home },
-    { name: 'Cards', path: 'MyCards', icon: BookOpen },
-    { name: 'Stats', path: 'Leaderboard', icon: BarChart3 },
-    { name: 'Board', path: 'Leaderboard', icon: Trophy }, // Point to Leaderboard
-    { name: 'Giveaways', path: 'Giveaways', icon: Gift },
-    { name: 'Social', path: 'Community', icon: Users },
-    { name: 'Profile', path: 'Profile', icon: User },
+    { name: 'Home', path: 'Practice', icon: Home },
     { name: 'Games', path: 'Games', icon: Gamepad2 },
-    { name: 'Calendar', path: 'Calendar', icon: Calendar }
+    { name: 'Cards', path: 'MyCards', icon: BookOpen },
+    { name: 'Practice', path: 'Practice', icon: Award },
+    { name: 'Progress', path: 'Progress', icon: BarChart3 },
   ];
 
   const isActive = (path) => {

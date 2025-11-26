@@ -35,29 +35,31 @@ export default function PulledCard({ card, userEmail }) {
 
   const { data: favorites = [] } = useQuery({
     queryKey: ['favorites', userEmail],
-    queryFn: () => base44.entities.FavoriteCard.filter({ user_email: userEmail }),
+    queryFn: () => base44.entities.CardsFavorites.filter({ user_email: userEmail }),
     enabled: !!userEmail
   });
 
-  const isFavorited = favorites.some(fav => fav.practice_card_id === card.id);
+  const isFavorited = favorites.some(fav => fav.card_id === card.id);
 
   const toggleFavorite = useMutation({
     mutationFn: async () => {
       if (isFavorited) {
-        const favorite = favorites.find(fav => fav.practice_card_id === card.id);
-        await base44.entities.FavoriteCard.delete(favorite.id);
+        const favorite = favorites.find(fav => fav.card_id === card.id);
+        await base44.entities.CardsFavorites.delete(favorite.id);
       } else {
-        await base44.entities.FavoriteCard.create({
-          practice_card_id: card.id,
-          user_email: userEmail,
-          favorited_date: new Date().toISOString()
+        await base44.entities.CardsFavorites.create({
+          card_id: card.id,
+          user_id: userEmail,
         });
       }
     },
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['favorites'] });
-      play('success');
-      trigger('light');
+      queryClient.invalidateQueries({ queryKey: ['favorites', userEmail] });
+      queryClient.invalidateQueries({ queryKey: ['favoritedCards', userEmail] });
+    },
+    onError: (error) => {
+      console.error("Failed to toggle favorite:", error);
+      // Optionally: Add user-facing error toast
     }
   });
 
@@ -188,6 +190,7 @@ export default function PulledCard({ card, userEmail }) {
                             e.stopPropagation();
                             toggleFavorite.mutate();
                         }}
+                        aria-label={isFavorited ? "Remove from favorites" : "Add to favorites"}
                         className="p-2 rounded-full bg-black/30 backdrop-blur-sm hover:bg-white/20 transition-all border border-white/10"
                      >
                         <Heart className={`w-5 h-5 ${isFavorited ? 'fill-rose-500 text-rose-500' : 'text-white'}`} />

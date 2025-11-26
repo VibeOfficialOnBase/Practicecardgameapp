@@ -1,8 +1,8 @@
 import { createClient } from '@supabase/supabase-js';
 
 // Get Supabase configuration from environment variables
-const supabaseUrl = import.meta.env.VITE_SUPABASE_URL;
-const supabaseAnonKey = import.meta.env.VITE_SUPABASE_ANON_KEY;
+const supabaseUrl = import.meta.env.NEXT_PUBLIC_SUPABASE_URL;
+const supabaseAnonKey = import.meta.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
 
 // Check if we're in demo mode (no environment variables provided)
 export const isDemoMode = !supabaseUrl || !supabaseAnonKey;
@@ -117,7 +117,10 @@ class EntityWrapper {
       .order(column, { ascending: !isDescending })
       .limit(limit);
 
-    if (error) throw error;
+    if (error) {
+      console.error(`Error listing ${this.tableName}:`, error);
+      throw new Error(`Failed to list ${this.tableName}. ${error.message}`);
+    }
     return data || [];
   }
 
@@ -138,7 +141,10 @@ class EntityWrapper {
     });
 
     const { data, error } = await query;
-    if (error) throw error;
+    if (error) {
+      console.error(`Error filtering ${this.tableName}:`, error);
+      throw new Error(`Failed to filter ${this.tableName}. ${error.message}`);
+    }
     return data || [];
   }
 
@@ -156,7 +162,14 @@ class EntityWrapper {
       .eq('id', id)
       .single();
 
-    if (error) throw error;
+    if (error) {
+      console.error(`Error getting ${this.tableName} with id ${id}:`, error);
+      // Don't throw if it's a "not found" error, just return null
+      if (error.code === 'PGRST116') { // PostgREST code for "Not Found"
+        return null;
+      }
+      throw new Error(`Failed to get ${this.tableName}. ${error.message}`);
+    }
     return data;
   }
 
@@ -180,7 +193,10 @@ class EntityWrapper {
       .select()
       .single();
 
-    if (error) throw error;
+    if (error) {
+      console.error(`Error creating ${this.tableName}:`, error);
+      throw new Error(`Failed to create ${this.tableName}. ${error.message}`);
+    }
     return data;
   }
 
@@ -207,7 +223,10 @@ class EntityWrapper {
       .select()
       .single();
 
-    if (error) throw error;
+    if (error) {
+      console.error(`Error updating ${this.tableName} with id ${id}:`, error);
+      throw new Error(`Failed to update ${this.tableName}. ${error.message}`);
+    }
     return data;
   }
 
@@ -227,7 +246,10 @@ class EntityWrapper {
       .delete()
       .eq('id', id);
 
-    if (error) throw error;
+    if (error) {
+      console.error(`Error deleting ${this.tableName} with id ${id}:`, error);
+      throw new Error(`Failed to delete ${this.tableName}. ${error.message}`);
+    }
     return { success: true };
   }
 }
@@ -250,8 +272,15 @@ const authWrapper = {
     }
 
     const { data: { user }, error } = await supabase.auth.getUser();
-    if (error) throw error;
-    if (!user) throw new Error('Not authenticated');
+    if (error) {
+      console.error('Error getting current user:', error);
+      throw new Error(`Authentication error. ${error.message}`);
+    }
+    if (!user) {
+      // This is not a thrown error from the API, but a state where no user is logged in.
+      // Throwing an error here would be unexpected for legitimate logged-out states.
+      return null;
+    }
     return user;
   },
 
@@ -274,7 +303,10 @@ const authWrapper = {
       password,
       options: { data: metadata }
     });
-    if (error) throw error;
+    if (error) {
+      console.error('Error signing up:', error);
+      throw new Error(`Sign up failed. ${error.message}`);
+    }
     return data;
   },
 
@@ -302,7 +334,10 @@ const authWrapper = {
       email,
       password
     });
-    if (error) throw error;
+    if (error) {
+      console.error('Error signing in:', error);
+      throw new Error(`Sign in failed. ${error.message}`);
+    }
     return data;
   },
 
@@ -313,7 +348,10 @@ const authWrapper = {
     }
 
     const { error } = await supabase.auth.signOut();
-    if (error) throw error;
+    if (error) {
+      console.error('Error signing out:', error);
+      throw new Error(`Sign out failed. ${error.message}`);
+    }
     return { success: true };
   },
 
@@ -324,7 +362,10 @@ const authWrapper = {
     }
 
     const { error } = await supabase.auth.resetPasswordForEmail(email);
-    if (error) throw error;
+    if (error) {
+      console.error('Error resetting password:', error);
+      throw new Error(`Password reset failed. ${error.message}`);
+    }
     return { success: true };
   },
 
@@ -417,7 +458,7 @@ const entityNames = [
   'BuddyConnection',
   'PersonalizedRecommendation',
   'StreakProtection',
-  'FavoriteCard',
+  'CardsFavorites',
   'PostLike',
   'UserPreferences',
   'DailyCard',

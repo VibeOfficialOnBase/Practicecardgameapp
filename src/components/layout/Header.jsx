@@ -19,7 +19,7 @@ export default function Header() {
     { name: 'Wins', icon: Award, path: 'Achievements' },
     { name: 'Stats', icon: BarChart3, path: 'Leaderboard' },
     { name: 'Giveaway', icon: Gift, path: 'PremiumPacks' }, // Mapping to PremiumPacks as placeholder
-    { name: 'Board', icon: Trophy, path: 'Games' },
+    { name: 'Games', icon: Trophy, path: 'Games' },
     { name: 'Social', icon: Users, path: 'Community' },
     { name: 'Profile', icon: Heart, path: 'Profile' },
     // { name: 'Calendar', icon: Calendar, path: 'Calendar' }, // Not implemented yet
@@ -76,6 +76,7 @@ export default function Header() {
            {/* Hamburger Menu */}
            <button
              onClick={() => setIsMenuOpen(!isMenuOpen)}
+             aria-label={isMenuOpen ? "Close navigation menu" : "Open navigation menu"}
              className="p-2 rounded-lg text-white/80 hover:bg-white/10 transition-colors"
            >
              {isMenuOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
@@ -109,13 +110,13 @@ export default function Header() {
                       key={item.name}
                       to={createPageUrl(item.path)}
                       onClick={() => setIsMenuOpen(false)}
-                      className={`flex items-center gap-4 px-6 py-3 transition-all ${
+                      className={`flex items-center gap-3 px-6 py-2.5 transition-all ${
                         active
                           ? 'bg-white/20 text-white border-l-4 border-purple-400'
                           : 'text-white/70 hover:text-white hover:bg-white/5'
                       }`}
                     >
-                      <Icon className={`w-5 h-5 ${active ? 'text-purple-300' : ''}`} />
+                      <Icon className={`w-4 h-4 ${active ? 'text-purple-300' : ''}`} />
                       <span className="font-medium">{item.name}</span>
                     </Link>
                   );

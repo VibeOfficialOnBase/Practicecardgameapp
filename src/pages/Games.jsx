@@ -46,15 +46,15 @@ export default function Games() {
         tags: ['Virtual Pet', 'Evolution', 'Wellness'],
         isNew: true
     },
-    {
-        id: 'challenge_bubbles',
-        title: 'Challenge Bubbles',
-        desc: 'Match emotions and find clarity',
-        icon: Puzzle,
-        path: 'ChallengeBubbles',
-        color: 'from-blue-500 to-cyan-500',
-        tags: ['Puzzle', 'Match 3', 'Relaxing']
-    },
+    // {
+    //     id: 'challenge_bubbles',
+    //     title: 'Challenge Bubbles',
+    //     desc: 'Match emotions and find clarity',
+    //     icon: Puzzle,
+    //     path: 'ChallengeBubbles',
+    //     color: 'from-blue-500 to-cyan-500',
+    //     tags: ['Puzzle', 'Match 3', 'Relaxing']
+    // },
     {
         id: 'memory_match',
         title: 'Memory Match',

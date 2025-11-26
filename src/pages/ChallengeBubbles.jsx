@@ -128,7 +128,6 @@ export default function ChallengeBubbles() {
   const backToMenu = () => {
     if (gameRef.current) {
       gameRef.current.stop();
-      gameRef.current = null;
     }
     setGameState('menu');
   };

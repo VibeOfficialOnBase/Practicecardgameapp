@@ -144,18 +144,27 @@ export class ChakraBlasterGame {
   
   stop() {
     this.isRunning = false;
+    if (this.animationFrameId) {
+      cancelAnimationFrame(this.animationFrameId);
+    }
   }
   
-  gameLoop() {
+  gameLoop(timestamp) {
     if (!this.isRunning || this.isPaused) return;
+
+    if (!this.lastTime) {
+      this.lastTime = timestamp;
+    }
+    const deltaTime = (timestamp - this.lastTime) / 1000; // Delta time in seconds
+    this.lastTime = timestamp;
     
-    this.update();
+    this.update(deltaTime);
     this.render();
     
-    requestAnimationFrame(() => this.gameLoop());
+    this.animationFrameId = requestAnimationFrame((t) => this.gameLoop(t));
   }
   
-  update() {
+  update(deltaTime) {
     this.frame++;
     
     // Update player
@@ -279,10 +288,10 @@ export class ChakraBlasterGame {
       this.enemiesSpawned++;
     }
     
-    // Continuous spawning to keep action flowing
-    const minEnemies = Math.min(3 + Math.floor(this.levelManager.level / 3), 8);
-    if (this.enemies.length < minEnemies && this.frame % 90 === 0) {
-      const types = ['fear', 'doubt', 'worry', 'anger', 'sadness'];
+    // Continuous spawning to keep action flowing, but more controlled
+    const maxEnemies = Math.min(5 + Math.floor(this.levelManager.level / 2), 12);
+    if (this.enemies.length < maxEnemies && this.frame % 100 === 0) {
+      const types = ['fear', 'doubt', 'worry', 'anger', 'sadness', 'jealousy'];
       const randomType = types[Math.floor(Math.random() * types.length)];
       const enemy = new Enemy(
         Math.random() * this.width,
@@ -374,7 +383,8 @@ export class ChakraBlasterGame {
     const dx = a.x - b.x;
     const dy = a.y - b.y;
     const distance = Math.sqrt(dx * dx + dy * dy);
-    return distance < (a.radius || 10) + (b.radius || 15);
+    // Add a small buffer for more forgiving collisions
+    return distance < (a.radius || 10) + (b.radius || 15) - 2;
   }
   
   completeLevel() {

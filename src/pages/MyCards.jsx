@@ -25,8 +25,9 @@ export default function MyCards() {
     queryKey: ['favoritedCards', user?.email],
     queryFn: async () => {
       if (!user) return [];
-      const favorites = await base44.entities.FavoriteCard.filter({ user_email: user.email });
-      const cardIds = favorites.map(fav => fav.practice_card_id);
+      const favorites = await base44.entities.CardsFavorites.filter({ user_id: user.id });
+      if (!favorites) return [];
+      const cardIds = favorites.map(fav => fav.card_id);
       
       if (cardIds.length === 0) return [];
 
@@ -35,7 +36,7 @@ export default function MyCards() {
 
       return favorites.map(fav => ({
         ...fav,
-        cardDetails: userFavoriteCards.find(card => card.id === fav.practice_card_id)
+        cardDetails: userFavoriteCards.find(card => card.id === fav.card_id)
       })).filter(item => item.cardDetails);
     },
     enabled: !!user,
@@ -59,7 +60,7 @@ export default function MyCards() {
         </TabsList>
 
         <TabsContent value="favorites">
-            {favoritedCards?.length === 0 ? (
+            {!favoritedCards || favoritedCards.length === 0 ? (
                 <Card className="p-8 text-center">
                     <BookOpen className="w-16 h-16 text-[var(--text-secondary)] mx-auto mb-4" />
                     <h2 className="text-xl font-bold mb-2">No Favorites Yet</h2>
