@@ -3,7 +3,7 @@
     "version": "1",
     "name": "PRACTICE - Daily Affirmations on Base",
     "iconUrl": "https://usdozf7pplhxfvrl.public.blob.vercel-storage.com/thumbnail_6c3fa7f1-3668-4a88-befc-6f2e019c6c52-ExkvmE6HvykbuBjbilMbIxlDOu4RAW",
-    "homeUrl": "https://stems-prevent-512.app.ohara.ai",
+    "homeUrl": "/",
     "imageUrl": "https://usdozf7pplhxfvrl.public.blob.vercel-storage.com/thumbnail_6c3fa7f1-3668-4a88-befc-6f2e019c6c52-ExkvmE6HvykbuBjbilMbIxlDOu4RAW",
     "buttonTitle": "✨ Pull Your Daily Card",
     "splashImageUrl": "https://usdozf7pplhxfvrl.public.blob.vercel-storage.com/farcaster/splash_images/splash_image1.svg",
@@ -25,27 +25,22 @@
   },
   "frame": {
     "version": "next",
-    "imageUrl": "https://stems-prevent-512.app.ohara.ai/api/og?cardId=1&affirmation=Pull+Your+Daily+Card",
+    "imageUrl": "/api/og?cardId=1&affirmation=Pull+Your+Daily+Card",
     "button": {
       "title": "✨ Pull Your Daily Card",
       "action": {
         "type": "launch_frame",
         "name": "PRACTICE",
-        "url": "https://stems-prevent-512.app.ohara.ai",
+        "url": "/",
         "splashImageUrl": "https://usdozf7pplhxfvrl.public.blob.vercel-storage.com/farcaster/splash_images/splash_image1.svg",
         "splashBackgroundColor": "#667eea"
       }
     },
-    "postUrl": "https://stems-prevent-512.app.ohara.ai/api/frame"
+    "postUrl": "/api/frame"
   },
   "baseBuilder": {
     "allowedAddresses": [
       ""
     ]
-  },
-  "accountAssociation": {
-    "header": "eyJmaWQiOjEsInR5cGUiOiJjdXN0b2R5Iiwia2V5IjoiMHg1RTUzRTg4MDVBRDU0NTM0M0RCNTUxNzY2NTY3OEY5RTY4RkMxOUQyIn0",
-    "payload": "eyJkb21haW4iOiJzdGVtcy1wcmV2ZW50LTUxMi5hcHAub2hhcmEuYWkifQ",
-    "signature": "MHg2RkMxODdFODFFNzE5Qjg0RThEMEYyNjQxMjRDRjM5RTk0REE2QzZCMzQxMjQ1RUFCQTQ5NEM5OEQ2ODU1MjcwMjkxMjQ1Qjk4NkExMjZENjVDRjM0QUIzNEQxNzFFOEI4N0M3RTI5QkQ3RTlFMkJGNDk5QTIyMDUxRUM4OTdBMDFi"
   }
 }

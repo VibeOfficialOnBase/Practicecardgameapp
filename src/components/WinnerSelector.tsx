@@ -2,8 +2,17 @@ import { useState } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Trophy, Sparkles, Copy, Check } from 'lucide-react';
-import Confetti from 'react-confetti';
-import type { RaffleEntry } from '@/spacetime_module_bindings';
+
+// Local type definition (replacing SpaceTimeDB type)
+interface RaffleEntry {
+  id: string;
+  wallet: string;
+  username: string;
+  email: string;
+  tokenBalance: string;
+  usdValue: number;
+  created_date?: string;
+}
 
 interface WinnerSelectorProps {
   raffleEntries: RaffleEntry[];
@@ -89,13 +98,22 @@ We'll be reaching out shortly. Thank you to everyone who participated!
   return (
     <div className="w-full max-w-2xl mx-auto space-y-6">
       {showConfetti && (
-        <Confetti
-          width={typeof window !== 'undefined' ? window.innerWidth : 300}
-          height={typeof window !== 'undefined' ? window.innerHeight : 200}
-          recycle={false}
-          numberOfPieces={500}
-          colors={['#a855f7', '#ec4899', '#3b82f6', '#10b981', '#f59e0b']}
-        />
+        <div className="fixed inset-0 pointer-events-none z-50 overflow-hidden">
+          {Array.from({ length: 50 }).map((_, i) => (
+            <div
+              key={i}
+              className="absolute animate-bounce"
+              style={{
+                left: `${Math.random() * 100}%`,
+                top: `${Math.random() * 100}%`,
+                animationDelay: `${Math.random() * 2}s`,
+                animationDuration: `${1 + Math.random() * 2}s`,
+              }}
+            >
+              <Sparkles className="w-4 h-4 text-yellow-400" />
+            </div>
+          ))}
+        </div>
       )}
 
       <Card className="backdrop-blur-lg bg-white/10 border-white/20">

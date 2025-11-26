@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { motion } from 'framer-motion';
 import { useAuth } from '../contexts/AuthContext';
+import { useWallet } from '../contexts/WalletContext';
 import { getUserProfile } from '../lib/supabase';
 import { appApi } from '@/api/supabaseClient';
 
@@ -10,8 +11,9 @@ import Card from '../components/common/Card';
 import Section from '../components/common/Section';
 import Button from '../components/common/Button';
 import Modal from '../components/common/Modal';
+import WalletConnect from '../components/wallet/WalletConnect';
 
-import { User, Award, Shield, LogOut, Edit2, Save, Trash2, Heart, Users, Zap, Leaf, Trophy, Sparkles } from 'lucide-react';
+import { User, Award, Shield, LogOut, Edit2, Save, Trash2, Heart, Users, Zap, Leaf, Trophy, Sparkles, Wallet } from 'lucide-react';
 import EnhancedStreakDisplay from '../components/EnhancedStreakDisplay';
 import BadgeDisplay from '../components/badges/BadgeDisplay';
 import UserLevelBadge from '../components/UserLevelBadge';
@@ -23,6 +25,7 @@ import { Switch } from '@/components/ui/switch';
 
 export default function Profile() {
   const { user, signOut } = useAuth();
+  const { walletAddress, isConnected, getShortAddress } = useWallet();
   const [isEditing, setIsEditing] = useState(false);
 
   // Edit Form State
@@ -193,6 +196,28 @@ export default function Profile() {
           </Card>
         </Section>
       )}
+
+      {/* Web3 Wallet Section */}
+      <Section title="Web3 Wallet">
+        <Card className="p-4">
+          <div className="flex items-center justify-between">
+            <div className="flex items-center gap-3">
+              <div className="w-10 h-10 rounded-full bg-gradient-to-r from-purple-500 to-pink-500 flex items-center justify-center">
+                <Wallet className="w-5 h-5 text-white" />
+              </div>
+              <div>
+                <p className="font-semibold text-[var(--text-primary)]">Algorand Wallet</p>
+                {isConnected ? (
+                  <p className="text-sm text-green-500">Connected: {getShortAddress(walletAddress)}</p>
+                ) : (
+                  <p className="text-sm text-[var(--text-secondary)]">Not connected</p>
+                )}
+              </div>
+            </div>
+            <WalletConnect />
+          </div>
+        </Card>
+      </Section>
 
       {/* Settings & Danger Zone */}
       <Section title="Account">

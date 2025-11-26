@@ -3,6 +3,7 @@ import Pages from "@/pages/index.jsx"
 import { Toaster } from "@/components/ui/toaster"
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 import { AuthProvider } from '@/contexts/AuthContext'
+import { WalletProvider } from '@/contexts/WalletContext'
 import DebugStatus from '@/components/DebugStatus'
 
 // Create a client
@@ -19,9 +20,11 @@ function App() {
   return (
     <QueryClientProvider client={queryClient}>
       <AuthProvider>
-        <Pages />
-        <Toaster />
-        <DebugStatus />
+        <WalletProvider>
+          <Pages />
+          <Toaster />
+          <DebugStatus />
+        </WalletProvider>
       </AuthProvider>
     </QueryClientProvider>
   )
