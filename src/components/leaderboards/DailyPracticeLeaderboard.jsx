@@ -1,87 +1,59 @@
+
 import React from 'react';
 import { useQuery } from '@tanstack/react-query';
-import { base44 } from '@/api/base44Client';
-import { Flame, Trophy, Award } from 'lucide-react';
+import { appApi } from '@/api/supabaseClient';
 import { motion } from 'framer-motion';
-import { ScrollArea } from '@/components/ui/scroll-area';
+import { Crown, Trophy, User } from 'lucide-react';
+import Card from '../common/Card';
 
-export default function DailyPracticeLeaderboard() {
-  const { data: topPractitioners = [] } = useQuery({
+const DailyPracticeLeaderboard = () => {
+  const { data: leaderboardData, isLoading } = useQuery({
     queryKey: ['dailyPracticeLeaderboard'],
     queryFn: async () => {
-      const sessions = await base44.entities.DailyPracticeSession.filter({ completed: true });
-      
-      // Group by user and calculate stats
-      const userStats = {};
-      sessions.forEach(session => {
-        if (!userStats[session.user_email]) {
-          userStats[session.user_email] = {
-            email: session.user_email,
-            totalXP: 0,
-            maxStreak: 0,
-            completedDays: 0
-          };
-        }
-        userStats[session.user_email].totalXP += session.total_xp_earned + session.bonus_xp;
-        userStats[session.user_email].maxStreak = Math.max(
-          userStats[session.user_email].maxStreak,
-          session.current_streak
-        );
-        userStats[session.user_email].completedDays += 1;
-      });
-
-      return Object.values(userStats)
-        .sort((a, b) => b.totalXP - a.totalXP)
-        .slice(0, 10);
-    }
+      // This is a simplified mock. In a real app, you'd have a dedicated function
+      // or RPC call to get ranked user profiles based on streak or points.
+      const profiles = await appApi.entities.UserProfile.list('-current_streak', 10);
+      return profiles;
+    },
   });
 
+  if (isLoading) {
+    return <div className="text-center p-4">Loading Leaderboard...</div>;
+  }
+
   return (
-    <div className="card-organic p-6">
-      <h3 className="text-2xl font-bold mb-4 ensure-readable-strong flex items-center gap-2">
-        <Flame className="w-6 h-6 text-orange-500" />
-        Daily Practice Champions
+    <Card className="p-4">
+      <h3 className="text-lg font-bold mb-4 flex items-center gap-2">
+        <Trophy className="w-5 h-5 text-amber-400" />
+        Top Practitioners
       </h3>
-
-      <ScrollArea className="h-[400px]">
-        <div className="space-y-3">
-          {topPractitioners.map((user, index) => (
-            <motion.div
-              key={user.email}
-              initial={{ opacity: 0, x: -20 }}
-              animate={{ opacity: 1, x: 0 }}
-              transition={{ delay: index * 0.05 }}
-              className="flex items-center gap-3 bg-white/5 rounded-xl p-4"
-            >
-              <div className="flex-shrink-0">
-                {index === 0 && <Trophy className="w-6 h-6 text-yellow-400" />}
-                {index === 1 && <Trophy className="w-6 h-6 text-gray-300" />}
-                {index === 2 && <Trophy className="w-6 h-6 text-amber-600" />}
-                {index > 2 && (
-                  <div className="w-6 h-6 rounded-full bg-purple-500/30 flex items-center justify-center text-xs font-bold">
-                    {index + 1}
-                  </div>
-                )}
-              </div>
-
-              <div className="flex-1 min-w-0">
-                <p className="font-bold ensure-readable truncate">
-                  {user.email.split('@')[0]}
-                </p>
-                <div className="flex items-center gap-2 text-xs text-label">
-                  <Flame className="w-3 h-3 text-orange-500" />
-                  {user.maxStreak} day streak
-                </div>
-              </div>
-
-              <div className="text-right">
-                <p className="font-bold text-purple-400">{user.totalXP} XP</p>
-                <p className="text-xs text-label">{user.completedDays} days</p>
-              </div>
-            </motion.div>
-          ))}
-        </div>
-      </ScrollArea>
-    </div>
+      <div className="space-y-3">
+        {leaderboardData && leaderboardData.map((user, index) => (
+          <motion.div
+            key={user.id}
+            initial={{ opacity: 0, x: -20 }}
+            animate={{ opacity: 1, x: 0 }}
+            transition={{ delay: index * 0.1 }}
+            className="flex items-center justify-between p-3 rounded-lg bg-white/5"
+          >
+            <div className="flex items-center gap-3">
+              <span className="font-bold text-sm w-6 text-center">{index + 1}</span>
+              <img
+                src={user.profile_image_url || `https://api.dicebear.com/8.x/bottts/svg?seed=${user.id}`}
+                alt={user.display_name}
+                className="w-8 h-8 rounded-full"
+              />
+              <span className="font-medium text-sm">{user.display_name || 'Anonymous'}</span>
+            </div>
+            <div className="flex items-center gap-2">
+              {index === 0 && <Crown className="w-4 h-4 text-yellow-400" />}
+              <span className="font-bold text-sm">{user.current_streak || 0} days</span>
+            </div>
+          </motion.div>
+        ))}
+      </div>
+    </Card>
   );
-}
+};
+
+export default DailyPracticeLeaderboard;
