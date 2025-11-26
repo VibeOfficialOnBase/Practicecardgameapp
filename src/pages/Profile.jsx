@@ -18,6 +18,7 @@ import UserLevelBadge from '../components/UserLevelBadge';
 import ProfileImageUpload from '../components/profile/ProfileImageUpload';
 import NotificationSettings from '../components/notifications/NotificationSettings';
 import StatsWidget from '../components/profile/StatsWidget';
+import DailyPracticeLeaderboard from '../components/leaderboards/DailyPracticeLeaderboard';
 import { Switch } from '@/components/ui/switch';
 
 export default function Profile() {
@@ -177,6 +178,11 @@ export default function Profile() {
             achievements={achievements}
             level={userLevel.level}
         />
+      </Section>
+
+      {/* Leaderboard Section */}
+      <Section title="Leaderboard">
+        <DailyPracticeLeaderboard />
       </Section>
 
       {/* Badges */}

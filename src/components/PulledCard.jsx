@@ -55,7 +55,8 @@ export default function PulledCard({ card, userEmail }) {
       }
     },
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['favorites'] });
+      queryClient.invalidateQueries({ queryKey: ['favorites', userEmail] });
+      queryClient.invalidateQueries({ queryKey: ['favoritedCards', userEmail] });
       play('success');
       trigger('light');
     }

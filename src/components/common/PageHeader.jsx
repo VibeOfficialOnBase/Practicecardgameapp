@@ -20,9 +20,14 @@ export default function PageHeader({ title, subtitle, backUrl }) {
           </Button>
         </div>
       )}
-      <div>
-        <h1 className="text-3xl md:text-4xl mb-2">{title}</h1>
-        {subtitle && <p className="text-[var(--text-secondary)] text-lg">{subtitle}</p>}
+      <div className="flex items-center gap-4">
+        <img src="/vibe_logo.jpg" alt="VibeOfficial Logo" className="w-12 h-12 rounded-full" />
+        <div>
+          <h1 className="text-3xl md:text-4xl font-bold text-gray-800 dark:text-white">
+            {title}
+          </h1>
+          {subtitle && <p className="text-[var(--text-secondary)] text-lg">{subtitle}</p>}
+        </div>
       </div>
     </div>
   );

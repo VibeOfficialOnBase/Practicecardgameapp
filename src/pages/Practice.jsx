@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useAuth } from '../contexts/AuthContext';
-import { getUserProfile, savePracticeEntry } from '../lib/supabase';
+import { getUserProfile, savePracticeEntry, savePulledCard } from '../lib/supabase';
 import { appApi, supabase } from '@/api/supabaseClient';
 import PageHeader from '../components/common/PageHeader';
 import Card from '../components/common/Card';
@@ -104,8 +104,16 @@ export default function Practice() {
     setTimeout(() => {
       const randomCard = practiceCards[Math.floor(Math.random() * practiceCards.length)];
       setPulledCard(randomCard);
+
+      // Save to Supabase instead of just localStorage
+      if (user && randomCard.id) {
+        saveCardMutation.mutate(randomCard.id);
+      }
+
+      // We can still use localStorage for quick retrieval within the session
       const todayKey = new Date().toISOString().split('T')[0];
       localStorage.setItem(`practice_card_${todayKey}`, JSON.stringify(randomCard));
+
       setIsPulling(false);
       setTimeout(() => {
         if (!todaysPractice?.completed) {
@@ -114,6 +122,18 @@ export default function Practice() {
       }, 1500);
     }, 1000);
   };
+
+  const saveCardMutation = useMutation({
+    mutationFn: (cardId) => savePulledCard(user.email, cardId),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['todaysPractice', user?.email] });
+      queryClient.invalidateQueries({ queryKey: ['pulledCardsHistory', user?.email] }); // For calendar/history
+    },
+    onError: (error) => {
+      console.error("Failed to save pulled card:", error);
+      toast.error("Could not save your card pull. Please try again.");
+    },
+  });
 
   const completePracticeMutation = useMutation({
     mutationFn: async ({ reflection, rating, beforeMood, afterMood }) => {

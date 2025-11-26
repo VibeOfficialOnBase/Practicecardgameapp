@@ -16,12 +16,12 @@ import ShareModal from '../components/common/ShareModal';
 export default function MyCards() {
   const [shareCard, setShareCard] = useState(null);
   
-  const { data: user } = useQuery({
+  const { data: user, isLoading: isUserLoading } = useQuery({
     queryKey: ['user'],
     queryFn: () => base44.auth.me(),
   });
 
-  const { data: favoritedCards, isLoading } = useQuery({
+  const { data: favoritedCards, isLoading: isCardsLoading } = useQuery({
     queryKey: ['favoritedCards', user?.email],
     queryFn: async () => {
       if (!user) return [];
@@ -41,7 +41,7 @@ export default function MyCards() {
     enabled: !!user,
   });
 
-  if (isLoading) {
+  if (isUserLoading || isCardsLoading) {
     return <div className="flex justify-center items-center h-screen"><p>Loading...</p></div>;
   }
 
@@ -96,10 +96,13 @@ export default function MyCards() {
         </TabsContent>
 
         <TabsContent value="history">
-            {/* Placeholder for history if needed, or just redirect to Calendar */}
             <Card className="p-6 text-center">
-                <p>View your full history in the Journal.</p>
-                <Link to={createPageUrl('Calendar')} className="text-[var(--accent-primary)] font-bold mt-2 inline-block">Go to Journal</Link>
+                <p>Your full card pull history is now available in the Journal.</p>
+                <Link to={createPageUrl('Calendar')}>
+                    <Button variant="primary" className="mt-4">
+                        <BookOpen className="w-4 h-4 mr-2" /> View Journal
+                    </Button>
+                </Link>
             </Card>
         </TabsContent>
       </Tabs>

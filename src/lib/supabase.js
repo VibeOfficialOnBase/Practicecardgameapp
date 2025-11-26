@@ -84,6 +84,44 @@ export async function savePracticeEntry(uid, data) {
 }
 
 /**
+ * Saves a pulled card for the day for a user.
+ * @param {string} uid - User email/ID
+ *param {string} cardId - The ID of the practice card pulled.
+ * @returns {Promise<Object>} Saved entry
+ */
+export async function savePulledCard(uid, cardId) {
+  const entry = {
+    created_by: uid,
+    practice_card_id: cardId,
+    created_date: new Date().toISOString(),
+  };
+
+  if (isDemoMode) {
+    const table = getDemoTable('daily_card');
+    const newEntry = { ...entry, id: `demo-daily-card-${Date.now()}` };
+    table.push(newEntry);
+    saveDemoTable('daily_card', table);
+    return newEntry;
+  }
+
+  const { data: saved, error } = await supabase
+    .from('daily_card')
+    .insert(entry)
+    .select()
+    .single();
+
+  if (error) {
+    // It might fail if a card was already pulled today, which is fine.
+    if (error.code === '23505') { // unique constraint violation
+      console.log('User has already pulled a card today.');
+      return null;
+    }
+    throw error;
+  }
+  return saved;
+}
+
+/**
  * Save game progress/score
  * @param {string} uid - User email/ID
  * @param {string} gameType - 'chakra_blaster', 'memory_match', etc.

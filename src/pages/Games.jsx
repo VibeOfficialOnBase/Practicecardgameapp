@@ -47,15 +47,6 @@ export default function Games() {
         isNew: true
     },
     {
-        id: 'challenge_bubbles',
-        title: 'Challenge Bubbles',
-        desc: 'Match emotions and find clarity',
-        icon: Puzzle,
-        path: 'ChallengeBubbles',
-        color: 'from-blue-500 to-cyan-500',
-        tags: ['Puzzle', 'Match 3', 'Relaxing']
-    },
-    {
         id: 'memory_match',
         title: 'Memory Match',
         desc: 'Match affirmations, train your mind',

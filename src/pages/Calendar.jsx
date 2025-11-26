@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { useQuery } from '@tanstack/react-query';
-import { base44 } from '@/api/base44Client';
+import { supabase } from '@/api/supabaseClient';
 import { useAuth } from '../contexts/AuthContext';
 import { format, startOfMonth, endOfMonth, eachDayOfInterval, isSameDay, isSameMonth, addMonths, subMonths } from 'date-fns';
 import { motion, AnimatePresence } from 'framer-motion';
@@ -16,22 +16,50 @@ export default function Calendar() {
   const [selectedDate, setSelectedDate] = useState(new Date());
   const [viewingEntry, setViewingEntry] = useState(null);
 
-  // Fetch practice entries for the current month
-  const { data: practices = [] } = useQuery({
-    queryKey: ['practices', user?.email, format(currentMonth, 'yyyy-MM')],
+  // Fetch practice entries and pulled cards for the current month
+  const { data: monthData = [], isLoading } = useQuery({
+    queryKey: ['calendarData', user?.email, format(currentMonth, 'yyyy-MM')],
     queryFn: async () => {
-      const start = format(startOfMonth(currentMonth), 'yyyy-MM-dd');
-      const end = format(endOfMonth(currentMonth), 'yyyy-MM-dd');
-      return base44.entities.DailyPractice.filter({
-        created_by: user?.email,
-        created_date: { $gte: start, $lte: end } // Mock filter syntax, depends on base44
+      if (!user) return [];
+      const startDate = startOfMonth(currentMonth);
+      const endDate = endOfMonth(currentMonth);
+
+      // Fetch completed practices
+      const { data: practices, error: practicesError } = await supabase
+        .from('daily_practice')
+        .select(`*`)
+        .eq('created_by', user.email)
+        .gte('created_date', startDate.toISOString())
+        .lte('created_date', endDate.toISOString());
+
+      if (practicesError) throw new Error(practicesError.message);
+
+      // Fetch pulled cards (history)
+      const { data: cards, error: cardsError } = await supabase
+        .from('daily_card')
+        .select(`*, practice_card:practice_card_id(*)`)
+        .eq('created_by', user.email)
+        .gte('created_date', startDate.toISOString())
+        .lte('created_date', endDate.toISOString());
+
+      if (cardsError) throw new Error(cardsError.message);
+
+      // Combine and process data
+      const combined = {};
+      practices.forEach(p => {
+        const day = format(new Date(p.created_date), 'yyyy-MM-dd');
+        combined[day] = { ...combined[day], practice: p, type: 'practice' };
       });
+      cards.forEach(c => {
+        const day = format(new Date(c.created_date), 'yyyy-MM-dd');
+        combined[day] = { ...combined[day], card: c, type: 'card' };
+      });
+
+      return Object.values(combined);
     },
-    enabled: !!user
+    enabled: !!user,
   });
 
-  // Fetch Card History for indicators
-  // In a real app, this might be joined or separate. Assuming DailyPractice has 'practice_card_id'
 
   const days = eachDayOfInterval({
     start: startOfMonth(currentMonth),
@@ -39,15 +67,17 @@ export default function Calendar() {
   });
 
   const getDayStatus = (day) => {
-    const practice = practices.find(p => isSameDay(new Date(p.created_date), day));
-    if (!practice) return null;
-    return practice.completed ? 'completed' : 'missed';
+    const entry = monthData.find(e => isSameDay(new Date(e.card?.created_date || e.practice?.created_date), day));
+    if (!entry) return null;
+    if (entry.practice?.completed) return 'completed';
+    if (entry.card) return 'pulled';
+    return null;
   };
 
   const handlePrevMonth = () => setCurrentMonth(subMonths(currentMonth, 1));
   const handleNextMonth = () => setCurrentMonth(addMonths(currentMonth, 1));
 
-  const selectedPractice = practices.find(p => isSameDay(new Date(p.created_date), selectedDate));
+  const selectedPractice = monthData.find(e => isSameDay(new Date(e.card?.created_date || e.practice?.created_date), selectedDate));
 
   return (
     <div className="space-y-6 pb-24 animate-fade-in">
@@ -100,9 +130,11 @@ export default function Calendar() {
                 <span className={`text-sm font-medium ${isSelected ? 'text-white' : 'text-[var(--text-primary)]'}`}>
                   {format(day, 'd')}
                 </span>
-                {status === 'completed' && (
+                {status === 'completed' ? (
                   <div className={`w-1.5 h-1.5 rounded-full mt-1 ${isSelected ? 'bg-white' : 'bg-green-500'}`} />
-                )}
+                ) : status === 'pulled' ? (
+                  <div className={`w-1.5 h-1.5 rounded-full mt-1 ${isSelected ? 'bg-white/50' : 'bg-gray-400'}`} />
+                ) : null}
               </motion.button>
             );
           })}
@@ -117,26 +149,38 @@ export default function Calendar() {
 
         {selectedPractice ? (
           <Card className="p-5 relative overflow-hidden">
-            <div className="absolute top-0 left-0 w-1 h-full bg-gradient-to-b from-green-400 to-emerald-500" />
-            <div className="flex justify-between items-start mb-3">
-                <div className="flex items-center gap-2">
-                    <div className="p-2 bg-green-500/10 rounded-lg">
-                        <Star className="w-4 h-4 text-green-500" />
+             {selectedPractice.practice?.completed ? (
+              <>
+                <div className="absolute top-0 left-0 w-1 h-full bg-gradient-to-b from-green-400 to-emerald-500" />
+                <div className="flex justify-between items-start mb-3">
+                    <div className="flex items-center gap-2">
+                        <div className="p-2 bg-green-500/10 rounded-lg">
+                            <Star className="w-4 h-4 text-green-500" />
+                        </div>
+                        <div>
+                            <p className="font-bold text-sm text-[var(--text-primary)]">Practice Complete</p>
+                            <p className="text-xs text-[var(--text-secondary)]">{format(new Date(selectedPractice.practice.created_date), 'h:mm a')}</p>
+                        </div>
                     </div>
+                    <button onClick={() => setViewingEntry(selectedPractice.practice)} className="text-xs font-medium text-[var(--accent-primary)] hover:underline">
+                        View Entry
+                    </button>
+                </div>
+                {selectedPractice.practice.reflection && (
+                    <p className="text-sm text-[var(--text-secondary)] line-clamp-2 italic">
+                        "{selectedPractice.practice.reflection}"
+                    </p>
+                )}
+              </>
+            ) : selectedPractice.card ? (
+                 <div className="flex items-center gap-4">
+                    <img src={selectedPractice.card.practice_card.image_url || 'https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/6921dea06e8f58657363a952/43aec5bff_PRACTICECARDBACK.jpg'} alt="Card" className="w-16 h-24 rounded-lg object-cover" />
                     <div>
-                        <p className="font-bold text-sm text-[var(--text-primary)]">Practice Complete</p>
-                        <p className="text-xs text-[var(--text-secondary)]">{format(new Date(selectedPractice.created_date), 'h:mm a')}</p>
+                        <p className="font-bold text-sm text-[var(--text-primary)]">{selectedPractice.card.practice_card.title}</p>
+                        <p className="text-xs text-[var(--text-secondary)]">Card pulled, practice pending.</p>
                     </div>
                 </div>
-                <button onClick={() => setViewingEntry(selectedPractice)} className="text-xs font-medium text-[var(--accent-primary)] hover:underline">
-                    View Entry
-                </button>
-            </div>
-            {selectedPractice.reflection && (
-                <p className="text-sm text-[var(--text-secondary)] line-clamp-2 italic">
-                    "{selectedPractice.reflection}"
-                </p>
-            )}
+            ) : null}
           </Card>
         ) : (
           <div className="p-8 text-center rounded-[32px] border-2 border-dashed border-[var(--text-secondary)]/20">
