@@ -3,7 +3,7 @@ import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useAuth } from '../contexts/AuthContext';
 import { getUserProfile, savePracticeEntry } from '../lib/supabase';
-import { appApi } from '@/api/supabaseClient';
+import { appApi, supabase } from '@/api/supabaseClient';
 import PageHeader from '../components/common/PageHeader';
 import Card from '../components/common/Card';
 import Section from '../components/common/Section';
@@ -39,11 +39,22 @@ export default function Practice() {
   const { data: todaysPractices = [] } = useQuery({
     queryKey: ['todaysPractice', user?.email],
     queryFn: async () => {
-      const today = new Date().toISOString().split('T')[0];
-      return appApi.entities.DailyPractice.filter({
-        created_by: user?.email,
-        created_date: { $gte: today }
-      });
+      if (!user) return [];
+      const today = new Date();
+      today.setHours(0, 0, 0, 0);
+
+      const { data, error } = await supabase
+        .from('daily_practice')
+        .select('*')
+        .eq('created_by', user.email)
+        .gte('created_date', today.toISOString());
+
+      if (error) {
+        console.error('Error fetching today\'s practice:', error);
+        toast.error('Could not load practice data.');
+        return [];
+      }
+      return data;
     },
     enabled: !!user,
   });

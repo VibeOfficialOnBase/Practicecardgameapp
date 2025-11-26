@@ -31,16 +31,18 @@ export const AuthProvider = ({ children }) => {
       return;
     }
 
-    supabase.auth.getSession().then(({ data: { session } }) => {
+    const setAuthSession = (session) => {
       setSession(session);
       setUser(session?.user ?? null);
       setLoading(false);
+    };
+
+    supabase.auth.getSession().then(({ data: { session } }) => {
+      setAuthSession(session);
     });
 
     const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
-      setSession(session);
-      setUser(session?.user ?? null);
-      setLoading(false);
+      setAuthSession(session);
     });
 
     return () => subscription.unsubscribe();

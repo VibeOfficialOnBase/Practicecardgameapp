@@ -102,10 +102,24 @@ export default function ChakraBlaster() {
   };
 
   const startGame = () => {
+    setGameState('playing');
+    setHp(100);
+    // Reset score only when starting from level 1
+    if (level === 1) {
+      setScore(0);
+    }
+  };
+
+  useEffect(() => {
+    if (gameState !== 'playing') {
+      return;
+    }
+
     const canvas = canvasRef.current;
+    if (!canvas) return;
     const ctx = canvas.getContext('2d');
     const data = gameDataRef.current;
-    
+
     data.player.x = canvas.width / 2;
     data.player.y = canvas.height - 80;
     data.projectiles = [];
@@ -116,29 +130,23 @@ export default function ChakraBlaster() {
     data.enemiesDefeated = 0;
     data.isBossActive = false;
     data.boss = null;
-    
-    setHp(100);
-    setGameState('playing');
 
     const enemyCount = 8 + level * 3;
     let enemiesSpawned = 0;
 
-    // Spawn enemies periodically until count reached
     const spawner = setInterval(() => {
-        if (gameState !== 'playing' || data.isBossActive) {
-            clearInterval(spawner);
-            return;
-        }
-        if (enemiesSpawned < enemyCount) {
-            data.enemies.push(spawnEnemy(canvas, level));
-            enemiesSpawned++;
-        } else {
-            clearInterval(spawner);
-        }
+      if (data.isBossActive || enemiesSpawned >= enemyCount) {
+        clearInterval(spawner);
+        return;
+      }
+      data.enemies.push(spawnEnemy(canvas, level));
+      enemiesSpawned++;
     }, 800);
 
     const gameLoop = () => {
-      if (gameState !== 'playing') return;
+      if (gameState !== 'playing' || !canvasRef.current) {
+        return;
+      }
 
       ctx.fillStyle = 'rgba(15, 8, 32, 0.3)';
       ctx.fillRect(0, 0, canvas.width, canvas.height);
@@ -418,12 +426,18 @@ export default function ChakraBlaster() {
     };
 
     gameLoopRef.current = requestAnimationFrame(gameLoop);
-  };
+
+    return () => {
+      clearInterval(spawner);
+      if (gameLoopRef.current) {
+        cancelAnimationFrame(gameLoopRef.current);
+      }
+    };
+  }, [gameState, level]);
 
   useEffect(() => {
     if (hp <= 0 && gameState === 'playing') {
       setGameState('gameOver');
-      if (gameLoopRef.current) cancelAnimationFrame(gameLoopRef.current);
     }
   }, [hp, gameState]);
 
@@ -441,18 +455,15 @@ export default function ChakraBlaster() {
     return () => {
       window.removeEventListener('keydown', handleKeyDown);
       window.removeEventListener('keyup', handleKeyUp);
-      if (gameLoopRef.current) cancelAnimationFrame(gameLoopRef.current);
     };
   }, []);
 
   const nextLevel = () => {
     setLevel(l => l + 1);
-    startGame();
   };
 
   const restartGame = () => {
     setLevel(1);
-    setScore(0);
     startGame();
   };
 
