@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { useWallet } from '@/contexts/WalletContext';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Wallet, LogOut, ChevronDown, Copy, Check, ExternalLink } from 'lucide-react';
+import { Wallet, LogOut, ChevronDown, Copy, Check, ExternalLink, Gift } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 
 export default function WalletConnect() {
@@ -11,8 +11,10 @@ export default function WalletConnect() {
     isConnecting,
     error,
     isConnected,
+    isVibeHolder,
     connectPera,
     connectDefly,
+    connectBase,
     disconnectWallet,
     getShortAddress,
   } = useWallet();
@@ -34,8 +36,18 @@ export default function WalletConnect() {
       await connectPera();
     } else if (walletName === 'defly') {
       await connectDefly();
+    } else if (walletName === 'base') {
+      await connectBase();
     }
     setShowConnectModal(false);
+  };
+
+  // Get explorer URL based on wallet type
+  const getExplorerUrl = () => {
+    if (walletType === 'base') {
+      return `https://basescan.org/address/${walletAddress}`;
+    }
+    return `https://allo.info/account/${walletAddress}`;
   };
 
   // Connected state
@@ -46,10 +58,11 @@ export default function WalletConnect() {
           onClick={() => setShowDropdown(!showDropdown)}
           className="flex items-center gap-2 px-4 py-2 rounded-xl bg-gradient-to-r from-purple-500/20 to-pink-500/20 border border-purple-400/30 hover:from-purple-500/30 hover:to-pink-500/30 transition-all"
         >
-          <div className="w-2 h-2 rounded-full bg-green-400 animate-pulse" />
+          <div className={`w-2 h-2 rounded-full ${isVibeHolder ? 'bg-amber-400' : 'bg-green-400'} animate-pulse`} />
           <span className="text-sm font-medium text-white">
             {getShortAddress(walletAddress)}
           </span>
+          {isVibeHolder && <Gift className="w-3 h-3 text-amber-400" />}
           <ChevronDown className={`w-4 h-4 text-white/70 transition-transform ${showDropdown ? 'rotate-180' : ''}`} />
         </button>
 
@@ -64,6 +77,12 @@ export default function WalletConnect() {
               <div className="p-3 border-b border-white/10 mb-2">
                 <p className="text-xs text-white/50 uppercase mb-1">Connected with {walletType}</p>
                 <p className="text-sm text-white font-mono truncate">{walletAddress}</p>
+                {isVibeHolder && (
+                  <div className="mt-2 flex items-center gap-2 bg-amber-500/10 rounded-lg px-2 py-1">
+                    <Gift className="w-4 h-4 text-amber-400" />
+                    <span className="text-xs text-amber-400 font-bold">Holders Bonus Pack Unlocked!</span>
+                  </div>
+                )}
               </div>
 
               <button
@@ -75,7 +94,7 @@ export default function WalletConnect() {
               </button>
 
               <a
-                href={`https://allo.info/account/${walletAddress}`}
+                href={getExplorerUrl()}
                 target="_blank"
                 rel="noopener noreferrer"
                 className="w-full flex items-center gap-2 px-3 py-2 rounded-lg hover:bg-white/5 transition-colors"
@@ -132,7 +151,7 @@ export default function WalletConnect() {
             >
               <h2 className="text-xl font-bold text-white mb-2 text-center">Connect Wallet</h2>
               <p className="text-white/60 text-sm text-center mb-6 leading-relaxed">
-                Choose your preferred Algorand wallet to connect
+                Choose your preferred wallet to connect
               </p>
 
               {error && (
@@ -142,33 +161,60 @@ export default function WalletConnect() {
               )}
 
               <div className="space-y-3 flex-1">
-                <button
-                  onClick={() => handleConnect('pera')}
-                  disabled={isConnecting}
-                  className="w-full flex items-center gap-4 p-4 bg-white/5 hover:bg-white/10 rounded-xl border border-white/10 transition-all disabled:opacity-50"
-                >
-                  <div className="w-12 h-12 rounded-full bg-yellow-500 flex items-center justify-center flex-shrink-0">
-                    <span className="text-2xl">🟡</span>
-                  </div>
-                  <div className="text-left flex-1">
-                    <p className="font-semibold text-white text-base">Pera Wallet</p>
-                    <p className="text-sm text-white/50 leading-relaxed">Connect with Pera mobile or web wallet</p>
-                  </div>
-                </button>
+                {/* Base Wallet Section */}
+                <div className="mb-4">
+                  <p className="text-xs text-white/50 uppercase mb-2 font-bold">Base Network</p>
+                  <button
+                    onClick={() => handleConnect('base')}
+                    disabled={isConnecting}
+                    className="w-full flex items-center gap-4 p-4 bg-gradient-to-r from-blue-600/20 to-purple-600/20 hover:from-blue-600/30 hover:to-purple-600/30 rounded-xl border border-blue-500/30 transition-all disabled:opacity-50"
+                  >
+                    <div className="w-12 h-12 rounded-full overflow-hidden flex-shrink-0">
+                      <img 
+                        src="/vibe_logo.jpg" 
+                        alt="$VibeOfficial" 
+                        className="w-full h-full object-cover"
+                      />
+                    </div>
+                    <div className="text-left flex-1">
+                      <p className="font-semibold text-white text-base">Base Wallet</p>
+                      <p className="text-sm text-white/50 leading-relaxed">Connect for $VibeOfficial Holders Pack</p>
+                    </div>
+                    <Gift className="w-5 h-5 text-amber-400" />
+                  </button>
+                </div>
 
-                <button
-                  onClick={() => handleConnect('defly')}
-                  disabled={isConnecting}
-                  className="w-full flex items-center gap-4 p-4 bg-white/5 hover:bg-white/10 rounded-xl border border-white/10 transition-all disabled:opacity-50"
-                >
-                  <div className="w-12 h-12 rounded-full bg-blue-500 flex items-center justify-center flex-shrink-0">
-                    <span className="text-2xl">🔵</span>
-                  </div>
-                  <div className="text-left flex-1">
-                    <p className="font-semibold text-white text-base">Defly Wallet</p>
-                    <p className="text-sm text-white/50 leading-relaxed">Connect with Defly mobile wallet</p>
-                  </div>
-                </button>
+                {/* Algorand Wallet Section */}
+                <div>
+                  <p className="text-xs text-white/50 uppercase mb-2 font-bold">Algorand Network</p>
+                  <button
+                    onClick={() => handleConnect('pera')}
+                    disabled={isConnecting}
+                    className="w-full flex items-center gap-4 p-4 bg-white/5 hover:bg-white/10 rounded-xl border border-white/10 transition-all disabled:opacity-50 mb-3"
+                  >
+                    <div className="w-12 h-12 rounded-full bg-yellow-500 flex items-center justify-center flex-shrink-0">
+                      <span className="text-2xl">🟡</span>
+                    </div>
+                    <div className="text-left flex-1">
+                      <p className="font-semibold text-white text-base">Pera Wallet</p>
+                      <p className="text-sm text-white/50 leading-relaxed">Connect with Pera mobile or web wallet</p>
+                    </div>
+                  </button>
+
+                  <button
+                    onClick={() => handleConnect('defly')}
+                    disabled={isConnecting}
+                    className="w-full flex items-center gap-4 p-4 bg-white/5 hover:bg-white/10 rounded-xl border border-white/10 transition-all disabled:opacity-50"
+                  >
+                    <div className="w-12 h-12 rounded-full bg-blue-500 flex items-center justify-center flex-shrink-0">
+                      <span className="text-2xl">🔵</span>
+                    </div>
+                    <div className="text-left flex-1">
+                      <p className="font-semibold text-white text-base">Defly Wallet</p>
+                      <p className="text-sm text-white/50 leading-relaxed">Connect with Defly mobile wallet</p>
+                    </div>
+                  </button>
+                </div>
               </div>
 
               <button

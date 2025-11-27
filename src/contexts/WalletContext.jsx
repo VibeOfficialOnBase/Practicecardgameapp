@@ -15,18 +15,44 @@ const deflyWallet = new DeflyWalletConnect({
   shouldShowSignTxnToast: true,
 });
 
+// $VibeOfficial token contract on Base (placeholder - update with real contract)
+const VIBE_OFFICIAL_CONTRACT = '0x...'; // TODO: Add real contract address
+
 export const WalletProvider = ({ children }) => {
   const [walletAddress, setWalletAddress] = useState(null);
   const [walletType, setWalletType] = useState(null);
   const [isConnecting, setIsConnecting] = useState(false);
   const [error, setError] = useState(null);
+  const [isVibeHolder, setIsVibeHolder] = useState(false);
+  const [vibeBalance, setVibeBalance] = useState(0);
 
   // Disconnect handler
   const handleDisconnect = useCallback(() => {
     setWalletAddress(null);
     setWalletType(null);
+    setIsVibeHolder(false);
+    setVibeBalance(0);
     localStorage.removeItem('walletAddress');
     localStorage.removeItem('walletType');
+  }, []);
+
+  // Check $VibeOfficial holdings on Base
+  const checkVibeHoldings = useCallback(async (address) => {
+    if (!address) return;
+    
+    try {
+      // For now, we'll use a placeholder check
+      // In production, this would call a Base RPC or API to check token balance
+      // const balance = await checkTokenBalance(address, VIBE_OFFICIAL_CONTRACT);
+      // setVibeBalance(balance);
+      // setIsVibeHolder(balance > 0);
+      
+      // Mock check - always set to false for now
+      setVibeBalance(0);
+      setIsVibeHolder(false);
+    } catch (err) {
+      console.error('Failed to check Vibe holdings:', err);
+    }
   }, []);
 
   // Setup disconnect listeners
@@ -54,9 +80,12 @@ export const WalletProvider = ({ children }) => {
         peraWallet.reconnectSession().catch(console.error);
       } else if (savedType === 'defly') {
         deflyWallet.reconnectSession().catch(console.error);
+      } else if (savedType === 'base') {
+        // Check Vibe holdings for Base wallet
+        checkVibeHoldings(savedAddress);
       }
     }
-  }, []);
+  }, [checkVibeHoldings]);
 
   // Connect to Pera Wallet
   const connectPera = async () => {
@@ -108,6 +137,69 @@ export const WalletProvider = ({ children }) => {
     return null;
   };
 
+  // Connect to Base wallet (MetaMask or similar)
+  const connectBase = async () => {
+    setIsConnecting(true);
+    setError(null);
+    try {
+      // Check if ethereum provider is available (MetaMask, etc.)
+      if (typeof window.ethereum === 'undefined') {
+        throw new Error('Please install MetaMask or another Web3 wallet to connect to Base');
+      }
+
+      // Request account access
+      const accounts = await window.ethereum.request({
+        method: 'eth_requestAccounts',
+      });
+
+      if (accounts.length > 0) {
+        const address = accounts[0];
+        
+        // Switch to Base network (chainId: 8453)
+        try {
+          await window.ethereum.request({
+            method: 'wallet_switchEthereumChain',
+            params: [{ chainId: '0x2105' }], // 8453 in hex
+          });
+        } catch (switchError) {
+          // If the network doesn't exist, add it
+          if (switchError.code === 4902) {
+            await window.ethereum.request({
+              method: 'wallet_addEthereumChain',
+              params: [{
+                chainId: '0x2105',
+                chainName: 'Base',
+                nativeCurrency: {
+                  name: 'Ethereum',
+                  symbol: 'ETH',
+                  decimals: 18,
+                },
+                rpcUrls: ['https://mainnet.base.org'],
+                blockExplorerUrls: ['https://basescan.org'],
+              }],
+            });
+          }
+        }
+
+        setWalletAddress(address);
+        setWalletType('base');
+        localStorage.setItem('walletAddress', address);
+        localStorage.setItem('walletType', 'base');
+        
+        // Check for $VibeOfficial holdings
+        await checkVibeHoldings(address);
+        
+        return address;
+      }
+    } catch (err) {
+      console.error('Base wallet connection error:', err);
+      setError(err.message || 'Failed to connect Base Wallet');
+    } finally {
+      setIsConnecting(false);
+    }
+    return null;
+  };
+
   // Disconnect wallet
   const disconnectWallet = async () => {
     try {
@@ -116,6 +208,7 @@ export const WalletProvider = ({ children }) => {
       } else if (walletType === 'defly') {
         await deflyWallet.disconnect();
       }
+      // Base wallets don't have a disconnect method, just clear state
     } catch (err) {
       console.error('Wallet disconnect error:', err);
     }
@@ -134,10 +227,14 @@ export const WalletProvider = ({ children }) => {
     isConnecting,
     error,
     isConnected: !!walletAddress,
+    isVibeHolder,
+    vibeBalance,
     connectPera,
     connectDefly,
+    connectBase,
     disconnectWallet,
     getShortAddress,
+    checkVibeHoldings,
   };
 
   return (
