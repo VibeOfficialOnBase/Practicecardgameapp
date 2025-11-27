@@ -2,7 +2,7 @@
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
-    <link rel="icon" type="image/svg+xml" href="https://base44.com/logo_v2.svg" />
+    <link rel="icon" type="image/svg+xml" href="/vibe_logo.jpg" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <!-- Farcaster Frame Meta Tags -->
     <meta property="fc:frame" content="vNext" />
@@ -11,6 +11,11 @@
     <meta property="fc:frame:button:1:action" content="link" />
     <meta property="fc:frame:button:1:target" content="https://practicecardgame.app/login" />
     <title>Practice Card Game</title>
+    <!-- Polyfill for Node.js globals needed by wallet libraries -->
+    <script>
+      window.global = window;
+      window.Buffer = window.Buffer || { from: () => [], isBuffer: () => false };
+    </script>
   </head>
   <body>
     <div id="root"></div>
