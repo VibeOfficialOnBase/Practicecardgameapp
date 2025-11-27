@@ -103,7 +103,7 @@ const GlobalCommunityPulseComponent = () => {
                 <h3 className="text-xl font-bold bg-gradient-to-r from-purple-600 to-pink-600 bg-clip-text text-transparent">
                   Global Community Pulse
                 </h3>
-                <p className="text-xs text-purple-600 font-semibold">✨ Real-time data from SpacetimeDB</p>
+                <p className="text-xs text-purple-600 font-semibold">✨ Real-time community data</p>
               </div>
             </div>
             <Button

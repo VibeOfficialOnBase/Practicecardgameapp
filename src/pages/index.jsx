@@ -1,14 +1,21 @@
 import Layout from "./Layout.jsx";
 
-import Practice from "./Practice";
-import Community from "./Community";
-import Achievements from "./Achievements";
-import Profile from "./Profile";
-import Leaderboard from "./Leaderboard";
-import Calendar from "./Calendar";
+// Main pages
+import PullCards from "./PullCards";
+import Wins from "./Wins";
+import Stats from "./Stats";
 import Giveaways from "./Giveaways";
-import MyCards from "./MyCards";
 import Games from "./Games";
+import Community from "./Community";
+import Profile from "./Profile";
+import Calendar from "./Calendar";
+import About from "./About";
+
+// Legacy pages kept for backward compatibility
+import Practice from "./Practice";
+import Achievements from "./Achievements";
+import Leaderboard from "./Leaderboard";
+import MyCards from "./MyCards";
 
 // Games
 import ChakraBlasterMax from "./ChakraBlasterMax";
@@ -27,20 +34,30 @@ import { BrowserRouter as Router, Route, Routes, useLocation } from 'react-route
 function _getCurrentPage(pathname) {
     const normalizedPath = pathname.toLowerCase().replace(/\/+$/, '').split('/').pop();
     const pageMap = {
-        'mycards': 'Cards',
-        'practice': 'Pull',
-        'leaderboard': 'Leaderboard',
-        'giveaways': 'Giveaways',
-        'community': 'Community',
+        'pullcards': 'PullCards',
+        'pull': 'PullCards',
+        'wins': 'Wins',
+        'stats': 'Stats',
+        'giveaways': 'Giveaway',
+        'giveaway': 'Giveaway',
+        'games': 'Board',
+        'board': 'Board',
+        'community': 'Social',
+        'social': 'Social',
         'profile': 'Profile',
-        'games': 'Games',
         'calendar': 'Calendar',
-        'chakrablastermax': 'Games',
-        'vibeagotchi': 'Games',
-        'challengebubbles': 'Games',
-        'memorymatch': 'Games'
+        'about': 'About',
+        // Legacy paths
+        'mycards': 'PullCards',
+        'practice': 'PullCards',
+        'leaderboard': 'Stats',
+        'achievements': 'Wins',
+        'chakrablastermax': 'Board',
+        'vibeagotchi': 'Board',
+        'challengebubbles': 'Board',
+        'memorymatch': 'Board'
     };
-    return pageMap[normalizedPath] || 'Practice';
+    return pageMap[normalizedPath] || 'PullCards';
 }
 
 function PagesContent() {
@@ -58,21 +75,35 @@ function PagesContent() {
                     <Layout currentPageName={currentPage}>
                         <Routes>
                             <Route element={<ProtectedRoute />}>
-                                <Route path="/" element={<Practice />} />
-                                <Route path="/practice" element={<Practice />} />
+                                {/* New Primary Routes */}
+                                <Route path="/" element={<PullCards />} />
+                                <Route path="/pullcards" element={<PullCards />} />
+                                <Route path="/pull" element={<PullCards />} />
+                                <Route path="/wins" element={<Wins />} />
+                                <Route path="/stats" element={<Stats />} />
+                                <Route path="/giveaway" element={<Giveaways />} />
+                                <Route path="/board" element={<Games />} />
+                                <Route path="/social" element={<Community />} />
+                                <Route path="/profile" element={<Profile />} />
+                                <Route path="/calendar" element={<Calendar />} />
+                                <Route path="/about" element={<About />} />
+
+                                {/* Legacy Routes for Backward Compatibility */}
+                                <Route path="/practice" element={<PullCards />} />
                                 <Route path="/mycards" element={<MyCards />} />
-                                <Route path="/leaderboard" element={<Leaderboard />} />
+                                <Route path="/leaderboard" element={<Stats />} />
                                 <Route path="/giveaways" element={<Giveaways />} />
                                 <Route path="/community" element={<Community />} />
-                                <Route path="/profile" element={<Profile />} />
                                 <Route path="/games" element={<Games />} />
-                                <Route path="/calendar" element={<Calendar />} />
-                                <Route path="/achievements" element={<Achievements />} />
+                                <Route path="/achievements" element={<Wins />} />
                                 <Route path="/premiumpacks" element={<Giveaways />} />
+
+                                {/* Game Routes */}
                                 <Route path="/chakrablastermax" element={<ChakraBlasterMax />} />
                                 <Route path="/vibeagotchi" element={<VibeAGotchi />} />
                                 <Route path="/challengebubbles" element={<ChallengeBubbles />} />
                                 <Route path="/memorymatch" element={<MemoryMatch />} />
+                                
                                 <Route path="*" element={<NotFound />} />
                             </Route>
                         </Routes>

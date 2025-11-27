@@ -110,7 +110,7 @@ export function awardStreakBonuses(username: string, streak: number): void {
 }
 
 /**
- * Utility to refresh SpacetimeDB stats with retry logic
+ * Utility to refresh database stats with retry logic
  */
 export function refreshStatsWithRetry(
   refreshFn: () => void,

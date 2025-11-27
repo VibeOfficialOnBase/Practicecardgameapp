@@ -76,7 +76,7 @@ const CommunityStatsWidgetComponent = () => {
       animate={{ opacity: 1, y: 0 }}
       className="w-full space-y-4"
     >
-      {/* Stats Grid - Real Data from SpacetimeDB */}
+      {/* Stats Grid - Real Data from Supabase */}
       <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
         <motion.div
           whileHover={{ scale: 1.05 }}

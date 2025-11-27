@@ -3,8 +3,8 @@ import { Link, useLocation } from 'react-router-dom';
 import { createPageUrl } from '@/utils';
 import { motion, AnimatePresence } from 'framer-motion';
 import {
-  Home, BookOpen, Award, BarChart3, Gift, Trophy, Users, Heart,
-  Calendar, Info, Menu, X, LogOut, Settings
+  Home, Award, BarChart3, Gift, Trophy, Users, Heart,
+  Calendar, Info, Menu, X, LogOut, Sparkles
 } from 'lucide-react';
 import { useAuth } from '@/contexts/AuthContext';
 
@@ -13,22 +13,32 @@ export default function Header() {
   const location = useLocation();
   const { user, signOut } = useAuth();
 
+  // Desktop navigation: Pull Cards, Wins, Stats, Giveaway, Board, Social, Profile, Calendar, About
   const navItems = [
-    { name: 'Pull', icon: Home, path: 'Practice' },
-    { name: 'Cards', icon: BookOpen, path: 'MyCards' },
-    { name: 'Wins', icon: Award, path: 'Achievements' },
-    { name: 'Stats', icon: BarChart3, path: 'Leaderboard' },
-    { name: 'Giveaway', icon: Gift, path: 'PremiumPacks' }, // Mapping to PremiumPacks as placeholder
-    { name: 'Board', icon: Trophy, path: 'Games' },
-    { name: 'Social', icon: Users, path: 'Community' },
+    { name: 'Pull Cards', icon: Sparkles, path: 'PullCards' },
+    { name: 'Wins', icon: Award, path: 'Wins' },
+    { name: 'Stats', icon: BarChart3, path: 'Stats' },
+    { name: 'Giveaway', icon: Gift, path: 'Giveaway' },
+    { name: 'Board', icon: Trophy, path: 'Board' },
+    { name: 'Social', icon: Users, path: 'Social' },
     { name: 'Profile', icon: Heart, path: 'Profile' },
-    // { name: 'Calendar', icon: Calendar, path: 'Calendar' }, // Not implemented yet
-    // { name: 'About', icon: Info, path: 'About' }, // Not implemented yet
+    { name: 'Calendar', icon: Calendar, path: 'Calendar' },
+    { name: 'About', icon: Info, path: 'About' },
   ];
 
   const isActive = (path) => {
-    if (path === 'Practice' && location.pathname === '/') return true;
-    return location.pathname.includes(path);
+    const currentPath = location.pathname.toLowerCase();
+    const targetPath = path.toLowerCase();
+    
+    // Root path matches PullCards
+    if (targetPath === 'pullcards' && (currentPath === '/' || currentPath === '/pullcards' || currentPath === '/pull' || currentPath === '/practice')) return true;
+    if (targetPath === 'wins' && (currentPath === '/wins' || currentPath === '/achievements')) return true;
+    if (targetPath === 'stats' && (currentPath === '/stats' || currentPath === '/leaderboard')) return true;
+    if (targetPath === 'giveaway' && (currentPath === '/giveaway' || currentPath === '/giveaways' || currentPath === '/premiumpacks')) return true;
+    if (targetPath === 'board' && (currentPath === '/board' || currentPath === '/games')) return true;
+    if (targetPath === 'social' && (currentPath === '/social' || currentPath === '/community')) return true;
+    
+    return currentPath.includes(targetPath);
   };
 
   return (

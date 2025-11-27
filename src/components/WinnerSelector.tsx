@@ -34,7 +34,7 @@ export function WinnerSelector({ raffleEntries, onSelectWeightedWinner }: Winner
 
     // Simulate selection animation
     setTimeout(() => {
-      // Call the SpacetimeDB reducer to select winner
+      // Call the Supabase function to select winner
       onSelectWeightedWinner();
 
       // Locally select winner using weighted random selection

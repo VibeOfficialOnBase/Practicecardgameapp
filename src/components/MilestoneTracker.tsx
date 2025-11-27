@@ -17,21 +17,21 @@ interface Milestone {
 }
 
 export function MilestoneTracker() {
-  // Get real-time stats from SpacetimeDB
+  // Get real-time stats from Supabase
   const stats = useGlobalCommunityStats();
 
   const [showMilestoneAchieved, setShowMilestoneAchieved] = useState(false);
   const [achievedMilestone, setAchievedMilestone] = useState<Milestone | null>(null);
   const [previousMilestoneStates, setPreviousMilestoneStates] = useState<Record<string, boolean>>({});
 
-  // Calculate milestones with REAL data from SpacetimeDB
+  // Calculate milestones with REAL data from Supabase
   const milestones = useMemo<Milestone[]>(() => [
     {
       id: 'community-1000',
       title: '1,000 Community Members',
       description: 'Unlock exclusive community NFT',
       target: 1000,
-      current: stats.totalUsers, // Real data from SpacetimeDB
+      current: stats.totalUsers, // Real data from Supabase
       icon: <Users className="w-6 h-6" />,
       color: 'from-blue-500 to-indigo-500',
       reward: '🎁 Exclusive NFT Badge'
@@ -41,7 +41,7 @@ export function MilestoneTracker() {
       title: '10,000 Total Card Pulls',
       description: 'Special LECHE expansion pack',
       target: 10000,
-      current: stats.totalPulls, // Real data from SpacetimeDB
+      current: stats.totalPulls, // Real data from Supabase
       icon: <Target className="w-6 h-6" />,
       color: 'from-purple-500 to-pink-500',
       reward: '🎴 LECHE Pack Unlocked'
@@ -51,7 +51,7 @@ export function MilestoneTracker() {
       title: '100 Active Users Goal',
       description: 'Community celebration event',
       target: 100,
-      current: stats.activeUsersToday, // Real data from SpacetimeDB
+      current: stats.activeUsersToday, // Real data from Supabase
       icon: <TrendingUp className="w-6 h-6" />,
       color: 'from-orange-500 to-red-500',
       reward: '🎉 Community Event'

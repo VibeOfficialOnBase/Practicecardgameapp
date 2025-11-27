@@ -80,7 +80,7 @@ export class ValidationError extends AppError {
 }
 
 /**
- * SpacetimeDB specific errors
+ * Database specific errors
  */
 export class DatabaseError extends AppError {
   constructor(message: string, userMessage: string = 'Database error. Please try again.', retryable: boolean = true) {

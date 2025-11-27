@@ -28,7 +28,7 @@ export function StreakLeaderboardRace({ username, currentStreak }: StreakLeaderb
   }, [username, currentStreak]);
 
   const fetchLeaderboard = () => {
-    // Generate mock leaderboard (in production, fetch from SpacetimeDB)
+    // Generate mock leaderboard (in production, fetch from Supabase)
     const mockData: LeaderboardEntry[] = [
       { username: 'streakmaster', streak: 100, rank: 1, change: 'same' },
       { username: 'consistency_queen', streak: 87, rank: 2, change: 'up' },

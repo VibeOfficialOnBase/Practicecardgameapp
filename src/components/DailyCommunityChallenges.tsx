@@ -74,7 +74,7 @@ export function DailyCommunityChallenges() {
   const [timeRemaining, setTimeRemaining] = useState('');
   const [completedChallenges, setCompletedChallenges] = useState<Set<string>>(new Set());
   
-  // Get real community stats from SpacetimeDB
+  // Get real community stats from Supabase
   const stats = useGlobalCommunityStats();
   const loading = !stats.connected;
 
