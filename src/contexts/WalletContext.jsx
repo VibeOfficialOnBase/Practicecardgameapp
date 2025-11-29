@@ -8,6 +8,7 @@ export const useWallet = () => useContext(WalletContext);
 
 // Initialize wallet connectors
 const peraWallet = new PeraWalletConnect({
+  chainId: 4160,
   shouldShowSignTxnToast: true,
 });
 

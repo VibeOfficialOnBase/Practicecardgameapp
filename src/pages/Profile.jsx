@@ -13,7 +13,7 @@ import Button from '../components/common/Button';
 import Modal from '../components/common/Modal';
 import WalletConnect from '../components/wallet/WalletConnect';
 
-import { User, Award, Shield, LogOut, Edit2, Save, Trash2, Heart, Users, Zap, Leaf, Trophy, Sparkles, Wallet } from 'lucide-react';
+import { User, Award, Shield, LogOut, Edit2, Save, Trash2, Heart, Users, Zap, Leaf, Trophy, Sparkles, Wallet, Gift } from 'lucide-react';
 import EnhancedStreakDisplay from '../components/EnhancedStreakDisplay';
 import BadgeDisplay from '../components/badges/BadgeDisplay';
 import UserLevelBadge from '../components/UserLevelBadge';
@@ -198,8 +198,9 @@ export default function Profile() {
       )}
 
       {/* Web3 Wallet Section */}
-      <Section title="Web3 Wallet">
-        <Card className="p-4">
+      <Section title="Web3 Wallets">
+        {/* Algorand Wallet */}
+        <Card className="p-4 mb-4">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-3">
               <div className="w-10 h-10 rounded-full bg-gradient-to-r from-purple-500 to-pink-500 flex items-center justify-center">
@@ -207,15 +208,66 @@ export default function Profile() {
               </div>
               <div>
                 <p className="font-semibold text-[var(--text-primary)]">Algorand Wallet</p>
-                {isConnected ? (
+                {isConnected && (walletAddress.length < 42) ? (
                   <p className="text-sm text-green-500">Connected: {getShortAddress(walletAddress)}</p>
                 ) : (
-                  <p className="text-sm text-[var(--text-secondary)]">Not connected</p>
+                  <p className="text-sm text-[var(--text-secondary)]">Pera / Defly</p>
                 )}
               </div>
             </div>
             <WalletConnect />
           </div>
+        </Card>
+
+        {/* Base Wallet */}
+        <Card className="p-4 relative overflow-hidden">
+             {/* Bonus Pack Indicator */}
+             {isConnected && walletAddress.length === 42 && (
+                 <div className="absolute top-0 right-0 p-2">
+                    <span className="px-2 py-1 rounded-full bg-amber-500/20 text-amber-500 text-[10px] font-bold uppercase border border-amber-500/30 flex items-center gap-1">
+                        <Gift className="w-3 h-3" />
+                        Bonus Active
+                    </span>
+                 </div>
+             )}
+
+            <div className="flex items-center justify-between">
+                <div className="flex items-center gap-3">
+                    <div className="w-10 h-10 rounded-full bg-blue-500 flex items-center justify-center">
+                        <img src="/assets/vibe-logo.png" className="w-full h-full object-cover rounded-full opacity-90" alt="Base" />
+                    </div>
+                    <div>
+                        <p className="font-semibold text-[var(--text-primary)]">Base Wallet</p>
+                         {isConnected && walletAddress.length === 42 ? (
+                            <p className="text-sm text-green-500">Connected: {getShortAddress(walletAddress)}</p>
+                        ) : (
+                            <p className="text-sm text-[var(--text-secondary)]">Connect for Holder Bonus</p>
+                        )}
+                    </div>
+                </div>
+                 {/* Reuse WalletConnect but maybe customize via props if needed, or just let it handle selection */}
+                 {/* Current WalletConnect handles selection modal. If already connected to Algo, we might need a way to switch or disconnect first.
+                     The current implementation shares 'walletAddress' in context. So only 1 wallet at a time.
+                     This UI implies we can connect either. The WalletConnect button will show "Connect Wallet" if disconnected,
+                     or the address dropdown if connected. We can duplicate the button here for visual consistency.
+                 */}
+                 <WalletConnect />
+            </div>
+
+             {/* Holders Bonus Message */}
+             {isConnected && walletAddress.length === 42 && (
+                 <div className="mt-4 pt-4 border-t border-black/5 dark:border-white/5">
+                     <div className="flex items-start gap-2">
+                         <Sparkles className="w-4 h-4 text-amber-400 mt-0.5" />
+                         <div>
+                             <p className="text-sm font-bold text-[var(--text-primary)]">$VibeOfficial Holder Pack</p>
+                             <p className="text-xs text-[var(--text-secondary)]">
+                                 Because you hold $Vibe, you've unlocked exclusive card backs and daily bonus XP!
+                             </p>
+                         </div>
+                     </div>
+                 </div>
+             )}
         </Card>
       </Section>
 

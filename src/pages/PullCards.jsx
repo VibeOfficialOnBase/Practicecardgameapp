@@ -18,6 +18,7 @@ import Button from '../components/common/Button';
 import { CheckCircle, Share2, Flame } from 'lucide-react';
 import practiceCardsData from '../data/practiceCards.json';
 import { toast } from 'sonner';
+import { MoodTracker } from '@/components/MoodTracker';
 
 export default function PullCards() {
   const { user } = useAuth();
@@ -27,6 +28,7 @@ export default function PullCards() {
   const [showCompletionFeedback, setShowCompletionFeedback] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [showShareModal, setShowShareModal] = useState(false);
+  const [beforeMood, setBeforeMood] = useState(null);
 
   const queryClient = useQueryClient();
 
@@ -198,9 +200,19 @@ export default function PullCards() {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            className="flex flex-col items-center py-4"
+            className="flex flex-col items-center py-4 space-y-8"
           >
-            <div className="text-center mb-8">
+            {/* Mood Before PRACTICE - Placed above Pull Card button */}
+            <div className="w-full max-w-md mx-auto">
+                <Section title="How are you feeling?">
+                    <MoodTracker
+                        username={user?.email || 'guest'}
+                        onMoodLog={(mood) => setBeforeMood(mood)}
+                    />
+                </Section>
+            </div>
+
+            <div className="text-center">
               <h2 className="text-2xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-indigo-400 to-purple-400 mb-2 animate-pulse">
                 Today's Intention
               </h2>
@@ -232,7 +244,7 @@ export default function PullCards() {
             {showJournal && (
               <ReflectionJournal
                 card={pulledCard}
-                onComplete={handleCompleteJournal}
+                onComplete={(data) => handleCompleteJournal({ ...data, beforeMood })}
                 isSubmitting={isSubmitting}
               />
             )}
