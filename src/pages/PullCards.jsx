@@ -2,8 +2,8 @@ import React, { useState, useEffect } from 'react';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useAuth } from '../contexts/AuthContext';
-import { getUserProfile, savePracticeEntry, savePulledCard, updateUserStatsOnPull, updateVibeagotchiXpOnPull, recordActivityPulse } from '../lib/supabase';
-import { appApi, supabase } from '@/api/supabaseClient';
+import { getUserProfile, savePracticeEntry, syncCardPull } from '../lib/supabase';
+import { supabase } from '@/api/supabaseClient';
 import PageHeader from '../components/common/PageHeader';
 import Card from '../components/common/Card';
 import Section from '../components/common/Section';
@@ -15,9 +15,10 @@ import StreakCounter from '../components/StreakCounter';
 import GlobalPulseTracker from '../components/GlobalPulseTracker';
 import ShareModal from '../components/common/ShareModal';
 import Button from '../components/common/Button';
-import { CheckCircle, Share2, Sparkles, Flame } from 'lucide-react';
-import { FALLBACK_AFFIRMATIONS } from '../utils/affirmations';
+import { CheckCircle, Share2, Flame } from 'lucide-react';
+import practiceCardsData from '../data/practiceCards.json';
 import { toast } from 'sonner';
+import { MoodTracker } from '@/components/MoodTracker';
 
 export default function PullCards() {
   const { user } = useAuth();
@@ -27,6 +28,7 @@ export default function PullCards() {
   const [showCompletionFeedback, setShowCompletionFeedback] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [showShareModal, setShowShareModal] = useState(false);
+  const [beforeMood, setBeforeMood] = useState(null);
 
   const queryClient = useQueryClient();
 
@@ -60,32 +62,7 @@ export default function PullCards() {
   });
 
   const todaysPractice = todaysPractices[0];
-
-  const { data: practiceCards = [] } = useQuery({
-    queryKey: ['practiceCards'],
-    queryFn: async () => {
-      try {
-        const cards = await appApi.entities.PracticeCard.list('-created_date', 50);
-        return cards.length > 0 ? cards : FALLBACK_AFFIRMATIONS.map((a, i) => ({
-             id: `local-card-${i}`,
-             title: a.category + " Practice",
-             affirmation: a.text,
-             leche_value: a.category,
-             mission: a.mission,
-             message: a.message
-        }));
-      } catch (e) {
-         return FALLBACK_AFFIRMATIONS.map((a, i) => ({
-             id: `local-card-${i}`,
-             title: a.category + " Practice",
-             affirmation: a.text,
-             leche_value: a.category,
-             mission: a.mission,
-             message: a.message
-        }));
-      }
-    },
-  });
+  const practiceCards = practiceCardsData;
 
   useEffect(() => {
     const todayKey = new Date().toISOString().split('T')[0];
@@ -127,19 +104,7 @@ export default function PullCards() {
 
   const saveCardMutation = useMutation({
     mutationFn: async (card) => {
-      // Save the pulled card
-      await savePulledCard(user.email, card.id);
-      
-      // Update user stats (pulls, streaks, category counts)
-      await updateUserStatsOnPull(user.email, card);
-      
-      // Update Vibeagotchi XP
-      await updateVibeagotchiXpOnPull(user.email, 25);
-      
-      // Record activity for live pulse tracker
-      await recordActivityPulse(user.email, 'pulled a PRACTICE card', '🎴');
-      
-      return card;
+      return syncCardPull(user.email, card);
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['todaysPractice', user?.email] });
@@ -235,9 +200,19 @@ export default function PullCards() {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            className="flex flex-col items-center py-4"
+            className="flex flex-col items-center py-4 space-y-8"
           >
-            <div className="text-center mb-8">
+            {/* Mood Before PRACTICE - Placed above Pull Card button */}
+            <div className="w-full max-w-md mx-auto">
+                <Section title="How are you feeling?">
+                    <MoodTracker
+                        username={user?.email || 'guest'}
+                        onMoodLog={(mood) => setBeforeMood(mood)}
+                    />
+                </Section>
+            </div>
+
+            <div className="text-center">
               <h2 className="text-2xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-indigo-400 to-purple-400 mb-2 animate-pulse">
                 Today's Intention
               </h2>
@@ -269,7 +244,7 @@ export default function PullCards() {
             {showJournal && (
               <ReflectionJournal
                 card={pulledCard}
-                onComplete={handleCompleteJournal}
+                onComplete={(data) => handleCompleteJournal({ ...data, beforeMood })}
                 isSubmitting={isSubmitting}
               />
             )}

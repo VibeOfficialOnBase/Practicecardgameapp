@@ -86,7 +86,7 @@ export async function savePracticeEntry(uid, data) {
 /**
  * Saves a pulled card for the day for a user.
  * @param {string} uid - User email/ID
- *param {string} cardId - The ID of the practice card pulled.
+ * @param {string} cardId - The ID of the practice card pulled.
  * @returns {Promise<Object>} Saved entry
  */
 export async function savePulledCard(uid, cardId) {
@@ -294,9 +294,9 @@ export async function updateUserStatsOnPull(uid, cardData) {
     }
 
     // Update category counts
-    if (cardData?.leche_value) {
+    if (cardData?.category) {
       if (!profile.category_counts) profile.category_counts = {};
-      profile.category_counts[cardData.leche_value] = (profile.category_counts[cardData.leche_value] || 0) + 1;
+      profile.category_counts[cardData.category] = (profile.category_counts[cardData.category] || 0) + 1;
     }
 
     profile.last_pull_date = new Date().toISOString();
@@ -324,8 +324,8 @@ export async function updateUserStatsOnPull(uid, cardData) {
 
   const longestStreak = Math.max(currentStreak, existing?.longest_streak || 0);
   const categoryCounts = existing?.category_counts || {};
-  if (cardData?.leche_value) {
-    categoryCounts[cardData.leche_value] = (categoryCounts[cardData.leche_value] || 0) + 1;
+  if (cardData?.category) {
+    categoryCounts[cardData.category] = (categoryCounts[cardData.category] || 0) + 1;
   }
 
   const updates = {
@@ -514,4 +514,28 @@ export async function getUserFavorites(uid) {
     return [];
   }
   return data || [];
+}
+
+/**
+ * Sync logic when a card is pulled
+ */
+export async function syncCardPull(uid, card) {
+  try {
+      // 1. Save pulled card
+      await savePulledCard(uid, card.id);
+
+      // 2. Update user stats
+      await updateUserStatsOnPull(uid, card);
+
+      // 3. Update Vibeagotchi XP
+      await updateVibeagotchiXpOnPull(uid, 25);
+
+      // 4. Record Activity Pulse
+      await recordActivityPulse(uid, 'pulled a PRACTICE card', '🎴');
+
+      return true;
+  } catch (error) {
+      console.error("Error syncing card pull:", error);
+      throw error;
+  }
 }

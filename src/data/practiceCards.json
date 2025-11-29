@@ -1,0 +1,72 @@
+[
+  {
+    "id": "practice-1",
+    "title": "Practice 1",
+    "mission": "Take 3 deep breaths before responding to any message today.",
+    "affirmation": "I am calm, centered, and in control of my reactions.",
+    "category": "Mindfulness"
+  },
+  {
+    "id": "practice-2",
+    "title": "Practice 2",
+    "mission": "Compliment a stranger or a friend genuinely.",
+    "affirmation": "My kindness creates a ripple effect of positivity.",
+    "category": "Connection"
+  },
+  {
+    "id": "practice-3",
+    "title": "Practice 3",
+    "mission": "Spend 5 minutes in silence without your phone.",
+    "affirmation": "In silence, I find clarity and peace.",
+    "category": "Mindfulness"
+  },
+  {
+    "id": "practice-4",
+    "title": "Practice 4",
+    "mission": "Write down 3 things you are grateful for.",
+    "affirmation": "Gratitude attracts abundance into my life.",
+    "category": "Gratitude"
+  },
+  {
+    "id": "practice-5",
+    "title": "Practice 5",
+    "mission": "Drink a glass of water mindfully, tasting every sip.",
+    "affirmation": "I nourish my body with love and care.",
+    "category": "Health"
+  },
+  {
+    "id": "practice-6",
+    "title": "Practice 6",
+    "mission": "Smile at yourself in the mirror for 10 seconds.",
+    "affirmation": "I love and accept myself exactly as I am.",
+    "category": "Self-Love"
+  },
+  {
+    "id": "practice-7",
+    "title": "Practice 7",
+    "mission": "Do a random act of kindness.",
+    "affirmation": "I am a force for good in the world.",
+    "category": "Kindness"
+  },
+  {
+    "id": "practice-8",
+    "title": "Practice 8",
+    "mission": "Read a page of a book or an article that inspires you.",
+    "affirmation": "I am constantly learning and growing.",
+    "category": "Growth"
+  },
+  {
+    "id": "practice-9",
+    "title": "Practice 9",
+    "mission": "Stretch your body for 2 minutes.",
+    "affirmation": "I honor my body's need for movement.",
+    "category": "Health"
+  },
+  {
+    "id": "practice-10",
+    "title": "Practice 10",
+    "mission": "Visualize your biggest goal as if it's already achieved.",
+    "affirmation": "I have the power to create my dream reality.",
+    "category": "Manifestation"
+  }
+]

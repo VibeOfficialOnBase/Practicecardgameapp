@@ -4,7 +4,7 @@ import { supabase } from '@/api/supabaseClient';
 import { useAuth } from '../contexts/AuthContext';
 import { format, startOfMonth, endOfMonth, eachDayOfInterval, isSameDay, isSameMonth, addMonths, subMonths } from 'date-fns';
 import { motion, AnimatePresence } from 'framer-motion';
-import { ChevronLeft, ChevronRight, BookOpen, Calendar as CalendarIcon, Star, Edit2, Trash2 } from 'lucide-react';
+import { ChevronLeft, ChevronRight, BookOpen, Calendar as CalendarIcon, Star, Edit2, Trash2, Trophy, Zap, Activity } from 'lucide-react';
 import PageHeader from '../components/common/PageHeader';
 import Card from '../components/common/Card';
 import Button from '../components/common/Button';
@@ -16,7 +16,7 @@ export default function Calendar() {
   const [selectedDate, setSelectedDate] = useState(new Date());
   const [viewingEntry, setViewingEntry] = useState(null);
 
-  // Fetch practice entries and pulled cards for the current month
+  // Fetch all calendar activity for the current month
   const { data: monthData = [], isLoading } = useQuery({
     queryKey: ['calendarData', user?.email, format(currentMonth, 'yyyy-MM')],
     queryFn: async () => {
@@ -24,38 +24,62 @@ export default function Calendar() {
       const startDate = startOfMonth(currentMonth);
       const endDate = endOfMonth(currentMonth);
 
-      // Fetch completed practices
-      const { data: practices, error: practicesError } = await supabase
+      // 1. Practices
+      const { data: practices } = await supabase
         .from('daily_practice')
-        .select(`*`)
+        .select('*')
         .eq('created_by', user.email)
         .gte('created_date', startDate.toISOString())
         .lte('created_date', endDate.toISOString());
 
-      if (practicesError) throw new Error(practicesError.message);
-
-      // Fetch pulled cards (history)
-      const { data: cards, error: cardsError } = await supabase
+      // 2. Pulled Cards
+      const { data: cards } = await supabase
         .from('daily_card')
-        .select(`*, practice_card:practice_card_id(*)`)
+        .select('*')
         .eq('created_by', user.email)
         .gte('created_date', startDate.toISOString())
         .lte('created_date', endDate.toISOString());
 
-      if (cardsError) throw new Error(cardsError.message);
+      // 3. Game Scores (Wins/Activity)
+      const { data: scores } = await supabase
+        .from('game_score')
+        .select('*')
+        .eq('user_email', user.email)
+        .gte('created_date', startDate.toISOString())
+        .lte('created_date', endDate.toISOString());
 
-      // Combine and process data
+      // 4. Activity Pulses (Daily Actions)
+      const { data: pulses } = await supabase
+        .from('activity_pulse')
+        .select('*')
+        .eq('user_email', user.email)
+        .gte('created_date', startDate.toISOString())
+        .lte('created_date', endDate.toISOString());
+
+      // 5. Achievements (Vibe Evolutions or Badges if tracked by date)
+      const { data: achievements } = await supabase
+        .from('vibeagotchi_evolution')
+        .select('*')
+        .eq('user_email', user.email)
+        .gte('achieved_at', startDate.toISOString())
+        .lte('achieved_at', endDate.toISOString());
+
+      // Combine all data keyed by day
       const combined = {};
-      practices.forEach(p => {
-        const day = format(new Date(p.created_date), 'yyyy-MM-dd');
-        combined[day] = { ...combined[day], practice: p, type: 'practice' };
-      });
-      cards.forEach(c => {
-        const day = format(new Date(c.created_date), 'yyyy-MM-dd');
-        combined[day] = { ...combined[day], card: c, type: 'card' };
-      });
 
-      return Object.values(combined);
+      const addToDay = (dateStr, type, item) => {
+        const day = format(new Date(dateStr), 'yyyy-MM-dd');
+        if (!combined[day]) combined[day] = { items: [] };
+        combined[day].items.push({ type, ...item });
+      };
+
+      (practices || []).forEach(p => addToDay(p.created_date, 'practice', p));
+      (cards || []).forEach(c => addToDay(c.created_date, 'card', c));
+      (scores || []).forEach(s => addToDay(s.created_date, 'score', s));
+      (pulses || []).forEach(p => addToDay(p.created_date, 'pulse', p));
+      (achievements || []).forEach(a => addToDay(a.achieved_at, 'achievement', a));
+
+      return combined; // Keyed by 'yyyy-MM-dd'
     },
     enabled: !!user,
   });
@@ -67,23 +91,31 @@ export default function Calendar() {
   });
 
   const getDayStatus = (day) => {
-    const entry = monthData.find(e => isSameDay(new Date(e.card?.created_date || e.practice?.created_date), day));
+    const dayKey = format(day, 'yyyy-MM-dd');
+    const entry = monthData[dayKey];
     if (!entry) return null;
-    if (entry.practice?.completed) return 'completed';
-    if (entry.card) return 'pulled';
+
+    // Determine priority status indicator
+    const items = entry.items;
+    if (items.some(i => i.type === 'practice' && i.completed)) return 'completed';
+    if (items.some(i => i.type === 'card')) return 'pulled';
+    if (items.some(i => i.type === 'score' || i.type === 'achievement')) return 'active';
+    if (items.length > 0) return 'active';
+
     return null;
   };
 
   const handlePrevMonth = () => setCurrentMonth(subMonths(currentMonth, 1));
   const handleNextMonth = () => setCurrentMonth(addMonths(currentMonth, 1));
 
-  const selectedPractice = monthData.find(e => isSameDay(new Date(e.card?.created_date || e.practice?.created_date), selectedDate));
+  const selectedDayKey = format(selectedDate, 'yyyy-MM-dd');
+  const selectedDayItems = monthData[selectedDayKey]?.items || [];
 
   return (
     <div className="space-y-6 pb-24 animate-fade-in">
       <PageHeader
         title="Calendar"
-        subtitle="Your practice journey"
+        subtitle="Your journey of practice & play"
       />
 
       {/* Calendar Widget */}
@@ -133,7 +165,9 @@ export default function Calendar() {
                 {status === 'completed' ? (
                   <div className={`w-1.5 h-1.5 rounded-full mt-1 ${isSelected ? 'bg-white' : 'bg-green-500'}`} />
                 ) : status === 'pulled' ? (
-                  <div className={`w-1.5 h-1.5 rounded-full mt-1 ${isSelected ? 'bg-white/50' : 'bg-gray-400'}`} />
+                  <div className={`w-1.5 h-1.5 rounded-full mt-1 ${isSelected ? 'bg-white/50' : 'bg-blue-400'}`} />
+                ) : status === 'active' ? (
+                   <div className={`w-1.5 h-1.5 rounded-full mt-1 ${isSelected ? 'bg-white/50' : 'bg-orange-400'}`} />
                 ) : null}
               </motion.button>
             );
@@ -147,44 +181,76 @@ export default function Calendar() {
           {isSameDay(selectedDate, new Date()) ? 'Today' : format(selectedDate, 'MMMM do')}
         </h3>
 
-        {selectedPractice ? (
-          <Card className="p-5 relative overflow-hidden">
-             {selectedPractice.practice?.completed ? (
-              <>
-                <div className="absolute top-0 left-0 w-1 h-full bg-gradient-to-b from-green-400 to-emerald-500" />
-                <div className="flex justify-between items-start mb-3">
-                    <div className="flex items-center gap-2">
-                        <div className="p-2 bg-green-500/10 rounded-lg">
-                            <Star className="w-4 h-4 text-green-500" />
-                        </div>
-                        <div>
-                            <p className="font-bold text-sm text-[var(--text-primary)]">Practice Complete</p>
-                            <p className="text-xs text-[var(--text-secondary)]">{format(new Date(selectedPractice.practice.created_date), 'h:mm a')}</p>
-                        </div>
-                    </div>
-                    <button onClick={() => setViewingEntry(selectedPractice.practice)} className="text-xs font-medium text-[var(--accent-primary)] hover:underline">
-                        View Entry
-                    </button>
-                </div>
-                {selectedPractice.practice.reflection && (
-                    <p className="text-sm text-[var(--text-secondary)] line-clamp-2 italic">
-                        "{selectedPractice.practice.reflection}"
-                    </p>
-                )}
-              </>
-            ) : selectedPractice.card ? (
-                 <div className="flex items-center gap-4">
-                    <img src={selectedPractice.card.practice_card.image_url || 'https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/6921dea06e8f58657363a952/43aec5bff_PRACTICECARDBACK.jpg'} alt="Card" className="w-16 h-24 rounded-lg object-cover" />
-                    <div>
-                        <p className="font-bold text-sm text-[var(--text-primary)]">{selectedPractice.card.practice_card.title}</p>
-                        <p className="text-xs text-[var(--text-secondary)]">Card pulled, practice pending.</p>
-                    </div>
-                </div>
-            ) : null}
-          </Card>
+        {selectedDayItems.length > 0 ? (
+            <div className="space-y-3">
+                {selectedDayItems.map((item, idx) => (
+                    <Card key={idx} className="p-4 relative overflow-hidden">
+                        {item.type === 'practice' && (
+                             <div className="flex justify-between items-start">
+                                <div className="flex items-center gap-3">
+                                    <div className="p-2 bg-green-500/10 rounded-lg">
+                                        <Star className="w-4 h-4 text-green-500" />
+                                    </div>
+                                    <div>
+                                        <p className="font-bold text-sm text-[var(--text-primary)]">Practice Complete</p>
+                                        <p className="text-xs text-[var(--text-secondary)]">Mood: {item.before_mood || '-'} → {item.after_mood || '-'}</p>
+                                    </div>
+                                </div>
+                                <button onClick={() => setViewingEntry(item)} className="text-xs font-medium text-[var(--accent-primary)] hover:underline">
+                                    View
+                                </button>
+                            </div>
+                        )}
+                        {item.type === 'card' && (
+                             <div className="flex items-center gap-3">
+                                <div className="p-2 bg-blue-500/10 rounded-lg">
+                                    <BookOpen className="w-4 h-4 text-blue-500" />
+                                </div>
+                                <div>
+                                    <p className="font-bold text-sm text-[var(--text-primary)]">Card Pulled</p>
+                                    <p className="text-xs text-[var(--text-secondary)] font-mono opacity-70">ID: {item.practice_card_id}</p>
+                                </div>
+                            </div>
+                        )}
+                        {item.type === 'score' && (
+                            <div className="flex items-center gap-3">
+                                <div className="p-2 bg-amber-500/10 rounded-lg">
+                                    <Trophy className="w-4 h-4 text-amber-500" />
+                                </div>
+                                <div>
+                                    <p className="font-bold text-sm text-[var(--text-primary)]">Game: {item.game_type?.replace('_', ' ')}</p>
+                                    <p className="text-xs text-[var(--text-secondary)]">Score: {item.score}</p>
+                                </div>
+                            </div>
+                        )}
+                        {item.type === 'pulse' && (
+                            <div className="flex items-center gap-3">
+                                <div className="p-2 bg-purple-500/10 rounded-lg">
+                                    <Activity className="w-4 h-4 text-purple-500" />
+                                </div>
+                                <div>
+                                    <p className="font-bold text-sm text-[var(--text-primary)]">{item.action_description}</p>
+                                    <p className="text-xs text-[var(--text-secondary)]">{format(new Date(item.created_date), 'h:mm a')}</p>
+                                </div>
+                            </div>
+                        )}
+                        {item.type === 'achievement' && (
+                             <div className="flex items-center gap-3">
+                                <div className="p-2 bg-pink-500/10 rounded-lg">
+                                    <Zap className="w-4 h-4 text-pink-500" />
+                                </div>
+                                <div>
+                                    <p className="font-bold text-sm text-[var(--text-primary)]">Evolution: {item.stage_name}</p>
+                                    <p className="text-xs text-[var(--text-secondary)]">VibeAGotchi Level Up!</p>
+                                </div>
+                            </div>
+                        )}
+                    </Card>
+                ))}
+            </div>
         ) : (
           <div className="p-8 text-center rounded-[32px] border-2 border-dashed border-[var(--text-secondary)]/20">
-            <p className="text-[var(--text-secondary)] text-sm">No practice recorded for this day.</p>
+            <p className="text-[var(--text-secondary)] text-sm">No activity recorded for this day.</p>
           </div>
         )}
       </div>
@@ -221,7 +287,7 @@ export default function Calendar() {
                     </div>
                 </div>
 
-                {/* Edit/Delete Placeholder actions - would require mutations */}
+                {/* Edit/Delete Placeholder actions */}
                 <div className="flex gap-2 pt-4">
                     <Button variant="secondary" className="flex-1">
                         <Edit2 className="w-4 h-4 mr-2" /> Edit

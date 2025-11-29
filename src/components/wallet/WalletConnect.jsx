@@ -160,7 +160,7 @@ export default function WalletConnect() {
                 </div>
               )}
 
-              <div className="space-y-3 flex-1">
+              <div className="space-y-3 flex-1 overflow-y-auto max-h-[400px]">
                 {/* Base Wallet Section */}
                 <div className="mb-4">
                   <p className="text-xs text-white/50 uppercase mb-2 font-bold">Base Network</p>
@@ -171,7 +171,7 @@ export default function WalletConnect() {
                   >
                     <div className="w-12 h-12 rounded-full overflow-hidden flex-shrink-0">
                       <img 
-                        src="/vibe_logo.jpg" 
+                        src="/assets/vibe-logo.png"
                         alt="$VibeOfficial" 
                         className="w-full h-full object-cover"
                       />
