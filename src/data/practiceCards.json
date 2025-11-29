@@ -1,72 +1,2922 @@
 [
   {
-    "id": "practice-1",
-    "title": "Practice 1",
-    "mission": "Take 3 deep breaths before responding to any message today.",
-    "affirmation": "I am calm, centered, and in control of my reactions.",
-    "category": "Mindfulness"
+    "id": "practice-001",
+    "title": "Strong Path",
+    "mission": "Say no to something that does not serve your well-being.",
+    "affirmation": "I take action toward what matters to me.",
+    "leche_value": "Empowerment",
+    "share_text": "Spoke up for what I believe in."
   },
   {
-    "id": "practice-2",
-    "title": "Practice 2",
-    "mission": "Compliment a stranger or a friend genuinely.",
-    "affirmation": "My kindness creates a ripple effect of positivity.",
-    "category": "Connection"
+    "id": "practice-002",
+    "title": "Claim Your Space",
+    "mission": "Reclaim your time by saying no to a distraction.",
+    "affirmation": "I trust myself to handle whatever comes.",
+    "leche_value": "Empowerment",
+    "share_text": "Set a boundary and stuck to it."
   },
   {
-    "id": "practice-3",
-    "title": "Practice 3",
-    "mission": "Spend 5 minutes in silence without your phone.",
-    "affirmation": "In silence, I find clarity and peace.",
-    "category": "Mindfulness"
+    "id": "practice-003",
+    "title": "Love Journey",
+    "mission": "Take a slow, mindful walk and notice beauty around you.",
+    "affirmation": "I am patient with myself as I grow.",
+    "leche_value": "Love",
+    "share_text": "Self-acceptance is a journey, not a destination."
   },
   {
-    "id": "practice-4",
-    "title": "Practice 4",
-    "mission": "Write down 3 things you are grateful for.",
-    "affirmation": "Gratitude attracts abundance into my life.",
-    "category": "Gratitude"
+    "id": "practice-004",
+    "title": "Healing Clarity",
+    "mission": "Let go of one thing you cannot control today.",
+    "affirmation": "I let go of tension and welcome calm.",
+    "leche_value": "Healing",
+    "share_text": "Allowed myself to slow down today."
   },
   {
-    "id": "practice-5",
-    "title": "Practice 5",
-    "mission": "Drink a glass of water mindfully, tasting every sip.",
-    "affirmation": "I nourish my body with love and care.",
-    "category": "Health"
+    "id": "practice-005",
+    "title": "Group Impact",
+    "mission": "Clean up or improve a shared space.",
+    "affirmation": "I strengthen my community through small acts.",
+    "leche_value": "Community",
+    "share_text": "Grateful for the people in my corner."
   },
   {
-    "id": "practice-6",
-    "title": "Practice 6",
-    "mission": "Smile at yourself in the mirror for 10 seconds.",
-    "affirmation": "I love and accept myself exactly as I am.",
-    "category": "Self-Love"
+    "id": "practice-006",
+    "title": "Deep Listening",
+    "mission": "Ask a friend how they are really feeling today.",
+    "affirmation": "I make space for others perspectives.",
+    "leche_value": "Empathy",
+    "share_text": "Understanding starts with really hearing someone."
   },
   {
-    "id": "practice-7",
-    "title": "Practice 7",
-    "mission": "Do a random act of kindness.",
-    "affirmation": "I am a force for good in the world.",
-    "category": "Kindness"
+    "id": "practice-007",
+    "title": "Strong Stance",
+    "mission": "Ask for what you need without apology.",
+    "affirmation": "I have the power to shape my path.",
+    "leche_value": "Empowerment",
+    "share_text": "Took ownership of my time and energy."
   },
   {
-    "id": "practice-8",
-    "title": "Practice 8",
-    "mission": "Read a page of a book or an article that inspires you.",
-    "affirmation": "I am constantly learning and growing.",
-    "category": "Growth"
+    "id": "practice-008",
+    "title": "Healing Ground",
+    "mission": "Create a peaceful corner in your space for rest.",
+    "affirmation": "I am healing, even when progress feels slow.",
+    "leche_value": "Healing",
+    "share_text": "Created space for renewal."
   },
   {
-    "id": "practice-9",
-    "title": "Practice 9",
-    "mission": "Stretch your body for 2 minutes.",
-    "affirmation": "I honor my body's need for movement.",
-    "category": "Health"
+    "id": "practice-009",
+    "title": "Love Clarity",
+    "mission": "Acknowledge your effort, not just your results.",
+    "affirmation": "I am worthy of my own care and attention.",
+    "leche_value": "Love",
+    "share_text": "Kindness to myself is a daily practice."
   },
   {
-    "id": "practice-10",
-    "title": "Practice 10",
-    "mission": "Visualize your biggest goal as if it's already achieved.",
-    "affirmation": "I have the power to create my dream reality.",
-    "category": "Manifestation"
+    "id": "practice-010",
+    "title": "Connect Through Care",
+    "mission": "Notice body language and respond with care.",
+    "affirmation": "I approach differences with openness.",
+    "leche_value": "Empathy",
+    "share_text": "Asked how someone was feeling and meant it."
+  },
+  {
+    "id": "practice-011",
+    "title": "Confident Stand",
+    "mission": "Say no to something that does not serve your well-being.",
+    "affirmation": "I take action toward what matters to me.",
+    "leche_value": "Empowerment",
+    "share_text": "Trusting myself more each day."
+  },
+  {
+    "id": "practice-012",
+    "title": "Love Moment",
+    "mission": "Express appreciation to someone who often goes unnoticed.",
+    "affirmation": "My self-worth is not dependent on others opinions.",
+    "leche_value": "Love",
+    "share_text": "Self-love is not selfish. It is necessary."
+  },
+  {
+    "id": "practice-013",
+    "title": "Share the Load",
+    "mission": "Listen to someone without planning your response.",
+    "affirmation": "I listen with an open heart and mind.",
+    "leche_value": "Empathy",
+    "share_text": "Today I listened more than I spoke."
+  },
+  {
+    "id": "practice-014",
+    "title": "Group Care",
+    "mission": "Express gratitude to someone who contributes to your community.",
+    "affirmation": "I offer my gifts to those around me.",
+    "leche_value": "Community",
+    "share_text": "Community starts with showing up."
+  },
+  {
+    "id": "practice-015",
+    "title": "Empowered Living",
+    "mission": "Celebrate progress, not just perfection.",
+    "affirmation": "I am strong, even when I feel uncertain.",
+    "leche_value": "Empowerment",
+    "share_text": "Said no to what does not serve me."
+  },
+  {
+    "id": "practice-016",
+    "title": "Inner Balance",
+    "mission": "Spend time outdoors and let nature restore you.",
+    "affirmation": "I am gentle with myself on difficult days.",
+    "leche_value": "Healing",
+    "share_text": "Released tension and welcomed calm."
+  },
+  {
+    "id": "practice-017",
+    "title": "Collective Effort",
+    "mission": "Clean up or improve a shared space.",
+    "affirmation": "I strengthen my community through small acts.",
+    "leche_value": "Community",
+    "share_text": "We are stronger together."
+  },
+  {
+    "id": "practice-018",
+    "title": "Empathic Bond",
+    "mission": "Let someone finish speaking before you reply.",
+    "affirmation": "I am learning to listen more deeply.",
+    "leche_value": "Empathy",
+    "share_text": "Practiced seeing things from another view."
+  },
+  {
+    "id": "practice-019",
+    "title": "Heartfelt Empathy",
+    "mission": "Thank someone for sharing their experience with you.",
+    "affirmation": "I allow others to be heard and seen.",
+    "leche_value": "Empathy",
+    "share_text": "Holding space for others without fixing."
+  },
+  {
+    "id": "practice-020",
+    "title": "Caring Attention",
+    "mission": "Put yourself in another persons shoes for a moment.",
+    "affirmation": "I value connection over being right.",
+    "leche_value": "Empathy",
+    "share_text": "Listened without interrupting today. It mattered."
+  },
+  {
+    "id": "practice-021",
+    "title": "Active Listening",
+    "mission": "Reflect on a time when someone showed you understanding.",
+    "affirmation": "I hold space for feelings, including my own.",
+    "leche_value": "Empathy",
+    "share_text": "Chose curiosity over judgment."
+  },
+  {
+    "id": "practice-022",
+    "title": "Community Way",
+    "mission": "Amplify someones voice who may not be heard.",
+    "affirmation": "I am building a network of mutual support.",
+    "leche_value": "Community",
+    "share_text": "Supporting each other is how we grow."
+  },
+  {
+    "id": "practice-023",
+    "title": "Inner Support",
+    "mission": "Take a short nap or rest your eyes for ten minutes.",
+    "affirmation": "I am creating space for renewal.",
+    "leche_value": "Healing",
+    "share_text": "Forgave myself for a past mistake."
+  },
+  {
+    "id": "practice-024",
+    "title": "Together We Build",
+    "mission": "Express gratitude to someone who contributes to your community.",
+    "affirmation": "I offer my gifts to those around me.",
+    "leche_value": "Community",
+    "share_text": "Together we can do more. #GoodVibes"
+  },
+  {
+    "id": "practice-025",
+    "title": "Understand Deeply",
+    "mission": "Share space with someone in silence if they need it.",
+    "affirmation": "I recognize the humanity in everyone I meet.",
+    "leche_value": "Empathy",
+    "share_text": "Holding space for others without fixing."
+  },
+  {
+    "id": "practice-026",
+    "title": "Patient Listening",
+    "mission": "Reflect on a time when someone showed you understanding.",
+    "affirmation": "I hold space for feelings, including my own.",
+    "leche_value": "Empathy",
+    "share_text": "A little patience goes a long way."
+  },
+  {
+    "id": "practice-027",
+    "title": "Healing Practice",
+    "mission": "Drink a glass of water mindfully, appreciating each sip.",
+    "affirmation": "I choose rest as a form of self-care.",
+    "leche_value": "Healing",
+    "share_text": "Prioritized my well-being today."
+  },
+  {
+    "id": "practice-028",
+    "title": "Community Stand",
+    "mission": "Offer help to someone in your community today.",
+    "affirmation": "I am part of something larger than myself.",
+    "leche_value": "Community",
+    "share_text": "We are stronger together."
+  },
+  {
+    "id": "practice-029",
+    "title": "Kind Listening",
+    "mission": "Offer your full attention in one conversation today.",
+    "affirmation": "I seek to understand before being understood.",
+    "leche_value": "Empathy",
+    "share_text": "Being present for someone is a gift."
+  },
+  {
+    "id": "practice-030",
+    "title": "Build Together",
+    "mission": "Reach out to a neighbor or colleague you havent spoken to recently.",
+    "affirmation": "I contribute to the well-being of my community.",
+    "leche_value": "Community",
+    "share_text": "Showed up for my community today."
+  },
+  {
+    "id": "practice-031",
+    "title": "Gentle Balance",
+    "mission": "Let go of perfectionism in one small task.",
+    "affirmation": "I am allowing myself to grow through challenges.",
+    "leche_value": "Healing",
+    "share_text": "Healing is not linear, and that is okay."
+  },
+  {
+    "id": "practice-032",
+    "title": "Heart Wisdom",
+    "mission": "Set a boundary that honors your well-being.",
+    "affirmation": "I give myself permission to rest and recharge.",
+    "leche_value": "Love",
+    "share_text": "Practicing love starts from within."
+  },
+  {
+    "id": "practice-033",
+    "title": "Self-Healing Day",
+    "mission": "Stretch your body gently for five minutes.",
+    "affirmation": "I am worthy of peace and recovery.",
+    "leche_value": "Healing",
+    "share_text": "Rest is not a reward. It is a need."
+  },
+  {
+    "id": "practice-034",
+    "title": "Community Circle",
+    "mission": "Write a thank-you note to a community helper.",
+    "affirmation": "I am a trusted member of my circles.",
+    "leche_value": "Community",
+    "share_text": "A rising tide lifts all boats."
+  },
+  {
+    "id": "practice-035",
+    "title": "Community Care",
+    "mission": "Offer help to someone in your community today.",
+    "affirmation": "I am part of something larger than myself.",
+    "leche_value": "Community",
+    "share_text": "Grateful for the people in my corner."
+  },
+  {
+    "id": "practice-036",
+    "title": "Strong Choice",
+    "mission": "Trust your gut on one choice today.",
+    "affirmation": "I am worthy of success and fulfillment.",
+    "leche_value": "Empowerment",
+    "share_text": "Made a decision aligned with my values."
+  },
+  {
+    "id": "practice-037",
+    "title": "Community Grow",
+    "mission": "Celebrate a community win, no matter how small.",
+    "affirmation": "I am grateful for the people in my life.",
+    "leche_value": "Community",
+    "share_text": "Shared a skill with someone who needed it."
+  },
+  {
+    "id": "practice-038",
+    "title": "Shared Goals",
+    "mission": "Share a skill or resource with someone who could use it.",
+    "affirmation": "I value connection and belonging.",
+    "leche_value": "Community",
+    "share_text": "Investing in relationships that matter."
+  },
+  {
+    "id": "practice-039",
+    "title": "Love Freely",
+    "mission": "Express appreciation to someone who often goes unnoticed.",
+    "affirmation": "My self-worth is not dependent on others opinions.",
+    "leche_value": "Love",
+    "share_text": "Learning to love the person I am becoming."
+  },
+  {
+    "id": "practice-040",
+    "title": "Love Strength",
+    "mission": "Choose an activity that nourishes your spirit.",
+    "affirmation": "I trust myself to make good decisions.",
+    "leche_value": "Love",
+    "share_text": "Today I chose compassion over criticism."
+  },
+  {
+    "id": "practice-041",
+    "title": "Local Growth",
+    "mission": "Reach out to a neighbor or colleague you havent spoken to recently.",
+    "affirmation": "I contribute to the well-being of my community.",
+    "leche_value": "Community",
+    "share_text": "Showed up for my community today."
+  },
+  {
+    "id": "practice-042",
+    "title": "Healing Moment",
+    "mission": "Reflect on how far you have come in your journey.",
+    "affirmation": "I trust the process of my own healing.",
+    "leche_value": "Healing",
+    "share_text": "Took a break and did not feel guilty."
+  },
+  {
+    "id": "practice-043",
+    "title": "Local Roots",
+    "mission": "Attend or organize a local gathering or event.",
+    "affirmation": "I lift others up as I rise.",
+    "leche_value": "Community",
+    "share_text": "Supporting each other is how we grow."
+  },
+  {
+    "id": "practice-044",
+    "title": "Gentle Rest",
+    "mission": "Let go of one thing you cannot control today.",
+    "affirmation": "I let go of tension and welcome calm.",
+    "leche_value": "Healing",
+    "share_text": "Listened to what my body needed."
+  },
+  {
+    "id": "practice-045",
+    "title": "Take Courage",
+    "mission": "Speak up about something that matters to you.",
+    "affirmation": "I trust my ability to navigate challenges.",
+    "leche_value": "Empowerment",
+    "share_text": "Took ownership of my time and energy."
+  },
+  {
+    "id": "practice-046",
+    "title": "Community Ground",
+    "mission": "Introduce two people who might benefit from knowing each other.",
+    "affirmation": "I show up for my community in meaningful ways.",
+    "leche_value": "Community",
+    "share_text": "Offered help without being asked."
+  },
+  {
+    "id": "practice-047",
+    "title": "Heart Living",
+    "mission": "Give yourself permission to rest without guilt.",
+    "affirmation": "I am capable of giving and receiving love.",
+    "leche_value": "Love",
+    "share_text": "Today I reminded myself: I am enough."
+  },
+  {
+    "id": "practice-048",
+    "title": "Love Energy",
+    "mission": "Give yourself permission to rest without guilt.",
+    "affirmation": "I am capable of giving and receiving love.",
+    "leche_value": "Love",
+    "share_text": "Today I chose compassion over criticism."
+  },
+  {
+    "id": "practice-049",
+    "title": "Shared Purpose",
+    "mission": "Share a skill or resource with someone who could use it.",
+    "affirmation": "I value connection and belonging.",
+    "leche_value": "Community",
+    "share_text": "Reached out to someone outside my circle."
+  },
+  {
+    "id": "practice-050",
+    "title": "Empowerment Rise",
+    "mission": "Take ownership of a decision, big or small.",
+    "affirmation": "I embrace my potential for growth.",
+    "leche_value": "Empowerment",
+    "share_text": "Trusting myself more each day."
+  },
+  {
+    "id": "practice-051",
+    "title": "Listen First",
+    "mission": "Reach out to someone who might feel overlooked.",
+    "affirmation": "I offer support in ways that honor others needs.",
+    "leche_value": "Empathy",
+    "share_text": "Listened without interrupting today. It mattered."
+  },
+  {
+    "id": "practice-052",
+    "title": "Heart Power",
+    "mission": "Allow yourself to feel proud of who you are becoming.",
+    "affirmation": "I am deserving of happiness and peace.",
+    "leche_value": "Love",
+    "share_text": "Kindness to myself is a daily practice."
+  },
+  {
+    "id": "practice-053",
+    "title": "Self-Healing Rest",
+    "mission": "Write down and release one worry or frustration.",
+    "affirmation": "I trust my bodys ability to restore itself.",
+    "leche_value": "Healing",
+    "share_text": "Taking care of myself is productive."
+  },
+  {
+    "id": "practice-054",
+    "title": "Mindful Listening",
+    "mission": "Reflect on how your words might land before speaking.",
+    "affirmation": "I respond with care instead of reaction.",
+    "leche_value": "Empathy",
+    "share_text": "Practiced seeing things from another view."
+  },
+  {
+    "id": "practice-055",
+    "title": "Stand Tall",
+    "mission": "Take ownership of a decision, big or small.",
+    "affirmation": "I embrace my potential for growth.",
+    "leche_value": "Empowerment",
+    "share_text": "Trusting myself more each day."
+  },
+  {
+    "id": "practice-056",
+    "title": "Group Strength",
+    "mission": "Clean up or improve a shared space.",
+    "affirmation": "I strengthen my community through small acts.",
+    "leche_value": "Community",
+    "share_text": "Grateful for the people in my corner."
+  },
+  {
+    "id": "practice-057",
+    "title": "Self-Rest Day",
+    "mission": "Forgive yourself for a past mistake.",
+    "affirmation": "I forgive myself for past mistakes.",
+    "leche_value": "Healing",
+    "share_text": "Took a break and did not feel guilty."
+  },
+  {
+    "id": "practice-058",
+    "title": "Bold Start",
+    "mission": "Say no to something that does not serve your well-being.",
+    "affirmation": "I take action toward what matters to me.",
+    "leche_value": "Empowerment",
+    "share_text": "I am learning to back myself."
+  },
+  {
+    "id": "practice-059",
+    "title": "Heart Opening",
+    "mission": "Write a note of gratitude to yourself.",
+    "affirmation": "I release the need for perfection.",
+    "leche_value": "Love",
+    "share_text": "Today I chose compassion over criticism."
+  },
+  {
+    "id": "practice-060",
+    "title": "Healing Journey",
+    "mission": "Write a letter to your past self with compassion.",
+    "affirmation": "I am patient with my healing journey.",
+    "leche_value": "Healing",
+    "share_text": "Created space for renewal."
+  },
+  {
+    "id": "practice-061",
+    "title": "Healing Space",
+    "mission": "Let go of one thing you cannot control today.",
+    "affirmation": "I let go of tension and welcome calm.",
+    "leche_value": "Healing",
+    "share_text": "Allowed myself to slow down today."
+  },
+  {
+    "id": "practice-062",
+    "title": "Feel With Others",
+    "mission": "Notice when someone seems to be struggling and check in.",
+    "affirmation": "I offer compassion without judgment.",
+    "leche_value": "Empathy",
+    "share_text": "Connection grows when we truly listen."
+  },
+  {
+    "id": "practice-063",
+    "title": "Take Action",
+    "mission": "Say no to something that does not serve your well-being.",
+    "affirmation": "I take action toward what matters to me.",
+    "leche_value": "Empowerment",
+    "share_text": "Spoke up for what I believe in."
+  },
+  {
+    "id": "practice-064",
+    "title": "Healing Calm",
+    "mission": "Stretch your body gently for five minutes.",
+    "affirmation": "I am worthy of peace and recovery.",
+    "leche_value": "Healing",
+    "share_text": "Gave myself permission to rest today."
+  },
+  {
+    "id": "practice-065",
+    "title": "Community Pride",
+    "mission": "Offer help to someone in your community today.",
+    "affirmation": "I am part of something larger than myself.",
+    "leche_value": "Community",
+    "share_text": "Celebrated someone elses win today."
+  },
+  {
+    "id": "practice-066",
+    "title": "Take Control",
+    "mission": "Reflect on a time you surprised yourself with your own ability.",
+    "affirmation": "I make choices that align with my values.",
+    "leche_value": "Empowerment",
+    "share_text": "Standing in my power, one step at a time. #GoodVibes"
+  },
+  {
+    "id": "practice-067",
+    "title": "Gentle Recovery",
+    "mission": "Drink a glass of water mindfully, appreciating each sip.",
+    "affirmation": "I choose rest as a form of self-care.",
+    "leche_value": "Healing",
+    "share_text": "Took a break and did not feel guilty."
+  },
+  {
+    "id": "practice-068",
+    "title": "Rise Strong",
+    "mission": "Speak up about something that matters to you.",
+    "affirmation": "I trust my ability to navigate challenges.",
+    "leche_value": "Empowerment",
+    "share_text": "Owned my choices and felt good about it."
+  },
+  {
+    "id": "practice-069",
+    "title": "Shared Understanding",
+    "mission": "Ask a friend how they are really feeling today.",
+    "affirmation": "I make space for others perspectives.",
+    "leche_value": "Empathy",
+    "share_text": "Empathy is a skill I am building."
+  },
+  {
+    "id": "practice-070",
+    "title": "Gentle Understanding",
+    "mission": "Notice body language and respond with care.",
+    "affirmation": "I approach differences with openness.",
+    "leche_value": "Empathy",
+    "share_text": "A little patience goes a long way."
+  },
+  {
+    "id": "practice-071",
+    "title": "Love Practice",
+    "mission": "Recognize one strength you used today.",
+    "affirmation": "I embrace my unique qualities and strengths.",
+    "leche_value": "Love",
+    "share_text": "I am worthy of my own time and attention."
+  },
+  {
+    "id": "practice-072",
+    "title": "Feel Deeply",
+    "mission": "Validate someones emotions with a simple I hear you.",
+    "affirmation": "I accept that others have their own journeys.",
+    "leche_value": "Empathy",
+    "share_text": "Understanding others helps me understand myself."
+  },
+  {
+    "id": "practice-073",
+    "title": "Receive Love",
+    "mission": "End the day by naming one thing you did well.",
+    "affirmation": "I show up for myself with love and presence.",
+    "leche_value": "Love",
+    "share_text": "Practicing love starts from within."
+  },
+  {
+    "id": "practice-074",
+    "title": "Restore Energy",
+    "mission": "Listen to music that soothes your soul.",
+    "affirmation": "I honor my need for stillness and quiet.",
+    "leche_value": "Healing",
+    "share_text": "Healing is not linear, and that is okay."
+  },
+  {
+    "id": "practice-075",
+    "title": "Gentle Care",
+    "mission": "Take a short nap or rest your eyes for ten minutes.",
+    "affirmation": "I am creating space for renewal.",
+    "leche_value": "Healing",
+    "share_text": "Rest is not a reward. It is a need."
+  },
+  {
+    "id": "practice-076",
+    "title": "Shared Feeling",
+    "mission": "Listen to someone without planning your response.",
+    "affirmation": "I listen with an open heart and mind.",
+    "leche_value": "Empathy",
+    "share_text": "Listened without interrupting today. It mattered."
+  },
+  {
+    "id": "practice-077",
+    "title": "Healing Joy",
+    "mission": "Write a letter to your past self with compassion.",
+    "affirmation": "I am patient with my healing journey.",
+    "leche_value": "Healing",
+    "share_text": "Created space for renewal."
+  },
+  {
+    "id": "practice-078",
+    "title": "Brave Action",
+    "mission": "Stand tall and take up space in a room.",
+    "affirmation": "I am building a life that reflects who I am.",
+    "leche_value": "Empowerment",
+    "share_text": "I am learning to back myself."
+  },
+  {
+    "id": "practice-079",
+    "title": "Empowered Choice",
+    "mission": "Ask for what you need without apology.",
+    "affirmation": "I have the power to shape my path.",
+    "leche_value": "Empowerment",
+    "share_text": "Challenged a limiting belief today."
+  },
+  {
+    "id": "practice-080",
+    "title": "Empowerment Focus",
+    "mission": "Write down three things you are proud of this week.",
+    "affirmation": "I take ownership of my actions and results.",
+    "leche_value": "Empowerment",
+    "share_text": "Owned my choices and felt good about it."
+  },
+  {
+    "id": "practice-081",
+    "title": "Shared Ground",
+    "mission": "Ask how you can contribute to a group effort.",
+    "affirmation": "I am open to learning from others.",
+    "leche_value": "Community",
+    "share_text": "Building bridges, one conversation at a time."
+  },
+  {
+    "id": "practice-082",
+    "title": "Healing Breath",
+    "mission": "Forgive yourself for a past mistake.",
+    "affirmation": "I forgive myself for past mistakes.",
+    "leche_value": "Healing",
+    "share_text": "Prioritized my well-being today."
+  },
+  {
+    "id": "practice-083",
+    "title": "Caring Connection",
+    "mission": "Practice patience in a challenging conversation.",
+    "affirmation": "I am becoming a better listener each day.",
+    "leche_value": "Empathy",
+    "share_text": "Understanding starts with really hearing someone."
+  },
+  {
+    "id": "practice-084",
+    "title": "Self-Care Time",
+    "mission": "Give yourself permission to take a break when needed.",
+    "affirmation": "I am releasing what no longer serves me.",
+    "leche_value": "Healing",
+    "share_text": "Healing happens one step at a time."
+  },
+  {
+    "id": "practice-085",
+    "title": "Restore Balance",
+    "mission": "Write down and release one worry or frustration.",
+    "affirmation": "I trust my bodys ability to restore itself.",
+    "leche_value": "Healing",
+    "share_text": "Let go of something I could not control."
+  },
+  {
+    "id": "practice-086",
+    "title": "Shared Impact",
+    "mission": "Volunteer your time or energy to a cause you believe in.",
+    "affirmation": "I create space for collaboration and support.",
+    "leche_value": "Community",
+    "share_text": "Connection makes life richer."
+  },
+  {
+    "id": "practice-087",
+    "title": "Rise Today",
+    "mission": "Share an idea or opinion you have been holding back.",
+    "affirmation": "I am resilient in the face of setbacks.",
+    "leche_value": "Empowerment",
+    "share_text": "Confidence is built, not given."
+  },
+  {
+    "id": "practice-088",
+    "title": "Community Roots",
+    "mission": "Celebrate a community win, no matter how small.",
+    "affirmation": "I am grateful for the people in my life.",
+    "leche_value": "Community",
+    "share_text": "Together we can do more. #GoodVibes"
+  },
+  {
+    "id": "practice-089",
+    "title": "Inner Ease",
+    "mission": "Let go of one thing you cannot control today.",
+    "affirmation": "I let go of tension and welcome calm.",
+    "leche_value": "Healing",
+    "share_text": "Healing happens one step at a time."
+  },
+  {
+    "id": "practice-090",
+    "title": "Courage Forward",
+    "mission": "Celebrate progress, not just perfection.",
+    "affirmation": "I am strong, even when I feel uncertain.",
+    "leche_value": "Empowerment",
+    "share_text": "Made a decision aligned with my values."
+  },
+  {
+    "id": "practice-091",
+    "title": "Together Strong",
+    "mission": "Learn something new about your communitys history.",
+    "affirmation": "I nurture the relationships that matter to me.",
+    "leche_value": "Community",
+    "share_text": "We are stronger together."
+  },
+  {
+    "id": "practice-092",
+    "title": "Accept Yourself",
+    "mission": "Celebrate one small win from today.",
+    "affirmation": "I accept my journey, including my challenges.",
+    "leche_value": "Love",
+    "share_text": "Learning to love the person I am becoming."
+  },
+  {
+    "id": "practice-093",
+    "title": "Neighborhood Care",
+    "mission": "Introduce two people who might benefit from knowing each other.",
+    "affirmation": "I show up for my community in meaningful ways.",
+    "leche_value": "Community",
+    "share_text": "Offered help without being asked."
+  },
+  {
+    "id": "practice-094",
+    "title": "Heart Joy",
+    "mission": "Create a moment of peace in your day just for you.",
+    "affirmation": "I am growing in self-love every day.",
+    "leche_value": "Love",
+    "share_text": "Building a foundation of self-respect."
+  },
+  {
+    "id": "practice-095",
+    "title": "Empathy Day",
+    "mission": "Reflect on a time when someone showed you understanding.",
+    "affirmation": "I hold space for feelings, including my own.",
+    "leche_value": "Empathy",
+    "share_text": "Asked how someone was feeling and meant it."
+  },
+  {
+    "id": "practice-096",
+    "title": "Deep Connection",
+    "mission": "Acknowledge someones feelings without trying to fix them.",
+    "affirmation": "I am gentle with others in challenging moments.",
+    "leche_value": "Empathy",
+    "share_text": "Connection grows when we truly listen."
+  },
+  {
+    "id": "practice-097",
+    "title": "Understand First",
+    "mission": "Pause before reacting to consider the other persons feelings.",
+    "affirmation": "I am patient with others as they grow.",
+    "leche_value": "Empathy",
+    "share_text": "Listened without interrupting today. It mattered."
+  },
+  {
+    "id": "practice-098",
+    "title": "Inner Restore",
+    "mission": "Take five slow, deep breaths to reset your nervous system.",
+    "affirmation": "I give myself permission to heal at my own pace.",
+    "leche_value": "Healing",
+    "share_text": "Forgave myself for a past mistake."
+  },
+  {
+    "id": "practice-099",
+    "title": "Self-Renewal",
+    "mission": "Stretch your body gently for five minutes.",
+    "affirmation": "I am worthy of peace and recovery.",
+    "leche_value": "Healing",
+    "share_text": "Forgave myself for a past mistake."
+  },
+  {
+    "id": "practice-100",
+    "title": "Boundless Compassion",
+    "mission": "Create a moment of peace in your day just for you.",
+    "affirmation": "I am growing in self-love every day.",
+    "leche_value": "Love",
+    "share_text": "Building a foundation of self-respect."
+  },
+  {
+    "id": "practice-101",
+    "title": "Shared Vision",
+    "mission": "Reflect on what community means to you today.",
+    "affirmation": "I invest in connections that bring out my best.",
+    "leche_value": "Community",
+    "share_text": "Community starts with showing up."
+  },
+  {
+    "id": "practice-102",
+    "title": "Claim Your Power",
+    "mission": "Celebrate progress, not just perfection.",
+    "affirmation": "I am strong, even when I feel uncertain.",
+    "leche_value": "Empowerment",
+    "share_text": "Took a step toward my goal today."
+  },
+  {
+    "id": "practice-103",
+    "title": "Own It Now",
+    "mission": "Challenge a limiting belief you hold about yourself.",
+    "affirmation": "I set clear intentions and follow through.",
+    "leche_value": "Empowerment",
+    "share_text": "Took a step toward my goal today."
+  },
+  {
+    "id": "practice-104",
+    "title": "Strong Start",
+    "mission": "Commit to one action that aligns with your values.",
+    "affirmation": "I am courageous in pursuing what I want.",
+    "leche_value": "Empowerment",
+    "share_text": "Standing in my power, one step at a time. #GoodVibes"
+  },
+  {
+    "id": "practice-105",
+    "title": "Listen With Heart",
+    "mission": "Share space with someone in silence if they need it.",
+    "affirmation": "I recognize the humanity in everyone I meet.",
+    "leche_value": "Empathy",
+    "share_text": "Empathy is a skill I am building."
+  },
+  {
+    "id": "practice-106",
+    "title": "Community Support",
+    "mission": "Offer help to someone in your community today.",
+    "affirmation": "I am part of something larger than myself.",
+    "leche_value": "Community",
+    "share_text": "We are stronger together."
+  },
+  {
+    "id": "practice-107",
+    "title": "Local Trust",
+    "mission": "Support a local business or initiative today.",
+    "affirmation": "I am a positive presence in the lives of others.",
+    "leche_value": "Community",
+    "share_text": "Celebrated someone elses win today."
+  },
+  {
+    "id": "practice-108",
+    "title": "Recovery Time",
+    "mission": "Move your body in a way that feels good, not punishing.",
+    "affirmation": "I listen to what my body and mind need.",
+    "leche_value": "Healing",
+    "share_text": "Listened to what my body needed."
+  },
+  {
+    "id": "practice-109",
+    "title": "Tune In",
+    "mission": "Practice patience in a challenging conversation.",
+    "affirmation": "I am becoming a better listener each day.",
+    "leche_value": "Empathy",
+    "share_text": "Empathy is a skill I am building."
+  },
+  {
+    "id": "practice-110",
+    "title": "Listen Gently",
+    "mission": "Offer support without giving advice unless asked.",
+    "affirmation": "I give others the benefit of the doubt.",
+    "leche_value": "Empathy",
+    "share_text": "A little patience goes a long way."
+  },
+  {
+    "id": "practice-111",
+    "title": "Love Flows",
+    "mission": "Celebrate one small win from today.",
+    "affirmation": "I accept my journey, including my challenges.",
+    "leche_value": "Love",
+    "share_text": "Small acts of self-kindness add up."
+  },
+  {
+    "id": "practice-112",
+    "title": "Rise Confident",
+    "mission": "Stand tall and take up space in a room.",
+    "affirmation": "I am building a life that reflects who I am.",
+    "leche_value": "Empowerment",
+    "share_text": "Trusting myself more each day."
+  },
+  {
+    "id": "practice-113",
+    "title": "Community Bridge",
+    "mission": "Share positive news about your community.",
+    "affirmation": "I welcome diverse voices and perspectives.",
+    "leche_value": "Community",
+    "share_text": "Small acts build strong communities."
+  },
+  {
+    "id": "practice-114",
+    "title": "Group Bond",
+    "mission": "Plan a future gathering with people you care about.",
+    "affirmation": "I find joy in shared experiences.",
+    "leche_value": "Community",
+    "share_text": "Community starts with showing up."
+  },
+  {
+    "id": "practice-115",
+    "title": "Self-Embrace",
+    "mission": "Do one thing today purely because it brings you joy.",
+    "affirmation": "I choose to love myself through all circumstances.",
+    "leche_value": "Love",
+    "share_text": "I celebrated a small win today."
+  },
+  {
+    "id": "practice-116",
+    "title": "Hear Deeply",
+    "mission": "Put yourself in another persons shoes for a moment.",
+    "affirmation": "I value connection over being right.",
+    "leche_value": "Empathy",
+    "share_text": "Made space for someone else's experience today."
+  },
+  {
+    "id": "practice-117",
+    "title": "Collective Action",
+    "mission": "Express gratitude to someone who contributes to your community.",
+    "affirmation": "I offer my gifts to those around me.",
+    "leche_value": "Community",
+    "share_text": "Shared a skill with someone who needed it."
+  },
+  {
+    "id": "practice-118",
+    "title": "Loving Kindness",
+    "mission": "Treat yourself to something small that makes you happy.",
+    "affirmation": "I am learning to treat myself with compassion.",
+    "leche_value": "Love",
+    "share_text": "I am worthy of my own time and attention."
+  },
+  {
+    "id": "practice-119",
+    "title": "Confident Rise",
+    "mission": "Trust your gut on one choice today.",
+    "affirmation": "I am worthy of success and fulfillment.",
+    "leche_value": "Empowerment",
+    "share_text": "Said no to what does not serve me."
+  },
+  {
+    "id": "practice-120",
+    "title": "Together Win",
+    "mission": "Clean up or improve a shared space.",
+    "affirmation": "I strengthen my community through small acts.",
+    "leche_value": "Community",
+    "share_text": "Celebrated someone elses win today."
+  },
+  {
+    "id": "practice-121",
+    "title": "Own Your Growth",
+    "mission": "Write down three things you are proud of this week.",
+    "affirmation": "I take ownership of my actions and results.",
+    "leche_value": "Empowerment",
+    "share_text": "Challenged a limiting belief today."
+  },
+  {
+    "id": "practice-122",
+    "title": "United Action",
+    "mission": "Share positive news about your community.",
+    "affirmation": "I welcome diverse voices and perspectives.",
+    "leche_value": "Community",
+    "share_text": "Supporting each other is how we grow."
+  },
+  {
+    "id": "practice-123",
+    "title": "Embrace Self-Worth",
+    "mission": "Express appreciation to someone who often goes unnoticed.",
+    "affirmation": "My self-worth is not dependent on others opinions.",
+    "leche_value": "Love",
+    "share_text": "Self-love is not selfish. It is necessary."
+  },
+  {
+    "id": "practice-124",
+    "title": "Compassion Practice",
+    "mission": "Listen to someone without planning your response.",
+    "affirmation": "I listen with an open heart and mind.",
+    "leche_value": "Empathy",
+    "share_text": "Made space for someone else's experience today."
+  },
+  {
+    "id": "practice-125",
+    "title": "Together Stand",
+    "mission": "Share a skill or resource with someone who could use it.",
+    "affirmation": "I value connection and belonging.",
+    "leche_value": "Community",
+    "share_text": "Reached out to someone outside my circle."
+  },
+  {
+    "id": "practice-126",
+    "title": "Love Ground",
+    "mission": "End the day by naming one thing you did well.",
+    "affirmation": "I show up for myself with love and presence.",
+    "leche_value": "Love",
+    "share_text": "Progress over perfection, always. #GoodVibes"
+  },
+  {
+    "id": "practice-127",
+    "title": "Confident Step",
+    "mission": "Commit to one action that aligns with your values.",
+    "affirmation": "I am courageous in pursuing what I want.",
+    "leche_value": "Empowerment",
+    "share_text": "Reminded myself: I am capable."
+  },
+  {
+    "id": "practice-128",
+    "title": "Group Connection",
+    "mission": "Volunteer your time or energy to a cause you believe in.",
+    "affirmation": "I create space for collaboration and support.",
+    "leche_value": "Community",
+    "share_text": "Supporting each other is how we grow."
+  },
+  {
+    "id": "practice-129",
+    "title": "Attentive Heart",
+    "mission": "Offer support without giving advice unless asked.",
+    "affirmation": "I give others the benefit of the doubt.",
+    "leche_value": "Empathy",
+    "share_text": "Asked how someone was feeling and meant it."
+  },
+  {
+    "id": "practice-130",
+    "title": "Brave Choice",
+    "mission": "Practice asserting yourself calmly and clearly.",
+    "affirmation": "I am learning and growing every day.",
+    "leche_value": "Empowerment",
+    "share_text": "Challenged a limiting belief today."
+  },
+  {
+    "id": "practice-131",
+    "title": "Caring Moment",
+    "mission": "Put yourself in another persons shoes for a moment.",
+    "affirmation": "I value connection over being right.",
+    "leche_value": "Empathy",
+    "share_text": "Today I listened more than I spoke."
+  },
+  {
+    "id": "practice-132",
+    "title": "Self-Care Pause",
+    "mission": "Set a bedtime that supports your rest.",
+    "affirmation": "I deserve to feel rested and at ease.",
+    "leche_value": "Healing",
+    "share_text": "Released tension and welcomed calm."
+  },
+  {
+    "id": "practice-133",
+    "title": "Love Awareness",
+    "mission": "Replace one self-critical thought with a compassionate one.",
+    "affirmation": "I honor my needs and boundaries.",
+    "leche_value": "Love",
+    "share_text": "Treating myself with the care I deserve."
+  },
+  {
+    "id": "practice-134",
+    "title": "Listen Closely",
+    "mission": "Thank someone for sharing their experience with you.",
+    "affirmation": "I allow others to be heard and seen.",
+    "leche_value": "Empathy",
+    "share_text": "Understanding starts with really hearing someone."
+  },
+  {
+    "id": "practice-135",
+    "title": "Bold Choice",
+    "mission": "Trust your gut on one choice today.",
+    "affirmation": "I am worthy of success and fulfillment.",
+    "leche_value": "Empowerment",
+    "share_text": "Took a step toward my goal today."
+  },
+  {
+    "id": "practice-136",
+    "title": "Love Today",
+    "mission": "Spend five minutes in quiet self-appreciation.",
+    "affirmation": "I am enough, just as I am.",
+    "leche_value": "Love",
+    "share_text": "Learning to accept myself, one day at a time."
+  },
+  {
+    "id": "practice-137",
+    "title": "Together Grow",
+    "mission": "Write a thank-you note to a community helper.",
+    "affirmation": "I am a trusted member of my circles.",
+    "leche_value": "Community",
+    "share_text": "Reached out to someone outside my circle."
+  },
+  {
+    "id": "practice-138",
+    "title": "Gentle Moment",
+    "mission": "Prepare a nourishing meal with care and intention.",
+    "affirmation": "I am taking steps toward balance and wellness.",
+    "leche_value": "Healing",
+    "share_text": "Listened to what my body needed."
+  },
+  {
+    "id": "practice-139",
+    "title": "Community Voice",
+    "mission": "Introduce two people who might benefit from knowing each other.",
+    "affirmation": "I show up for my community in meaningful ways.",
+    "leche_value": "Community",
+    "share_text": "Building bridges, one conversation at a time."
+  },
+  {
+    "id": "practice-140",
+    "title": "Brave Path",
+    "mission": "Stand tall and take up space in a room.",
+    "affirmation": "I am building a life that reflects who I am.",
+    "leche_value": "Empowerment",
+    "share_text": "I am learning to back myself."
+  },
+  {
+    "id": "practice-141",
+    "title": "Healing Space",
+    "mission": "Spend time outdoors and let nature restore you.",
+    "affirmation": "I am gentle with myself on difficult days.",
+    "leche_value": "Healing",
+    "share_text": "Created space for renewal."
+  },
+  {
+    "id": "practice-142",
+    "title": "Restore Mind",
+    "mission": "Create a peaceful corner in your space for rest.",
+    "affirmation": "I am healing, even when progress feels slow.",
+    "leche_value": "Healing",
+    "share_text": "Chose peace over pushing through."
+  },
+  {
+    "id": "practice-143",
+    "title": "Love Presence",
+    "mission": "Write down three things you love about yourself today.",
+    "affirmation": "I am worthy of love and belonging.",
+    "leche_value": "Love",
+    "share_text": "Chose self-love today. It changes everything."
+  },
+  {
+    "id": "practice-144",
+    "title": "Empathy Space",
+    "mission": "Reflect on how your words might land before speaking.",
+    "affirmation": "I respond with care instead of reaction.",
+    "leche_value": "Empathy",
+    "share_text": "Seeking to understand before being understood."
+  },
+  {
+    "id": "practice-145",
+    "title": "Group Growth",
+    "mission": "Share positive news about your community.",
+    "affirmation": "I welcome diverse voices and perspectives.",
+    "leche_value": "Community",
+    "share_text": "Connection makes life richer."
+  },
+  {
+    "id": "practice-146",
+    "title": "Perspective Shift",
+    "mission": "Thank someone for sharing their experience with you.",
+    "affirmation": "I allow others to be heard and seen.",
+    "leche_value": "Empathy",
+    "share_text": "Holding space for others without fixing."
+  },
+  {
+    "id": "practice-147",
+    "title": "Love in Action",
+    "mission": "Replace one self-critical thought with a compassionate one.",
+    "affirmation": "I honor my needs and boundaries.",
+    "leche_value": "Love",
+    "share_text": "Kindness to myself is a daily practice."
+  },
+  {
+    "id": "practice-148",
+    "title": "Gentle Recovery",
+    "mission": "Drink a glass of water mindfully, appreciating each sip.",
+    "affirmation": "I choose rest as a form of self-care.",
+    "leche_value": "Healing",
+    "share_text": "Healing is a practice, not a finish line. #GoodVibes"
+  },
+  {
+    "id": "practice-149",
+    "title": "Local Connection",
+    "mission": "Start a conversation with someone outside your usual circle.",
+    "affirmation": "I celebrate the success of those around me.",
+    "leche_value": "Community",
+    "share_text": "Investing in relationships that matter."
+  },
+  {
+    "id": "practice-150",
+    "title": "Confident Action",
+    "mission": "Make a choice that prioritizes your growth.",
+    "affirmation": "I am capable of more than I realize.",
+    "leche_value": "Empowerment",
+    "share_text": "Confidence is built, not given."
+  },
+  {
+    "id": "practice-151",
+    "title": "Heart Connection",
+    "mission": "Allow yourself to feel proud of who you are becoming.",
+    "affirmation": "I am deserving of happiness and peace.",
+    "leche_value": "Love",
+    "share_text": "Treating myself with the care I deserve."
+  },
+  {
+    "id": "practice-152",
+    "title": "Open Heart Space",
+    "mission": "Send a kind message to someone you care about.",
+    "affirmation": "I accept myself exactly as I am today.",
+    "leche_value": "Love",
+    "share_text": "Small acts of self-kindness add up."
+  },
+  {
+    "id": "practice-153",
+    "title": "Inner Ground",
+    "mission": "Write a letter to your past self with compassion.",
+    "affirmation": "I am patient with my healing journey.",
+    "leche_value": "Healing",
+    "share_text": "Released tension and welcomed calm."
+  },
+  {
+    "id": "practice-154",
+    "title": "Community First",
+    "mission": "Invite someone new into a group activity.",
+    "affirmation": "I give back in ways that feel authentic to me.",
+    "leche_value": "Community",
+    "share_text": "Building bridges, one conversation at a time."
+  },
+  {
+    "id": "practice-155",
+    "title": "Heart Ease",
+    "mission": "Allow yourself to feel proud of who you are becoming.",
+    "affirmation": "I am deserving of happiness and peace.",
+    "leche_value": "Love",
+    "share_text": "I celebrated a small win today."
+  },
+  {
+    "id": "practice-156",
+    "title": "Healing Heart",
+    "mission": "Give yourself permission to take a break when needed.",
+    "affirmation": "I am releasing what no longer serves me.",
+    "leche_value": "Healing",
+    "share_text": "Allowed myself to slow down today."
+  },
+  {
+    "id": "practice-157",
+    "title": "Empower Yourself",
+    "mission": "Remind yourself that your voice and actions matter.",
+    "affirmation": "I stand in my power with humility and grace.",
+    "leche_value": "Empowerment",
+    "share_text": "Reminded myself: I am capable."
+  },
+  {
+    "id": "practice-158",
+    "title": "Heart-Centered Living",
+    "mission": "Give yourself permission to rest without guilt.",
+    "affirmation": "I am capable of giving and receiving love.",
+    "leche_value": "Love",
+    "share_text": "Today I reminded myself: I am enough."
+  },
+  {
+    "id": "practice-159",
+    "title": "Presence for Others",
+    "mission": "Let someone finish speaking before you reply.",
+    "affirmation": "I am learning to listen more deeply.",
+    "leche_value": "Empathy",
+    "share_text": "Seeking to understand before being understood."
+  },
+  {
+    "id": "practice-160",
+    "title": "Inner Calm",
+    "mission": "Listen to music that soothes your soul.",
+    "affirmation": "I honor my need for stillness and quiet.",
+    "leche_value": "Healing",
+    "share_text": "Taking care of myself is productive."
+  },
+  {
+    "id": "practice-161",
+    "title": "Take Your Stand",
+    "mission": "Write down three things you are proud of this week.",
+    "affirmation": "I take ownership of my actions and results.",
+    "leche_value": "Empowerment",
+    "share_text": "Took ownership of my time and energy."
+  },
+  {
+    "id": "practice-162",
+    "title": "Take Lead",
+    "mission": "Recognize a strength you used to overcome a challenge.",
+    "affirmation": "I am the author of my own story.",
+    "leche_value": "Empowerment",
+    "share_text": "I am the author of my own story."
+  },
+  {
+    "id": "practice-163",
+    "title": "Warm Heart",
+    "mission": "Write a note of gratitude to yourself.",
+    "affirmation": "I release the need for perfection.",
+    "leche_value": "Love",
+    "share_text": "Chose self-love today. It changes everything."
+  },
+  {
+    "id": "practice-164",
+    "title": "Empathic Moment",
+    "mission": "Try to understand a viewpoint different from your own.",
+    "affirmation": "I am present for those who need me.",
+    "leche_value": "Empathy",
+    "share_text": "A little patience goes a long way."
+  },
+  {
+    "id": "practice-165",
+    "title": "Caring Ear",
+    "mission": "Be present with someone even if you cannot solve their problem.",
+    "affirmation": "I am building bridges through understanding.",
+    "leche_value": "Empathy",
+    "share_text": "Connection over correction. #GoodVibes"
+  },
+  {
+    "id": "practice-166",
+    "title": "Restore Heart",
+    "mission": "Give yourself permission to take a break when needed.",
+    "affirmation": "I am releasing what no longer serves me.",
+    "leche_value": "Healing",
+    "share_text": "Listened to what my body needed."
+  },
+  {
+    "id": "practice-167",
+    "title": "Inner Pause",
+    "mission": "Let go of perfectionism in one small task.",
+    "affirmation": "I am allowing myself to grow through challenges.",
+    "leche_value": "Healing",
+    "share_text": "Taking care of myself is productive."
+  },
+  {
+    "id": "practice-168",
+    "title": "Strength Forward",
+    "mission": "Identify one goal and take a single step toward it today.",
+    "affirmation": "I am capable of achieving my goals.",
+    "leche_value": "Empowerment",
+    "share_text": "Made a decision aligned with my values."
+  },
+  {
+    "id": "practice-169",
+    "title": "Empathy Bridge",
+    "mission": "Acknowledge someones feelings without trying to fix them.",
+    "affirmation": "I am gentle with others in challenging moments.",
+    "leche_value": "Empathy",
+    "share_text": "Connection over correction. #GoodVibes"
+  },
+  {
+    "id": "practice-170",
+    "title": "Empowered Day",
+    "mission": "List your accomplishments, no matter how small.",
+    "affirmation": "I release doubt and step into my strength.",
+    "leche_value": "Empowerment",
+    "share_text": "Trusting myself more each day."
+  },
+  {
+    "id": "practice-171",
+    "title": "Strength Now",
+    "mission": "Set a clear intention for how you want to show up today.",
+    "affirmation": "I speak up for myself with confidence.",
+    "leche_value": "Empowerment",
+    "share_text": "Standing in my power, one step at a time. #GoodVibes"
+  },
+  {
+    "id": "practice-172",
+    "title": "Gentle Pause",
+    "mission": "Write a letter to your past self with compassion.",
+    "affirmation": "I am patient with my healing journey.",
+    "leche_value": "Healing",
+    "share_text": "Chose peace over pushing through."
+  },
+  {
+    "id": "practice-173",
+    "title": "Heart Calm",
+    "mission": "Set a boundary that honors your well-being.",
+    "affirmation": "I give myself permission to rest and recharge.",
+    "leche_value": "Love",
+    "share_text": "Building a foundation of self-respect."
+  },
+  {
+    "id": "practice-174",
+    "title": "Healing Energy",
+    "mission": "Take a short nap or rest your eyes for ten minutes.",
+    "affirmation": "I am creating space for renewal.",
+    "leche_value": "Healing",
+    "share_text": "Gave myself permission to rest today."
+  },
+  {
+    "id": "practice-175",
+    "title": "Shared Trust",
+    "mission": "Attend or organize a local gathering or event.",
+    "affirmation": "I lift others up as I rise.",
+    "leche_value": "Community",
+    "share_text": "Small acts build strong communities."
+  },
+  {
+    "id": "practice-176",
+    "title": "Local Bond",
+    "mission": "Plan a future gathering with people you care about.",
+    "affirmation": "I find joy in shared experiences.",
+    "leche_value": "Community",
+    "share_text": "Shared a skill with someone who needed it."
+  },
+  {
+    "id": "practice-177",
+    "title": "Community Strength",
+    "mission": "Share positive news about your community.",
+    "affirmation": "I welcome diverse voices and perspectives.",
+    "leche_value": "Community",
+    "share_text": "Supporting each other is how we grow."
+  },
+  {
+    "id": "practice-178",
+    "title": "Heart Focus",
+    "mission": "Spend five minutes in quiet self-appreciation.",
+    "affirmation": "I am enough, just as I am.",
+    "leche_value": "Love",
+    "share_text": "Self-acceptance is a journey, not a destination."
+  },
+  {
+    "id": "practice-179",
+    "title": "Claim Today",
+    "mission": "Reflect on a time you surprised yourself with your own ability.",
+    "affirmation": "I make choices that align with my values.",
+    "leche_value": "Empowerment",
+    "share_text": "Celebrated my own progress."
+  },
+  {
+    "id": "practice-180",
+    "title": "Open Understanding",
+    "mission": "Ask an open-ended question and listen with curiosity.",
+    "affirmation": "I practice curiosity instead of assumption.",
+    "leche_value": "Empathy",
+    "share_text": "Practiced seeing things from another view."
+  },
+  {
+    "id": "practice-181",
+    "title": "Gather Together",
+    "mission": "Attend or organize a local gathering or event.",
+    "affirmation": "I lift others up as I rise.",
+    "leche_value": "Community",
+    "share_text": "Connection makes life richer."
+  },
+  {
+    "id": "practice-182",
+    "title": "Community Spirit",
+    "mission": "Learn something new about your communitys history.",
+    "affirmation": "I nurture the relationships that matter to me.",
+    "leche_value": "Community",
+    "share_text": "Celebrated someone elses win today."
+  },
+  {
+    "id": "practice-183",
+    "title": "Tender Care",
+    "mission": "Take a slow, mindful walk and notice beauty around you.",
+    "affirmation": "I am patient with myself as I grow.",
+    "leche_value": "Love",
+    "share_text": "Learning to accept myself, one day at a time."
+  },
+  {
+    "id": "practice-184",
+    "title": "Own Your Power",
+    "mission": "Identify one goal and take a single step toward it today.",
+    "affirmation": "I am capable of achieving my goals.",
+    "leche_value": "Empowerment",
+    "share_text": "Took a step toward my goal today."
+  },
+  {
+    "id": "practice-185",
+    "title": "Inner Love",
+    "mission": "Recognize one strength you used today.",
+    "affirmation": "I embrace my unique qualities and strengths.",
+    "leche_value": "Love",
+    "share_text": "Learning to accept myself, one day at a time."
+  },
+  {
+    "id": "practice-186",
+    "title": "Present Listening",
+    "mission": "Thank someone for sharing their experience with you.",
+    "affirmation": "I allow others to be heard and seen.",
+    "leche_value": "Empathy",
+    "share_text": "Empathy is a skill I am building."
+  },
+  {
+    "id": "practice-187",
+    "title": "Nurture Love",
+    "mission": "Send a kind message to someone you care about.",
+    "affirmation": "I accept myself exactly as I am today.",
+    "leche_value": "Love",
+    "share_text": "Self-love is not selfish. It is necessary."
+  },
+  {
+    "id": "practice-188",
+    "title": "Share Your Love",
+    "mission": "Write down three things you love about yourself today.",
+    "affirmation": "I am worthy of love and belonging.",
+    "leche_value": "Love",
+    "share_text": "Today I reminded myself: I am enough."
+  },
+  {
+    "id": "practice-189",
+    "title": "Empathy Growth",
+    "mission": "Notice body language and respond with care.",
+    "affirmation": "I approach differences with openness.",
+    "leche_value": "Empathy",
+    "share_text": "A little patience goes a long way."
+  },
+  {
+    "id": "practice-190",
+    "title": "Community Ties",
+    "mission": "Introduce two people who might benefit from knowing each other.",
+    "affirmation": "I show up for my community in meaningful ways.",
+    "leche_value": "Community",
+    "share_text": "Showed up for my community today."
+  },
+  {
+    "id": "practice-191",
+    "title": "Self-Compassion Day",
+    "mission": "Set a boundary that honors your well-being.",
+    "affirmation": "I give myself permission to rest and recharge.",
+    "leche_value": "Love",
+    "share_text": "Progress over perfection, always. #GoodVibes"
+  },
+  {
+    "id": "practice-192",
+    "title": "Heart Trust",
+    "mission": "Send a kind message to someone you care about.",
+    "affirmation": "I accept myself exactly as I am today.",
+    "leche_value": "Love",
+    "share_text": "Small acts of self-kindness add up."
+  },
+  {
+    "id": "practice-193",
+    "title": "Bridge Building",
+    "mission": "Pause before reacting to consider the other persons feelings.",
+    "affirmation": "I am patient with others as they grow.",
+    "leche_value": "Empathy",
+    "share_text": "Made space for someone else's experience today."
+  },
+  {
+    "id": "practice-194",
+    "title": "Open Ears",
+    "mission": "Be present with someone even if you cannot solve their problem.",
+    "affirmation": "I am building bridges through understanding.",
+    "leche_value": "Empathy",
+    "share_text": "Connection grows when we truly listen."
+  },
+  {
+    "id": "practice-195",
+    "title": "Gentle Healing",
+    "mission": "Notice tension in your body and consciously release it.",
+    "affirmation": "I am learning to be present with my emotions.",
+    "leche_value": "Healing",
+    "share_text": "Healing is a practice, not a finish line. #GoodVibes"
+  },
+  {
+    "id": "practice-196",
+    "title": "Love Without Limits",
+    "mission": "Look in the mirror and speak words of encouragement.",
+    "affirmation": "I deserve kindness, especially from myself.",
+    "leche_value": "Love",
+    "share_text": "Practicing love starts from within."
+  },
+  {
+    "id": "practice-197",
+    "title": "Healing Support",
+    "mission": "Forgive yourself for a past mistake.",
+    "affirmation": "I forgive myself for past mistakes.",
+    "leche_value": "Healing",
+    "share_text": "Prioritized my well-being today."
+  },
+  {
+    "id": "practice-198",
+    "title": "Hold Space",
+    "mission": "Acknowledge someones feelings without trying to fix them.",
+    "affirmation": "I am gentle with others in challenging moments.",
+    "leche_value": "Empathy",
+    "share_text": "Understanding others helps me understand myself."
+  },
+  {
+    "id": "practice-199",
+    "title": "Community Bond",
+    "mission": "Volunteer your time or energy to a cause you believe in.",
+    "affirmation": "I create space for collaboration and support.",
+    "leche_value": "Community",
+    "share_text": "Connection makes life richer."
+  },
+  {
+    "id": "practice-200",
+    "title": "Inner Peace",
+    "mission": "Spend time outdoors and let nature restore you.",
+    "affirmation": "I am gentle with myself on difficult days.",
+    "leche_value": "Healing",
+    "share_text": "Chose peace over pushing through."
+  },
+  {
+    "id": "practice-201",
+    "title": "Restore Self",
+    "mission": "Write down and release one worry or frustration.",
+    "affirmation": "I trust my bodys ability to restore itself.",
+    "leche_value": "Healing",
+    "share_text": "Healing is not linear, and that is okay."
+  },
+  {
+    "id": "practice-202",
+    "title": "Community Lift",
+    "mission": "Write a thank-you note to a community helper.",
+    "affirmation": "I am a trusted member of my circles.",
+    "leche_value": "Community",
+    "share_text": "Investing in relationships that matter."
+  },
+  {
+    "id": "practice-203",
+    "title": "Restore Strength",
+    "mission": "Stretch your body gently for five minutes.",
+    "affirmation": "I am worthy of peace and recovery.",
+    "leche_value": "Healing",
+    "share_text": "Rest is not a reward. It is a need."
+  },
+  {
+    "id": "practice-204",
+    "title": "Love Grows",
+    "mission": "Send a kind message to someone you care about.",
+    "affirmation": "I accept myself exactly as I am today.",
+    "leche_value": "Love",
+    "share_text": "Learning to love the person I am becoming."
+  },
+  {
+    "id": "practice-205",
+    "title": "Empowered Steps",
+    "mission": "Reflect on a time you surprised yourself with your own ability.",
+    "affirmation": "I make choices that align with my values.",
+    "leche_value": "Empowerment",
+    "share_text": "Reminded myself: I am capable."
+  },
+  {
+    "id": "practice-206",
+    "title": "Heartfelt Attention",
+    "mission": "Try to understand a viewpoint different from your own.",
+    "affirmation": "I am present for those who need me.",
+    "leche_value": "Empathy",
+    "share_text": "Chose curiosity over judgment."
+  },
+  {
+    "id": "practice-207",
+    "title": "Restore Spirit",
+    "mission": "Allow yourself to feel an emotion without judgment.",
+    "affirmation": "I welcome each day as a fresh start.",
+    "leche_value": "Healing",
+    "share_text": "Rest is not a reward. It is a need."
+  },
+  {
+    "id": "practice-208",
+    "title": "Love Anchor",
+    "mission": "Write a note of gratitude to yourself.",
+    "affirmation": "I release the need for perfection.",
+    "leche_value": "Love",
+    "share_text": "Today I reminded myself: I am enough."
+  },
+  {
+    "id": "practice-209",
+    "title": "Shared Journey",
+    "mission": "Celebrate a community win, no matter how small.",
+    "affirmation": "I am grateful for the people in my life.",
+    "leche_value": "Community",
+    "share_text": "Shared a skill with someone who needed it."
+  },
+  {
+    "id": "practice-210",
+    "title": "Take Strength",
+    "mission": "Take ownership of a decision, big or small.",
+    "affirmation": "I embrace my potential for growth.",
+    "leche_value": "Empowerment",
+    "share_text": "Spoke up for what I believe in."
+  },
+  {
+    "id": "practice-211",
+    "title": "Community Heart",
+    "mission": "Amplify someones voice who may not be heard.",
+    "affirmation": "I am building a network of mutual support.",
+    "leche_value": "Community",
+    "share_text": "Small acts build strong communities."
+  },
+  {
+    "id": "practice-212",
+    "title": "Compassionate Ear",
+    "mission": "Offer your full attention in one conversation today.",
+    "affirmation": "I seek to understand before being understood.",
+    "leche_value": "Empathy",
+    "share_text": "Practiced seeing things from another view."
+  },
+  {
+    "id": "practice-213",
+    "title": "Inner Healing",
+    "mission": "Notice tension in your body and consciously release it.",
+    "affirmation": "I am learning to be present with my emotions.",
+    "leche_value": "Healing",
+    "share_text": "Took a break and did not feel guilty."
+  },
+  {
+    "id": "practice-214",
+    "title": "Heart Glow",
+    "mission": "Treat yourself to something small that makes you happy.",
+    "affirmation": "I am learning to treat myself with compassion.",
+    "leche_value": "Love",
+    "share_text": "Self-acceptance is a journey, not a destination."
+  },
+  {
+    "id": "practice-215",
+    "title": "Understanding Day",
+    "mission": "Practice patience in a challenging conversation.",
+    "affirmation": "I am becoming a better listener each day.",
+    "leche_value": "Empathy",
+    "share_text": "Holding space for others without fixing."
+  },
+  {
+    "id": "practice-216",
+    "title": "Open to Love",
+    "mission": "Give yourself permission to rest without guilt.",
+    "affirmation": "I am capable of giving and receiving love.",
+    "leche_value": "Love",
+    "share_text": "Chose self-love today. It changes everything."
+  },
+  {
+    "id": "practice-217",
+    "title": "Community Day",
+    "mission": "Celebrate a community win, no matter how small.",
+    "affirmation": "I am grateful for the people in my life.",
+    "leche_value": "Community",
+    "share_text": "Community starts with showing up."
+  },
+  {
+    "id": "practice-218",
+    "title": "Connect Gently",
+    "mission": "Reach out to someone who might feel overlooked.",
+    "affirmation": "I offer support in ways that honor others needs.",
+    "leche_value": "Empathy",
+    "share_text": "Today I listened more than I spoke."
+  },
+  {
+    "id": "practice-219",
+    "title": "Self-Worth Day",
+    "mission": "Treat yourself to something small that makes you happy.",
+    "affirmation": "I am learning to treat myself with compassion.",
+    "leche_value": "Love",
+    "share_text": "I am worthy of my own time and attention."
+  },
+  {
+    "id": "practice-220",
+    "title": "Rest Deeply",
+    "mission": "Take five slow, deep breaths to reset your nervous system.",
+    "affirmation": "I give myself permission to heal at my own pace.",
+    "leche_value": "Healing",
+    "share_text": "Rest is not a reward. It is a need."
+  },
+  {
+    "id": "practice-221",
+    "title": "Self-Healing Path",
+    "mission": "Create a peaceful corner in your space for rest.",
+    "affirmation": "I am healing, even when progress feels slow.",
+    "leche_value": "Healing",
+    "share_text": "Released tension and welcomed calm."
+  },
+  {
+    "id": "practice-222",
+    "title": "Choose Love Today",
+    "mission": "Write down three things you love about yourself today.",
+    "affirmation": "I am worthy of love and belonging.",
+    "leche_value": "Love",
+    "share_text": "Chose self-love today. It changes everything."
+  },
+  {
+    "id": "practice-223",
+    "title": "Empowerment Day",
+    "mission": "Reclaim your time by saying no to a distraction.",
+    "affirmation": "I trust myself to handle whatever comes.",
+    "leche_value": "Empowerment",
+    "share_text": "Confidence is built, not given."
+  },
+  {
+    "id": "practice-224",
+    "title": "Rise Forward",
+    "mission": "Set a clear intention for how you want to show up today.",
+    "affirmation": "I speak up for myself with confidence.",
+    "leche_value": "Empowerment",
+    "share_text": "Reminded myself: I am capable."
+  },
+  {
+    "id": "practice-225",
+    "title": "Strength Rise",
+    "mission": "Practice asserting yourself calmly and clearly.",
+    "affirmation": "I am learning and growing every day.",
+    "leche_value": "Empowerment",
+    "share_text": "Took ownership of my time and energy."
+  },
+  {
+    "id": "practice-226",
+    "title": "Understand Others",
+    "mission": "Try to understand a viewpoint different from your own.",
+    "affirmation": "I am present for those who need me.",
+    "leche_value": "Empathy",
+    "share_text": "Asked how someone was feeling and meant it."
+  },
+  {
+    "id": "practice-227",
+    "title": "Gentle Spirit",
+    "mission": "Spend time outdoors and let nature restore you.",
+    "affirmation": "I am gentle with myself on difficult days.",
+    "leche_value": "Healing",
+    "share_text": "Chose peace over pushing through."
+  },
+  {
+    "id": "practice-228",
+    "title": "Restore Joy",
+    "mission": "Move your body in a way that feels good, not punishing.",
+    "affirmation": "I listen to what my body and mind need.",
+    "leche_value": "Healing",
+    "share_text": "Listened to what my body needed."
+  },
+  {
+    "id": "practice-229",
+    "title": "Group Support",
+    "mission": "Create a small ritual of connection with your neighbors.",
+    "affirmation": "I recognize the impact I have on others.",
+    "leche_value": "Community",
+    "share_text": "Reached out to someone outside my circle."
+  },
+  {
+    "id": "practice-230",
+    "title": "Shared Path",
+    "mission": "Invite someone new into a group activity.",
+    "affirmation": "I give back in ways that feel authentic to me.",
+    "leche_value": "Community",
+    "share_text": "Offered help without being asked."
+  },
+  {
+    "id": "practice-231",
+    "title": "Love Growth",
+    "mission": "Replace one self-critical thought with a compassionate one.",
+    "affirmation": "I honor my needs and boundaries.",
+    "leche_value": "Love",
+    "share_text": "Kindness to myself is a daily practice."
+  },
+  {
+    "id": "practice-232",
+    "title": "Group Heart",
+    "mission": "Support a local business or initiative today.",
+    "affirmation": "I am a positive presence in the lives of others.",
+    "leche_value": "Community",
+    "share_text": "We are stronger together."
+  },
+  {
+    "id": "practice-233",
+    "title": "Healing Trust",
+    "mission": "Set a bedtime that supports your rest.",
+    "affirmation": "I deserve to feel rested and at ease.",
+    "leche_value": "Healing",
+    "share_text": "Created space for renewal."
+  },
+  {
+    "id": "practice-234",
+    "title": "Find Calm",
+    "mission": "Create a peaceful corner in your space for rest.",
+    "affirmation": "I am healing, even when progress feels slow.",
+    "leche_value": "Healing",
+    "share_text": "Released tension and welcomed calm."
+  },
+  {
+    "id": "practice-235",
+    "title": "Self-Restoration",
+    "mission": "Let go of perfectionism in one small task.",
+    "affirmation": "I am allowing myself to grow through challenges.",
+    "leche_value": "Healing",
+    "share_text": "Let go of something I could not control."
+  },
+  {
+    "id": "practice-236",
+    "title": "Love Intentionally",
+    "mission": "Create a moment of peace in your day just for you.",
+    "affirmation": "I am growing in self-love every day.",
+    "leche_value": "Love",
+    "share_text": "Progress over perfection, always. #GoodVibes"
+  },
+  {
+    "id": "practice-237",
+    "title": "Collective Joy",
+    "mission": "Create a small ritual of connection with your neighbors.",
+    "affirmation": "I recognize the impact I have on others.",
+    "leche_value": "Community",
+    "share_text": "Investing in relationships that matter."
+  },
+  {
+    "id": "practice-238",
+    "title": "Self-Restoration Day",
+    "mission": "Move your body in a way that feels good, not punishing.",
+    "affirmation": "I listen to what my body and mind need.",
+    "leche_value": "Healing",
+    "share_text": "Healing happens one step at a time."
+  },
+  {
+    "id": "practice-239",
+    "title": "Self-Love Practice",
+    "mission": "Spend five minutes in quiet self-appreciation.",
+    "affirmation": "I am enough, just as I am.",
+    "leche_value": "Love",
+    "share_text": "Learning to accept myself, one day at a time."
+  },
+  {
+    "id": "practice-240",
+    "title": "Healing Pause",
+    "mission": "Give yourself permission to take a break when needed.",
+    "affirmation": "I am releasing what no longer serves me.",
+    "leche_value": "Healing",
+    "share_text": "Healing happens one step at a time."
+  },
+  {
+    "id": "practice-241",
+    "title": "Understanding Pause",
+    "mission": "Ask an open-ended question and listen with curiosity.",
+    "affirmation": "I practice curiosity instead of assumption.",
+    "leche_value": "Empathy",
+    "share_text": "Being present for someone is a gift."
+  },
+  {
+    "id": "practice-242",
+    "title": "Love Forward",
+    "mission": "Look in the mirror and speak words of encouragement.",
+    "affirmation": "I deserve kindness, especially from myself.",
+    "leche_value": "Love",
+    "share_text": "Practicing love starts from within."
+  },
+  {
+    "id": "practice-243",
+    "title": "Healing Anchor",
+    "mission": "Listen to music that soothes your soul.",
+    "affirmation": "I honor my need for stillness and quiet.",
+    "leche_value": "Healing",
+    "share_text": "Let go of something I could not control."
+  },
+  {
+    "id": "practice-244",
+    "title": "Empowered Path",
+    "mission": "Speak up about something that matters to you.",
+    "affirmation": "I trust my ability to navigate challenges.",
+    "leche_value": "Empowerment",
+    "share_text": "Owned my choices and felt good about it."
+  },
+  {
+    "id": "practice-245",
+    "title": "Restore Peace",
+    "mission": "Forgive yourself for a past mistake.",
+    "affirmation": "I forgive myself for past mistakes.",
+    "leche_value": "Healing",
+    "share_text": "Healing is a practice, not a finish line. #GoodVibes"
+  },
+  {
+    "id": "practice-246",
+    "title": "Supportive Presence",
+    "mission": "Notice when someone seems to be struggling and check in.",
+    "affirmation": "I offer compassion without judgment.",
+    "leche_value": "Empathy",
+    "share_text": "Understanding others helps me understand myself."
+  },
+  {
+    "id": "practice-247",
+    "title": "Take Bold Steps",
+    "mission": "Reclaim your time by saying no to a distraction.",
+    "affirmation": "I trust myself to handle whatever comes.",
+    "leche_value": "Empowerment",
+    "share_text": "I am the author of my own story."
+  },
+  {
+    "id": "practice-248",
+    "title": "Brave Move",
+    "mission": "Share an idea or opinion you have been holding back.",
+    "affirmation": "I am resilient in the face of setbacks.",
+    "leche_value": "Empowerment",
+    "share_text": "Set a boundary and stuck to it."
+  },
+  {
+    "id": "practice-249",
+    "title": "Together We Rise",
+    "mission": "Support a local business or initiative today.",
+    "affirmation": "I am a positive presence in the lives of others.",
+    "leche_value": "Community",
+    "share_text": "Celebrated someone elses win today."
+  },
+  {
+    "id": "practice-250",
+    "title": "Restore Body",
+    "mission": "Unplug from screens for an hour of quiet time.",
+    "affirmation": "I release the weight of things I cannot control.",
+    "leche_value": "Healing",
+    "share_text": "Healing is not linear, and that is okay."
+  },
+  {
+    "id": "practice-251",
+    "title": "Own Your Voice",
+    "mission": "Remind yourself that your voice and actions matter.",
+    "affirmation": "I stand in my power with humility and grace.",
+    "leche_value": "Empowerment",
+    "share_text": "Celebrated my own progress."
+  },
+  {
+    "id": "practice-252",
+    "title": "Healing Peace",
+    "mission": "Move your body in a way that feels good, not punishing.",
+    "affirmation": "I listen to what my body and mind need.",
+    "leche_value": "Healing",
+    "share_text": "Allowed myself to slow down today."
+  },
+  {
+    "id": "practice-253",
+    "title": "Take Charge",
+    "mission": "Write down three things you are proud of this week.",
+    "affirmation": "I take ownership of my actions and results.",
+    "leche_value": "Empowerment",
+    "share_text": "Took ownership of my time and energy."
+  },
+  {
+    "id": "practice-254",
+    "title": "Support Network",
+    "mission": "Plan a future gathering with people you care about.",
+    "affirmation": "I find joy in shared experiences.",
+    "leche_value": "Community",
+    "share_text": "Together we can do more. #GoodVibes"
+  },
+  {
+    "id": "practice-255",
+    "title": "Pure Love",
+    "mission": "End the day by naming one thing you did well.",
+    "affirmation": "I show up for myself with love and presence.",
+    "leche_value": "Love",
+    "share_text": "Building a foundation of self-respect."
+  },
+  {
+    "id": "practice-256",
+    "title": "Gentle Love",
+    "mission": "Speak kindly to yourself when you make a mistake.",
+    "affirmation": "I am proud of who I am becoming.",
+    "leche_value": "Love",
+    "share_text": "Learning to love the person I am becoming."
+  },
+  {
+    "id": "practice-257",
+    "title": "Cherish Yourself",
+    "mission": "Look in the mirror and speak words of encouragement.",
+    "affirmation": "I deserve kindness, especially from myself.",
+    "leche_value": "Love",
+    "share_text": "Building a foundation of self-respect."
+  },
+  {
+    "id": "practice-258",
+    "title": "Love Balance",
+    "mission": "Express appreciation to someone who often goes unnoticed.",
+    "affirmation": "My self-worth is not dependent on others opinions.",
+    "leche_value": "Love",
+    "share_text": "Small acts of self-kindness add up."
+  },
+  {
+    "id": "practice-259",
+    "title": "Healing Path",
+    "mission": "Unplug from screens for an hour of quiet time.",
+    "affirmation": "I release the weight of things I cannot control.",
+    "leche_value": "Healing",
+    "share_text": "Let go of something I could not control."
+  },
+  {
+    "id": "practice-260",
+    "title": "Love Patience",
+    "mission": "Write a note of gratitude to yourself.",
+    "affirmation": "I release the need for perfection.",
+    "leche_value": "Love",
+    "share_text": "Today I chose compassion over criticism."
+  },
+  {
+    "id": "practice-261",
+    "title": "Inner Strength",
+    "mission": "Drink a glass of water mindfully, appreciating each sip.",
+    "affirmation": "I choose rest as a form of self-care.",
+    "leche_value": "Healing",
+    "share_text": "Took a break and did not feel guilty."
+  },
+  {
+    "id": "practice-262",
+    "title": "Bold Living",
+    "mission": "Make a choice that prioritizes your growth.",
+    "affirmation": "I am capable of more than I realize.",
+    "leche_value": "Empowerment",
+    "share_text": "Set a boundary and stuck to it."
+  },
+  {
+    "id": "practice-263",
+    "title": "Together Learn",
+    "mission": "Create a small ritual of connection with your neighbors.",
+    "affirmation": "I recognize the impact I have on others.",
+    "leche_value": "Community",
+    "share_text": "A rising tide lifts all boats."
+  },
+  {
+    "id": "practice-264",
+    "title": "Rest and Renew",
+    "mission": "Take five slow, deep breaths to reset your nervous system.",
+    "affirmation": "I give myself permission to heal at my own pace.",
+    "leche_value": "Healing",
+    "share_text": "Gave myself permission to rest today."
+  },
+  {
+    "id": "practice-265",
+    "title": "Empathic Care",
+    "mission": "Ask a friend how they are really feeling today.",
+    "affirmation": "I make space for others perspectives.",
+    "leche_value": "Empathy",
+    "share_text": "Understanding starts with really hearing someone."
+  },
+  {
+    "id": "practice-266",
+    "title": "Empathy Focus",
+    "mission": "Let someone finish speaking before you reply.",
+    "affirmation": "I am learning to listen more deeply.",
+    "leche_value": "Empathy",
+    "share_text": "Being present for someone is a gift."
+  },
+  {
+    "id": "practice-267",
+    "title": "Bold Path",
+    "mission": "Ask for what you need without apology.",
+    "affirmation": "I have the power to shape my path.",
+    "leche_value": "Empowerment",
+    "share_text": "Challenged a limiting belief today."
+  },
+  {
+    "id": "practice-268",
+    "title": "Own Your Path",
+    "mission": "Take ownership of a decision, big or small.",
+    "affirmation": "I embrace my potential for growth.",
+    "leche_value": "Empowerment",
+    "share_text": "I am learning to back myself."
+  },
+  {
+    "id": "practice-269",
+    "title": "Walk in Their Shoes",
+    "mission": "Listen to someone without planning your response.",
+    "affirmation": "I listen with an open heart and mind.",
+    "leche_value": "Empathy",
+    "share_text": "Listened without interrupting today. It mattered."
+  },
+  {
+    "id": "practice-270",
+    "title": "Restore Calm",
+    "mission": "Allow yourself to feel an emotion without judgment.",
+    "affirmation": "I welcome each day as a fresh start.",
+    "leche_value": "Healing",
+    "share_text": "Gave myself permission to rest today."
+  },
+  {
+    "id": "practice-271",
+    "title": "Collective Heart",
+    "mission": "Learn something new about your communitys history.",
+    "affirmation": "I nurture the relationships that matter to me.",
+    "leche_value": "Community",
+    "share_text": "Grateful for the people in my corner."
+  },
+  {
+    "id": "practice-272",
+    "title": "Healing Day",
+    "mission": "Prepare a nourishing meal with care and intention.",
+    "affirmation": "I am taking steps toward balance and wellness.",
+    "leche_value": "Healing",
+    "share_text": "Allowed myself to slow down today."
+  },
+  {
+    "id": "practice-273",
+    "title": "Brave Steps",
+    "mission": "Set a clear intention for how you want to show up today.",
+    "affirmation": "I speak up for myself with confidence.",
+    "leche_value": "Empowerment",
+    "share_text": "Celebrated my own progress."
+  },
+  {
+    "id": "practice-274",
+    "title": "Restore Trust",
+    "mission": "Reflect on how far you have come in your journey.",
+    "affirmation": "I trust the process of my own healing.",
+    "leche_value": "Healing",
+    "share_text": "Healing is a practice, not a finish line. #GoodVibes"
+  },
+  {
+    "id": "practice-275",
+    "title": "Sense Others",
+    "mission": "Reach out to someone who might feel overlooked.",
+    "affirmation": "I offer support in ways that honor others needs.",
+    "leche_value": "Empathy",
+    "share_text": "Made space for someone else's experience today."
+  },
+  {
+    "id": "practice-276",
+    "title": "Love Forward",
+    "mission": "Acknowledge your effort, not just your results.",
+    "affirmation": "I am worthy of my own care and attention.",
+    "leche_value": "Love",
+    "share_text": "Treating myself with the care I deserve."
+  },
+  {
+    "id": "practice-277",
+    "title": "Feel Their Way",
+    "mission": "Notice when someone seems to be struggling and check in.",
+    "affirmation": "I offer compassion without judgment.",
+    "leche_value": "Empathy",
+    "share_text": "Connection grows when we truly listen."
+  },
+  {
+    "id": "practice-278",
+    "title": "Group Pride",
+    "mission": "Reflect on what community means to you today.",
+    "affirmation": "I invest in connections that bring out my best.",
+    "leche_value": "Community",
+    "share_text": "Together we can do more. #GoodVibes"
+  },
+  {
+    "id": "practice-279",
+    "title": "Collective Care",
+    "mission": "Ask how you can contribute to a group effort.",
+    "affirmation": "I am open to learning from others.",
+    "leche_value": "Community",
+    "share_text": "Showed up for my community today."
+  },
+  {
+    "id": "practice-280",
+    "title": "Take Your Space",
+    "mission": "Remind yourself that your voice and actions matter.",
+    "affirmation": "I stand in my power with humility and grace.",
+    "leche_value": "Empowerment",
+    "share_text": "Standing in my power, one step at a time. #GoodVibes"
+  },
+  {
+    "id": "practice-281",
+    "title": "Attentive Care",
+    "mission": "Notice when someone seems to be struggling and check in.",
+    "affirmation": "I offer compassion without judgment.",
+    "leche_value": "Empathy",
+    "share_text": "Connection over correction. #GoodVibes"
+  },
+  {
+    "id": "practice-282",
+    "title": "Self-Love Boost",
+    "mission": "Replace one self-critical thought with a compassionate one.",
+    "affirmation": "I honor my needs and boundaries.",
+    "leche_value": "Love",
+    "share_text": "I celebrated a small win today."
+  },
+  {
+    "id": "practice-283",
+    "title": "Local Impact",
+    "mission": "Reach out to a neighbor or colleague you havent spoken to recently.",
+    "affirmation": "I contribute to the well-being of my community.",
+    "leche_value": "Community",
+    "share_text": "Offered help without being asked."
+  },
+  {
+    "id": "practice-284",
+    "title": "Confident Choice",
+    "mission": "Ask for what you need without apology.",
+    "affirmation": "I have the power to shape my path.",
+    "leche_value": "Empowerment",
+    "share_text": "Owned my choices and felt good about it."
+  },
+  {
+    "id": "practice-285",
+    "title": "Empathy Ground",
+    "mission": "Pause before reacting to consider the other persons feelings.",
+    "affirmation": "I am patient with others as they grow.",
+    "leche_value": "Empathy",
+    "share_text": "Made space for someone else's experience today."
+  },
+  {
+    "id": "practice-286",
+    "title": "Lead Yourself",
+    "mission": "Share an idea or opinion you have been holding back.",
+    "affirmation": "I am resilient in the face of setbacks.",
+    "leche_value": "Empowerment",
+    "share_text": "I am the author of my own story."
+  },
+  {
+    "id": "practice-287",
+    "title": "Inner Renewal",
+    "mission": "Set a bedtime that supports your rest.",
+    "affirmation": "I deserve to feel rested and at ease.",
+    "leche_value": "Healing",
+    "share_text": "Chose peace over pushing through."
+  },
+  {
+    "id": "practice-288",
+    "title": "Bold Steps",
+    "mission": "Set a clear intention for how you want to show up today.",
+    "affirmation": "I speak up for myself with confidence.",
+    "leche_value": "Empowerment",
+    "share_text": "Reminded myself: I am capable."
+  },
+  {
+    "id": "practice-289",
+    "title": "Strength Path",
+    "mission": "Share an idea or opinion you have been holding back.",
+    "affirmation": "I am resilient in the face of setbacks.",
+    "leche_value": "Empowerment",
+    "share_text": "I am the author of my own story."
+  },
+  {
+    "id": "practice-290",
+    "title": "Healing Ease",
+    "mission": "Notice tension in your body and consciously release it.",
+    "affirmation": "I am learning to be present with my emotions.",
+    "leche_value": "Healing",
+    "share_text": "Prioritized my well-being today."
+  },
+  {
+    "id": "practice-291",
+    "title": "Empathy Practice",
+    "mission": "Validate someones emotions with a simple I hear you.",
+    "affirmation": "I accept that others have their own journeys.",
+    "leche_value": "Empathy",
+    "share_text": "Connection over correction. #GoodVibes"
+  },
+  {
+    "id": "practice-292",
+    "title": "Embrace Warmth",
+    "mission": "Speak kindly to yourself when you make a mistake.",
+    "affirmation": "I am proud of who I am becoming.",
+    "leche_value": "Love",
+    "share_text": "Self-love is not selfish. It is necessary."
+  },
+  {
+    "id": "practice-293",
+    "title": "Gentle Care",
+    "mission": "Offer your full attention in one conversation today.",
+    "affirmation": "I seek to understand before being understood.",
+    "leche_value": "Empathy",
+    "share_text": "Practiced seeing things from another view."
+  },
+  {
+    "id": "practice-294",
+    "title": "Understanding Heart",
+    "mission": "Validate someones emotions with a simple I hear you.",
+    "affirmation": "I accept that others have their own journeys.",
+    "leche_value": "Empathy",
+    "share_text": "Connection grows when we truly listen."
+  },
+  {
+    "id": "practice-295",
+    "title": "Local Support",
+    "mission": "Ask how you can contribute to a group effort.",
+    "affirmation": "I am open to learning from others.",
+    "leche_value": "Community",
+    "share_text": "Offered help without being asked."
+  },
+  {
+    "id": "practice-296",
+    "title": "Shared Care",
+    "mission": "Share a skill or resource with someone who could use it.",
+    "affirmation": "I value connection and belonging.",
+    "leche_value": "Community",
+    "share_text": "A rising tide lifts all boats."
+  },
+  {
+    "id": "practice-297",
+    "title": "Connect Deeply",
+    "mission": "Put yourself in another persons shoes for a moment.",
+    "affirmation": "I value connection over being right.",
+    "leche_value": "Empathy",
+    "share_text": "Today I listened more than I spoke."
+  },
+  {
+    "id": "practice-298",
+    "title": "Group Effort",
+    "mission": "Reach out to a neighbor or colleague you havent spoken to recently.",
+    "affirmation": "I contribute to the well-being of my community.",
+    "leche_value": "Community",
+    "share_text": "Building bridges, one conversation at a time."
+  },
+  {
+    "id": "practice-299",
+    "title": "Self-Care Rest",
+    "mission": "Unplug from screens for an hour of quiet time.",
+    "affirmation": "I release the weight of things I cannot control.",
+    "leche_value": "Healing",
+    "share_text": "Taking care of myself is productive."
+  },
+  {
+    "id": "practice-300",
+    "title": "Strong Move",
+    "mission": "Make a choice that prioritizes your growth.",
+    "affirmation": "I am capable of more than I realize.",
+    "leche_value": "Empowerment",
+    "share_text": "I am the author of my own story."
+  },
+  {
+    "id": "practice-301",
+    "title": "Strength Today",
+    "mission": "Stand tall and take up space in a room.",
+    "affirmation": "I am building a life that reflects who I am.",
+    "leche_value": "Empowerment",
+    "share_text": "Spoke up for what I believe in."
+  },
+  {
+    "id": "practice-302",
+    "title": "Heart Rest",
+    "mission": "Celebrate one small win from today.",
+    "affirmation": "I accept my journey, including my challenges.",
+    "leche_value": "Love",
+    "share_text": "Self-love is not selfish. It is necessary."
+  },
+  {
+    "id": "practice-303",
+    "title": "Empowerment Ground",
+    "mission": "Challenge a limiting belief you hold about yourself.",
+    "affirmation": "I set clear intentions and follow through.",
+    "leche_value": "Empowerment",
+    "share_text": "Said no to what does not serve me."
+  },
+  {
+    "id": "practice-304",
+    "title": "Claim Your Worth",
+    "mission": "Speak up about something that matters to you.",
+    "affirmation": "I trust my ability to navigate challenges.",
+    "leche_value": "Empowerment",
+    "share_text": "Challenged a limiting belief today."
+  },
+  {
+    "id": "practice-305",
+    "title": "Connect Locally",
+    "mission": "Attend or organize a local gathering or event.",
+    "affirmation": "I lift others up as I rise.",
+    "leche_value": "Community",
+    "share_text": "Small acts build strong communities."
+  },
+  {
+    "id": "practice-306",
+    "title": "Caring Response",
+    "mission": "Offer your full attention in one conversation today.",
+    "affirmation": "I seek to understand before being understood.",
+    "leche_value": "Empathy",
+    "share_text": "Seeking to understand before being understood."
+  },
+  {
+    "id": "practice-307",
+    "title": "Daily Love",
+    "mission": "Do one thing today purely because it brings you joy.",
+    "affirmation": "I choose to love myself through all circumstances.",
+    "leche_value": "Love",
+    "share_text": "Kindness to myself is a daily practice."
+  },
+  {
+    "id": "practice-308",
+    "title": "Love Heals",
+    "mission": "Choose an activity that nourishes your spirit.",
+    "affirmation": "I trust myself to make good decisions.",
+    "leche_value": "Love",
+    "share_text": "Today I reminded myself: I am enough."
+  },
+  {
+    "id": "practice-309",
+    "title": "Hear Fully",
+    "mission": "Pause before reacting to consider the other persons feelings.",
+    "affirmation": "I am patient with others as they grow.",
+    "leche_value": "Empathy",
+    "share_text": "Today I listened more than I spoke."
+  },
+  {
+    "id": "practice-310",
+    "title": "Claim Your Day",
+    "mission": "Recognize a strength you used to overcome a challenge.",
+    "affirmation": "I am the author of my own story.",
+    "leche_value": "Empowerment",
+    "share_text": "Set a boundary and stuck to it."
+  },
+  {
+    "id": "practice-311",
+    "title": "Together Thrive",
+    "mission": "Reflect on what community means to you today.",
+    "affirmation": "I invest in connections that bring out my best.",
+    "leche_value": "Community",
+    "share_text": "Shared a skill with someone who needed it."
+  },
+  {
+    "id": "practice-312",
+    "title": "Collective Good",
+    "mission": "Express gratitude to someone who contributes to your community.",
+    "affirmation": "I offer my gifts to those around me.",
+    "leche_value": "Community",
+    "share_text": "Community starts with showing up."
+  },
+  {
+    "id": "practice-313",
+    "title": "Healing Growth",
+    "mission": "Write down and release one worry or frustration.",
+    "affirmation": "I trust my bodys ability to restore itself.",
+    "leche_value": "Healing",
+    "share_text": "Let go of something I could not control."
+  },
+  {
+    "id": "practice-314",
+    "title": "Daily Devotion",
+    "mission": "Write down three things you love about yourself today.",
+    "affirmation": "I am worthy of love and belonging.",
+    "leche_value": "Love",
+    "share_text": "Today I chose compassion over criticism."
+  },
+  {
+    "id": "practice-315",
+    "title": "Collective Rise",
+    "mission": "Volunteer your time or energy to a cause you believe in.",
+    "affirmation": "I create space for collaboration and support.",
+    "leche_value": "Community",
+    "share_text": "Small acts build strong communities."
+  },
+  {
+    "id": "practice-316",
+    "title": "Daily Heart",
+    "mission": "Do one thing today purely because it brings you joy.",
+    "affirmation": "I choose to love myself through all circumstances.",
+    "leche_value": "Love",
+    "share_text": "Treating myself with the care I deserve."
+  },
+  {
+    "id": "practice-317",
+    "title": "Self-Healing Space",
+    "mission": "Allow yourself to feel an emotion without judgment.",
+    "affirmation": "I welcome each day as a fresh start.",
+    "leche_value": "Healing",
+    "share_text": "Forgave myself for a past mistake."
+  },
+  {
+    "id": "practice-318",
+    "title": "Healing Focus",
+    "mission": "Prepare a nourishing meal with care and intention.",
+    "affirmation": "I am taking steps toward balance and wellness.",
+    "leche_value": "Healing",
+    "share_text": "Healing happens one step at a time."
+  },
+  {
+    "id": "practice-319",
+    "title": "Love Ripples",
+    "mission": "Spend five minutes in quiet self-appreciation.",
+    "affirmation": "I am enough, just as I am.",
+    "leche_value": "Love",
+    "share_text": "I am worthy of my own time and attention."
+  },
+  {
+    "id": "practice-320",
+    "title": "Attentive Moment",
+    "mission": "Try to understand a viewpoint different from your own.",
+    "affirmation": "I am present for those who need me.",
+    "leche_value": "Empathy",
+    "share_text": "Asked how someone was feeling and meant it."
+  },
+  {
+    "id": "practice-321",
+    "title": "Take Initiative",
+    "mission": "List your accomplishments, no matter how small.",
+    "affirmation": "I release doubt and step into my strength.",
+    "leche_value": "Empowerment",
+    "share_text": "Spoke up for what I believe in."
+  },
+  {
+    "id": "practice-322",
+    "title": "Shared Success",
+    "mission": "Invite someone new into a group activity.",
+    "affirmation": "I give back in ways that feel authentic to me.",
+    "leche_value": "Community",
+    "share_text": "Showed up for my community today."
+  },
+  {
+    "id": "practice-323",
+    "title": "Shared Strength",
+    "mission": "Amplify someones voice who may not be heard.",
+    "affirmation": "I am building a network of mutual support.",
+    "leche_value": "Community",
+    "share_text": "Connection makes life richer."
+  },
+  {
+    "id": "practice-324",
+    "title": "Steady Love",
+    "mission": "Create a moment of peace in your day just for you.",
+    "affirmation": "I am growing in self-love every day.",
+    "leche_value": "Love",
+    "share_text": "Practicing love starts from within."
+  },
+  {
+    "id": "practice-325",
+    "title": "Local Pride",
+    "mission": "Start a conversation with someone outside your usual circle.",
+    "affirmation": "I celebrate the success of those around me.",
+    "leche_value": "Community",
+    "share_text": "Reached out to someone outside my circle."
+  },
+  {
+    "id": "practice-326",
+    "title": "Claim Your Growth",
+    "mission": "List your accomplishments, no matter how small.",
+    "affirmation": "I release doubt and step into my strength.",
+    "leche_value": "Empowerment",
+    "share_text": "I am learning to back myself."
+  },
+  {
+    "id": "practice-327",
+    "title": "Take Your Power",
+    "mission": "Celebrate progress, not just perfection.",
+    "affirmation": "I am strong, even when I feel uncertain.",
+    "leche_value": "Empowerment",
+    "share_text": "Made a decision aligned with my values."
+  },
+  {
+    "id": "practice-328",
+    "title": "Together Forward",
+    "mission": "Support a local business or initiative today.",
+    "affirmation": "I am a positive presence in the lives of others.",
+    "leche_value": "Community",
+    "share_text": "Grateful for the people in my corner."
+  },
+  {
+    "id": "practice-329",
+    "title": "Empathy First",
+    "mission": "Offer support without giving advice unless asked.",
+    "affirmation": "I give others the benefit of the doubt.",
+    "leche_value": "Empathy",
+    "share_text": "Chose curiosity over judgment."
+  },
+  {
+    "id": "practice-330",
+    "title": "Empathic Response",
+    "mission": "Share space with someone in silence if they need it.",
+    "affirmation": "I recognize the humanity in everyone I meet.",
+    "leche_value": "Empathy",
+    "share_text": "Empathy is a skill I am building."
+  },
+  {
+    "id": "practice-331",
+    "title": "Empowerment Path",
+    "mission": "Recognize a strength you used to overcome a challenge.",
+    "affirmation": "I am the author of my own story.",
+    "leche_value": "Empowerment",
+    "share_text": "Confidence is built, not given."
+  },
+  {
+    "id": "practice-332",
+    "title": "Local Love",
+    "mission": "Start a conversation with someone outside your usual circle.",
+    "affirmation": "I celebrate the success of those around me.",
+    "leche_value": "Community",
+    "share_text": "A rising tide lifts all boats."
+  },
+  {
+    "id": "practice-333",
+    "title": "Brave Start",
+    "mission": "Identify one goal and take a single step toward it today.",
+    "affirmation": "I am capable of achieving my goals.",
+    "leche_value": "Empowerment",
+    "share_text": "Took a step toward my goal today."
+  },
+  {
+    "id": "practice-334",
+    "title": "See Their View",
+    "mission": "Ask an open-ended question and listen with curiosity.",
+    "affirmation": "I practice curiosity instead of assumption.",
+    "leche_value": "Empathy",
+    "share_text": "Being present for someone is a gift."
+  },
+  {
+    "id": "practice-335",
+    "title": "Radiate Love",
+    "mission": "Do one thing today purely because it brings you joy.",
+    "affirmation": "I choose to love myself through all circumstances.",
+    "leche_value": "Love",
+    "share_text": "Treating myself with the care I deserve."
+  },
+  {
+    "id": "practice-336",
+    "title": "Empathy Rest",
+    "mission": "Acknowledge someones feelings without trying to fix them.",
+    "affirmation": "I am gentle with others in challenging moments.",
+    "leche_value": "Empathy",
+    "share_text": "Understanding others helps me understand myself."
+  },
+  {
+    "id": "practice-337",
+    "title": "Own Your Story",
+    "mission": "Reflect on a time you surprised yourself with your own ability.",
+    "affirmation": "I make choices that align with my values.",
+    "leche_value": "Empowerment",
+    "share_text": "Celebrated my own progress."
+  },
+  {
+    "id": "practice-338",
+    "title": "Inner Rest",
+    "mission": "Take a short nap or rest your eyes for ten minutes.",
+    "affirmation": "I am creating space for renewal.",
+    "leche_value": "Healing",
+    "share_text": "Forgave myself for a past mistake."
+  },
+  {
+    "id": "practice-339",
+    "title": "Hear Their Story",
+    "mission": "Be present with someone even if you cannot solve their problem.",
+    "affirmation": "I am building bridges through understanding.",
+    "leche_value": "Empathy",
+    "share_text": "Understanding others helps me understand myself."
+  },
+  {
+    "id": "practice-340",
+    "title": "Collective Trust",
+    "mission": "Start a conversation with someone outside your usual circle.",
+    "affirmation": "I celebrate the success of those around me.",
+    "leche_value": "Community",
+    "share_text": "Investing in relationships that matter."
+  },
+  {
+    "id": "practice-341",
+    "title": "Own Your Strength",
+    "mission": "Recognize a strength you used to overcome a challenge.",
+    "affirmation": "I am the author of my own story.",
+    "leche_value": "Empowerment",
+    "share_text": "Set a boundary and stuck to it."
+  },
+  {
+    "id": "practice-342",
+    "title": "Rise Boldly",
+    "mission": "Identify one goal and take a single step toward it today.",
+    "affirmation": "I am capable of achieving my goals.",
+    "leche_value": "Empowerment",
+    "share_text": "Said no to what does not serve me."
+  },
+  {
+    "id": "practice-343",
+    "title": "Feel Together",
+    "mission": "Ask an open-ended question and listen with curiosity.",
+    "affirmation": "I practice curiosity instead of assumption.",
+    "leche_value": "Empathy",
+    "share_text": "Seeking to understand before being understood."
+  },
+  {
+    "id": "practice-344",
+    "title": "Gentle Renewal",
+    "mission": "Listen to music that soothes your soul.",
+    "affirmation": "I honor my need for stillness and quiet.",
+    "leche_value": "Healing",
+    "share_text": "Healing is not linear, and that is okay."
+  },
+  {
+    "id": "practice-345",
+    "title": "Unconditional Acceptance",
+    "mission": "Acknowledge your effort, not just your results.",
+    "affirmation": "I am worthy of my own care and attention.",
+    "leche_value": "Love",
+    "share_text": "I celebrated a small win today."
+  },
+  {
+    "id": "practice-346",
+    "title": "Rise Up",
+    "mission": "Practice asserting yourself calmly and clearly.",
+    "affirmation": "I am learning and growing every day.",
+    "leche_value": "Empowerment",
+    "share_text": "Owned my choices and felt good about it."
+  },
+  {
+    "id": "practice-347",
+    "title": "Healing Rest",
+    "mission": "Reflect on how far you have come in your journey.",
+    "affirmation": "I trust the process of my own healing.",
+    "leche_value": "Healing",
+    "share_text": "Prioritized my well-being today."
+  },
+  {
+    "id": "practice-348",
+    "title": "Listening Practice",
+    "mission": "Share space with someone in silence if they need it.",
+    "affirmation": "I recognize the humanity in everyone I meet.",
+    "leche_value": "Empathy",
+    "share_text": "Understanding starts with really hearing someone."
+  },
+  {
+    "id": "practice-349",
+    "title": "Gentle Presence",
+    "mission": "Reflect on how your words might land before speaking.",
+    "affirmation": "I respond with care instead of reaction.",
+    "leche_value": "Empathy",
+    "share_text": "Being present for someone is a gift."
+  },
+  {
+    "id": "practice-350",
+    "title": "Heart Space",
+    "mission": "Treat yourself to something small that makes you happy.",
+    "affirmation": "I am learning to treat myself with compassion.",
+    "leche_value": "Love",
+    "share_text": "Learning to accept myself, one day at a time."
+  },
+  {
+    "id": "practice-351",
+    "title": "Gentle Heart",
+    "mission": "Choose an activity that nourishes your spirit.",
+    "affirmation": "I trust myself to make good decisions.",
+    "leche_value": "Love",
+    "share_text": "Chose self-love today. It changes everything."
+  },
+  {
+    "id": "practice-352",
+    "title": "Love Your Journey",
+    "mission": "Speak kindly to yourself when you make a mistake.",
+    "affirmation": "I am proud of who I am becoming.",
+    "leche_value": "Love",
+    "share_text": "Small acts of self-kindness add up."
+  },
+  {
+    "id": "practice-353",
+    "title": "Together Trust",
+    "mission": "Invite someone new into a group activity.",
+    "affirmation": "I give back in ways that feel authentic to me.",
+    "leche_value": "Community",
+    "share_text": "Building bridges, one conversation at a time."
+  },
+  {
+    "id": "practice-354",
+    "title": "Confident Move",
+    "mission": "Trust your gut on one choice today.",
+    "affirmation": "I am worthy of success and fulfillment.",
+    "leche_value": "Empowerment",
+    "share_text": "Said no to what does not serve me."
+  },
+  {
+    "id": "practice-355",
+    "title": "Love Momentum",
+    "mission": "Look in the mirror and speak words of encouragement.",
+    "affirmation": "I deserve kindness, especially from myself.",
+    "leche_value": "Love",
+    "share_text": "Progress over perfection, always. #GoodVibes"
+  },
+  {
+    "id": "practice-356",
+    "title": "Healing Foundation",
+    "mission": "Take five slow, deep breaths to reset your nervous system.",
+    "affirmation": "I give myself permission to heal at my own pace.",
+    "leche_value": "Healing",
+    "share_text": "Gave myself permission to rest today."
+  },
+  {
+    "id": "practice-357",
+    "title": "Bold Move",
+    "mission": "Commit to one action that aligns with your values.",
+    "affirmation": "I am courageous in pursuing what I want.",
+    "leche_value": "Empowerment",
+    "share_text": "Celebrated my own progress."
+  },
+  {
+    "id": "practice-358",
+    "title": "Love Foundation",
+    "mission": "Take a slow, mindful walk and notice beauty around you.",
+    "affirmation": "I am patient with myself as I grow.",
+    "leche_value": "Love",
+    "share_text": "I am worthy of my own time and attention."
+  },
+  {
+    "id": "practice-359",
+    "title": "Self-Trust",
+    "mission": "Celebrate one small win from today.",
+    "affirmation": "I accept my journey, including my challenges.",
+    "leche_value": "Love",
+    "share_text": "Learning to love the person I am becoming."
+  },
+  {
+    "id": "practice-360",
+    "title": "Feel Alongside",
+    "mission": "Ask a friend how they are really feeling today.",
+    "affirmation": "I make space for others perspectives.",
+    "leche_value": "Empathy",
+    "share_text": "Holding space for others without fixing."
+  },
+  {
+    "id": "practice-361",
+    "title": "Compassion Bridge",
+    "mission": "Notice body language and respond with care.",
+    "affirmation": "I approach differences with openness.",
+    "leche_value": "Empathy",
+    "share_text": "Chose curiosity over judgment."
+  },
+  {
+    "id": "practice-362",
+    "title": "Deep Empathy",
+    "mission": "Reflect on a time when someone showed you understanding.",
+    "affirmation": "I hold space for feelings, including my own.",
+    "leche_value": "Empathy",
+    "share_text": "Chose curiosity over judgment."
+  },
+  {
+    "id": "practice-363",
+    "title": "Love Yourself First",
+    "mission": "Take a slow, mindful walk and notice beauty around you.",
+    "affirmation": "I am patient with myself as I grow.",
+    "leche_value": "Love",
+    "share_text": "Self-acceptance is a journey, not a destination."
+  },
+  {
+    "id": "practice-364",
+    "title": "Love Renewal",
+    "mission": "Recognize one strength you used today.",
+    "affirmation": "I embrace my unique qualities and strengths.",
+    "leche_value": "Love",
+    "share_text": "Self-acceptance is a journey, not a destination."
+  },
+  {
+    "id": "practice-365",
+    "title": "Take Ownership",
+    "mission": "Challenge a limiting belief you hold about yourself.",
+    "affirmation": "I set clear intentions and follow through.",
+    "leche_value": "Empowerment",
+    "share_text": "Made a decision aligned with my values."
   }
 ]
