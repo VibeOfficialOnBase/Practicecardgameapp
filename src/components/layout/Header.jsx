@@ -13,13 +13,12 @@ export default function Header() {
   const location = useLocation();
   const { user, signOut } = useAuth();
 
-  // Desktop navigation: Pull Cards, Wins, Stats, Giveaway, Games, Social, Profile, Calendar, About
+  // Desktop navigation: Pull Cards, Wins, Games, Giveaway, Social, Profile, Calendar, About
   const navItems = [
     { name: 'Pull Cards', icon: Sparkles, path: 'PullCards' },
     { name: 'Wins', icon: Award, path: 'Wins' },
-    { name: 'Stats', icon: BarChart3, path: 'Stats' },
-    { name: 'Giveaway', icon: Gift, path: 'Giveaway' },
     { name: 'Games', icon: Trophy, path: 'Games' },
+    { name: 'Giveaway', icon: Gift, path: 'Giveaway' },
     { name: 'Social', icon: Users, path: 'Social' },
     { name: 'Profile', icon: Heart, path: 'Profile' },
     { name: 'Calendar', icon: Calendar, path: 'Calendar' },
@@ -33,7 +32,6 @@ export default function Header() {
     // Root path matches PullCards
     if (targetPath === 'pullcards' && (currentPath === '/' || currentPath === '/pullcards' || currentPath === '/pull' || currentPath === '/practice')) return true;
     if (targetPath === 'wins' && (currentPath === '/wins' || currentPath === '/achievements')) return true;
-    if (targetPath === 'stats' && (currentPath === '/stats' || currentPath === '/leaderboard')) return true;
     if (targetPath === 'giveaway' && (currentPath === '/giveaway' || currentPath === '/giveaways' || currentPath === '/premiumpacks')) return true;
     if (targetPath === 'games' && (currentPath === '/games')) return true;
     if (targetPath === 'social' && (currentPath === '/social' || currentPath === '/community')) return true;

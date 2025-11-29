@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { motion } from 'framer-motion';
-import { Coffee, Heart, Sparkles, Twitter, X, ExternalLink, Book, Users } from 'lucide-react';
+import { Coffee, Heart, Sparkles, Twitter, X, ExternalLink, Book, Users, Instagram } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { toast } from 'sonner';
 import PageHeader from '../components/common/PageHeader';
@@ -24,17 +24,17 @@ export default function About() {
 
       {/* PRACTICE → LECHE Visual Flow */}
       <Card className="p-6 relative overflow-hidden glass-card">
-        <div className="absolute top-0 left-0 w-full h-24 bg-gradient-to-r from-purple-600/20 to-pink-600/20" />
+        <div className="absolute top-0 left-0 w-full h-32 bg-gradient-to-r from-purple-600/20 to-pink-600/20" />
         
-        <div className="relative">
-          <h3 className="text-lg font-bold text-center text-[var(--text-primary)] mb-4">
+        <div className="relative pt-8">
+          <h3 className="text-lg font-bold text-center text-[var(--text-primary)] mb-8">
             PRACTICE to Get LECHE 🥛
           </h3>
           
           <div className="grid gap-4">
             {/* PRACTICE Card */}
             <motion.div 
-              className="bg-gradient-to-br from-purple-600/20 to-indigo-600/20 rounded-xl p-4 border border-purple-400/30"
+              className="bg-gradient-to-br from-purple-600/20 to-indigo-600/20 rounded-xl p-4 border border-purple-400/30 mt-4"
               initial={{ x: -20, opacity: 0 }}
               animate={{ x: 0, opacity: 1 }}
               transition={{ delay: 0.2 }}
@@ -168,6 +168,13 @@ export default function About() {
             >
               <Twitter className="w-4 h-4 mr-2" />
               Follow on X
+            </Button>
+            <Button
+              onClick={() => window.open('https://instagram.com/EddiePabonOfficial', '_blank')}
+              className="flex-1 min-w-[140px] bg-gradient-to-r from-pink-500 to-rose-600 hover:from-pink-600 hover:to-rose-700 text-white font-bold"
+            >
+              <Instagram className="w-4 h-4 mr-2" />
+              @EddiePabonOfficial
             </Button>
           </div>
         </Card>
