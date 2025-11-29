@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { motion } from 'framer-motion';
 import { useAuth } from '../contexts/AuthContext';
@@ -11,9 +11,9 @@ import Card from '../components/common/Card';
 import Section from '../components/common/Section';
 import Button from '../components/common/Button';
 import Modal from '../components/common/Modal';
-import WalletConnect from '../components/wallet/WalletConnect';
+import ConnectWalletButton from '../components/wallet/ConnectWalletButton';
 
-import { User, Award, Shield, LogOut, Edit2, Save, Trash2, Heart, Users, Zap, Leaf, Trophy, Sparkles, Wallet, Gift } from 'lucide-react';
+import { LogOut, Edit2, Heart, Users, Zap, Leaf, Sparkles, Gift, ExternalLink } from 'lucide-react';
 import EnhancedStreakDisplay from '../components/EnhancedStreakDisplay';
 import BadgeDisplay from '../components/badges/BadgeDisplay';
 import UserLevelBadge from '../components/UserLevelBadge';
@@ -25,7 +25,17 @@ import { Switch } from '@/components/ui/switch';
 
 export default function Profile() {
   const { user, signOut } = useAuth();
-  const { walletAddress, isConnected, getShortAddress } = useWallet();
+  const { 
+    algoAddress, 
+    evmAddress, 
+    isAlgoConnected, 
+    isEvmConnected,
+    formatAlgoAddress,
+    formatEVMAddress,
+    disconnectAlgorand,
+    disconnectEVM,
+    getBaseExplorerUrl,
+  } = useWallet();
   const [isEditing, setIsEditing] = useState(false);
 
   // Edit Form State
@@ -34,7 +44,6 @@ export default function Profile() {
   const [favoriteValue, setFavoriteValue] = useState('');
   const [lookingForBuddy, setLookingForBuddy] = useState(false);
 
-  const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
   const queryClient = useQueryClient();
 
   const { data: userProfile } = useQuery({
@@ -203,26 +212,46 @@ export default function Profile() {
         <Card className="p-4 mb-4">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-3">
-              <div className="w-10 h-10 rounded-full bg-gradient-to-r from-purple-500 to-pink-500 flex items-center justify-center">
-                <Wallet className="w-5 h-5 text-white" />
+              <div className="w-10 h-10 rounded-full bg-gradient-to-r from-yellow-500 to-orange-500 flex items-center justify-center">
+                <span className="text-lg">🟡</span>
               </div>
               <div>
                 <p className="font-semibold text-[var(--text-primary)]">Algorand Wallet</p>
-                {isConnected && (walletAddress.length < 42) ? (
-                  <p className="text-sm text-green-500">Connected: {getShortAddress(walletAddress)}</p>
+                {isAlgoConnected ? (
+                  <p className="text-sm text-green-500">Connected: {formatAlgoAddress(algoAddress)}</p>
                 ) : (
-                  <p className="text-sm text-[var(--text-secondary)]">Pera / Defly</p>
+                  <p className="text-sm text-[var(--text-secondary)]">Pera Wallet</p>
                 )}
               </div>
             </div>
-            <WalletConnect />
+            <div className="flex items-center gap-2">
+              {isAlgoConnected && (
+                <>
+                  <a
+                    href={`https://allo.info/account/${algoAddress}`}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="p-2 rounded-lg bg-[var(--bg-secondary)] hover:bg-black/10 dark:hover:bg-white/10 transition-colors"
+                  >
+                    <ExternalLink className="w-4 h-4 text-[var(--text-secondary)]" />
+                  </a>
+                  <button
+                    onClick={disconnectAlgorand}
+                    className="px-3 py-1.5 text-xs font-medium text-red-500 bg-red-500/10 hover:bg-red-500/20 rounded-lg transition-colors"
+                  >
+                    Disconnect
+                  </button>
+                </>
+              )}
+              {!isAlgoConnected && <ConnectWalletButton />}
+            </div>
           </div>
         </Card>
 
         {/* Base Wallet */}
         <Card className="p-4 relative overflow-hidden">
              {/* Bonus Pack Indicator */}
-             {isConnected && walletAddress.length === 42 && (
+             {isEvmConnected && (
                  <div className="absolute top-0 right-0 p-2">
                     <span className="px-2 py-1 rounded-full bg-amber-500/20 text-amber-500 text-[10px] font-bold uppercase border border-amber-500/30 flex items-center gap-1">
                         <Gift className="w-3 h-3" />
@@ -233,36 +262,50 @@ export default function Profile() {
 
             <div className="flex items-center justify-between">
                 <div className="flex items-center gap-3">
-                    <div className="w-10 h-10 rounded-full bg-blue-500 flex items-center justify-center">
-                        <img src="/assets/vibe-logo.png" className="w-full h-full object-cover rounded-full opacity-90" alt="Base" />
+                    <div className="w-10 h-10 rounded-full bg-blue-500 flex items-center justify-center overflow-hidden">
+                        <img src="/assets/vibe-logo.png" className="w-full h-full object-cover opacity-90" alt="Base" />
                     </div>
                     <div>
                         <p className="font-semibold text-[var(--text-primary)]">Base Wallet</p>
-                         {isConnected && walletAddress.length === 42 ? (
-                            <p className="text-sm text-green-500">Connected: {getShortAddress(walletAddress)}</p>
+                         {isEvmConnected ? (
+                            <p className="text-sm text-green-500">Connected: {formatEVMAddress(evmAddress)}</p>
                         ) : (
                             <p className="text-sm text-[var(--text-secondary)]">Connect for Holder Bonus</p>
                         )}
                     </div>
                 </div>
-                 {/* Reuse WalletConnect but maybe customize via props if needed, or just let it handle selection */}
-                 {/* Current WalletConnect handles selection modal. If already connected to Algo, we might need a way to switch or disconnect first.
-                     The current implementation shares 'walletAddress' in context. So only 1 wallet at a time.
-                     This UI implies we can connect either. The WalletConnect button will show "Connect Wallet" if disconnected,
-                     or the address dropdown if connected. We can duplicate the button here for visual consistency.
-                 */}
-                 <WalletConnect />
+                <div className="flex items-center gap-2">
+                  {isEvmConnected && (
+                    <>
+                      <a
+                        href={getBaseExplorerUrl(evmAddress)}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="p-2 rounded-lg bg-[var(--bg-secondary)] hover:bg-black/10 dark:hover:bg-white/10 transition-colors"
+                      >
+                        <ExternalLink className="w-4 h-4 text-[var(--text-secondary)]" />
+                      </a>
+                      <button
+                        onClick={disconnectEVM}
+                        className="px-3 py-1.5 text-xs font-medium text-red-500 bg-red-500/10 hover:bg-red-500/20 rounded-lg transition-colors"
+                      >
+                        Disconnect
+                      </button>
+                    </>
+                  )}
+                  {!isEvmConnected && <ConnectWalletButton />}
+                </div>
             </div>
 
              {/* Holders Bonus Message */}
-             {isConnected && walletAddress.length === 42 && (
+             {isEvmConnected && (
                  <div className="mt-4 pt-4 border-t border-black/5 dark:border-white/5">
                      <div className="flex items-start gap-2">
                          <Sparkles className="w-4 h-4 text-amber-400 mt-0.5" />
                          <div>
                              <p className="text-sm font-bold text-[var(--text-primary)]">$VibeOfficial Holder Pack</p>
                              <p className="text-xs text-[var(--text-secondary)]">
-                                 Because you hold $Vibe, you've unlocked exclusive card backs and daily bonus XP!
+                                 Because you hold $Vibe, you&apos;ve unlocked exclusive card backs and daily bonus XP!
                              </p>
                          </div>
                      </div>
