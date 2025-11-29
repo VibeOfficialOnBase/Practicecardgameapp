@@ -26,15 +26,15 @@ export default function About() {
       <Card className="p-6 relative overflow-hidden glass-card">
         <div className="absolute top-0 left-0 w-full h-32 bg-gradient-to-r from-purple-600/20 to-pink-600/20" />
         
-        <div className="relative pt-8">
-          <h3 className="text-lg font-bold text-center text-[var(--text-primary)] mb-8">
+        <div className="relative pt-12">
+          <h3 className="text-lg font-bold text-center text-[var(--text-primary)] mb-12">
             PRACTICE to Get LECHE 🥛
           </h3>
           
           <div className="grid gap-4">
             {/* PRACTICE Card */}
             <motion.div 
-              className="bg-gradient-to-br from-purple-600/20 to-indigo-600/20 rounded-xl p-4 border border-purple-400/30 mt-4"
+              className="bg-gradient-to-br from-purple-600/20 to-indigo-600/20 rounded-xl p-4 border border-purple-400/30 mt-6"
               initial={{ x: -20, opacity: 0 }}
               animate={{ x: 0, opacity: 1 }}
               transition={{ delay: 0.2 }}

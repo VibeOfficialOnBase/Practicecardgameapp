@@ -11,9 +11,6 @@ import Calendar from "./Calendar";
 import About from "./About";
 
 // Legacy pages kept for backward compatibility
-import Practice from "./Practice";
-import Achievements from "./Achievements";
-import Leaderboard from "./Leaderboard";
 import MyCards from "./MyCards";
 
 // Games

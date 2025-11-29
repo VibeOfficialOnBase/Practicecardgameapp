@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Menu, X, Home, BookOpen, Award, BarChart3, Users, Trophy, Gift, Info, Wallet, Copy, RefreshCw, LogOut, Check, User, Calendar } from 'lucide-react';
+import { Menu, X, Home, Award, Users, Trophy, Gift, Info, Wallet, Copy, RefreshCw, LogOut, Check, User, Calendar } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import type { Address } from 'viem';
 
@@ -12,17 +12,15 @@ interface NavItem {
 
 const primaryNavItems: NavItem[] = [
   { id: 'home', label: 'Pull', icon: Home },
-  { id: 'collection', label: 'Cards', icon: BookOpen },
   { id: 'achievements', label: 'Wins', icon: Award },
-  { id: 'analytics', label: 'Stats', icon: BarChart3 },
+  { id: 'leaderboard', label: 'Games', icon: Trophy },
 ];
 
 const secondaryNavItems: NavItem[] = [
+  { id: 'raffle', label: 'Giveaway', icon: Gift },
+  { id: 'community', label: 'Social', icon: Users },
   { id: 'profile', label: 'Profile', icon: User },
   { id: 'calendar', label: 'Calendar', icon: Calendar },
-  { id: 'community', label: 'Social', icon: Users },
-  { id: 'leaderboard', label: 'Games', icon: Trophy },
-  { id: 'raffle', label: 'Giveaway', icon: Gift },
 ];
 
 interface MobileNavProps {
