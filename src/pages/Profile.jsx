@@ -1,3 +1,14 @@
+/**
+ * Profile Page Component
+ * 
+ * User profile page with wallet connections, stats, and settings.
+ * 
+ * NOTE: Algorand wallet support has been commented out as part of UI simplification.
+ * The profile now only shows Base wallet connection.
+ * To re-enable Algorand support, uncomment the relevant sections marked with
+ * "DISABLED: Algorand wallet support" comments.
+ */
+
 import { useState, useEffect } from 'react';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { motion } from 'framer-motion';
@@ -26,13 +37,15 @@ import { Switch } from '@/components/ui/switch';
 export default function Profile() {
   const { user, signOut } = useAuth();
   const { 
+    /* DISABLED: Algorand wallet support - uncomment to re-enable
     algoAddress, 
-    evmAddress, 
-    isAlgoConnected, 
-    isEvmConnected,
+    isAlgoConnected,
     formatAlgoAddress,
-    formatEVMAddress,
     disconnectAlgorand,
+    */
+    evmAddress, 
+    isEvmConnected,
+    formatEVMAddress,
     disconnectEVM,
     getBaseExplorerUrl,
   } = useWallet();
@@ -206,9 +219,9 @@ export default function Profile() {
         </Section>
       )}
 
-      {/* Web3 Wallet Section */}
-      <Section title="Web3 Wallets">
-        {/* Algorand Wallet */}
+      {/* Web3 Wallet Section - Simplified to only show Base wallet */}
+      <Section title="Wallet">
+        {/* DISABLED: Algorand Wallet - removed as part of UI simplification
         <Card className="p-4 mb-4">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-3">
@@ -247,8 +260,9 @@ export default function Profile() {
             </div>
           </div>
         </Card>
+        */}
 
-        {/* Base Wallet */}
+        {/* Base Wallet - Primary wallet connection */}
         <Card className="p-4 relative overflow-hidden">
              {/* Bonus Pack Indicator */}
              {isEvmConnected && (

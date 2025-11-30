@@ -4,6 +4,11 @@
  * A button that opens the wallet connection modal.
  * Shows connection status when wallets are connected.
  * 
+ * NOTE: Algorand wallet support has been commented out as part of UI simplification.
+ * The UI now presents a single, streamlined wallet connection option for Base network.
+ * To re-enable Algorand support, uncomment the relevant sections marked with
+ * "DISABLED: Algorand wallet support" comments.
+ * 
  * @module components/wallet/ConnectWalletButton
  */
 
@@ -30,15 +35,17 @@ import { Button } from '@/components/ui/button';
  */
 export default function ConnectWalletButton({ className = '' }) {
   const {
+    /* DISABLED: Algorand wallet support - uncomment to re-enable
     algoAddress,
-    evmAddress,
     isAlgoConnected,
+    disconnectAlgorand,
+    formatAlgoAddress,
+    */
+    evmAddress,
     isEvmConnected,
     isConnecting,
     hasAnyWallet,
-    disconnectAlgorand,
     disconnectEVM,
-    formatAlgoAddress,
     formatEVMAddress,
     getBaseExplorerUrl,
   } = useWallet();
@@ -67,20 +74,24 @@ export default function ConnectWalletButton({ className = '' }) {
     if (type === 'evm') {
       return getBaseExplorerUrl(address);
     }
+    /* DISABLED: Algorand wallet support - uncomment to re-enable
     // Algorand explorer
     return `https://allo.info/account/${address}`;
+    */
+    return '#';
   };
 
-  /**
+  /* DISABLED: Algorand wallet support - uncomment to re-enable
    * Disconnect all wallets
-   */
+   *
   const handleDisconnectAll = async () => {
     if (isAlgoConnected) await disconnectAlgorand();
     if (isEvmConnected) await disconnectEVM();
     setShowDropdown(false);
   };
+  */
 
-  // Connected state - show dropdown
+  // Connected state - show dropdown (simplified for Base wallet only)
   if (hasAnyWallet) {
     return (
       <>
@@ -98,11 +109,10 @@ export default function ConnectWalletButton({ className = '' }) {
           >
             <div className="w-2 h-2 rounded-full bg-green-400 animate-pulse" />
             <span className="text-sm font-medium text-white">
-              {isEvmConnected && isAlgoConnected 
-                ? 'Both Connected'
-                : isEvmConnected 
-                  ? formatEVMAddress(evmAddress)
-                  : formatAlgoAddress(algoAddress)
+              {/* Simplified to only show EVM address */}
+              {isEvmConnected 
+                ? formatEVMAddress(evmAddress)
+                : 'Connected'
               }
             </span>
             <ChevronDown 
@@ -118,7 +128,7 @@ export default function ConnectWalletButton({ className = '' }) {
                 exit={{ opacity: 0, y: -10 }}
                 className="absolute right-0 top-full mt-2 w-72 bg-gray-900 border border-white/10 rounded-xl shadow-xl p-2 z-50"
               >
-                {/* EVM Wallet Section */}
+                {/* EVM/Base Wallet Section - Primary wallet connection */}
                 {isEvmConnected && (
                   <div className="p-3 border-b border-white/10">
                     <p className="text-xs text-white/50 uppercase mb-1 flex items-center gap-2">
@@ -146,7 +156,7 @@ export default function ConnectWalletButton({ className = '' }) {
                       <button
                         onClick={async () => {
                           await disconnectEVM();
-                          if (!isAlgoConnected) setShowDropdown(false);
+                          setShowDropdown(false);
                         }}
                         aria-label="Disconnect Base wallet"
                         className="flex items-center gap-1 px-2 py-1 rounded bg-red-500/10 hover:bg-red-500/20 transition-colors text-xs text-red-400"
@@ -158,7 +168,7 @@ export default function ConnectWalletButton({ className = '' }) {
                   </div>
                 )}
                 
-                {/* Algorand Wallet Section */}
+                {/* DISABLED: Algorand Wallet Section - removed as part of UI simplification
                 {isAlgoConnected && (
                   <div className={`p-3 ${isEvmConnected ? '' : 'border-b border-white/10'}`}>
                     <p className="text-xs text-white/50 uppercase mb-1">Algorand Network</p>
@@ -194,8 +204,9 @@ export default function ConnectWalletButton({ className = '' }) {
                     </div>
                   </div>
                 )}
+                */}
                 
-                {/* Connect More / Manage */}
+                {/* Manage Wallet - simplified for single wallet */}
                 <div className="pt-2 flex gap-2">
                   <button
                     onClick={() => {
@@ -205,17 +216,8 @@ export default function ConnectWalletButton({ className = '' }) {
                     className="flex-1 flex items-center justify-center gap-2 px-3 py-2 rounded-lg bg-white/5 hover:bg-white/10 transition-colors text-sm text-white"
                   >
                     <Wallet className="w-4 h-4" />
-                    {isAlgoConnected && isEvmConnected ? 'Manage Wallets' : 'Connect More'}
+                    Manage Wallet
                   </button>
-                  
-                  {isAlgoConnected && isEvmConnected && (
-                    <button
-                      onClick={handleDisconnectAll}
-                      className="flex items-center gap-1 px-3 py-2 rounded-lg bg-red-500/10 hover:bg-red-500/20 transition-colors text-sm text-red-400"
-                    >
-                      <LogOut className="w-4 h-4" />
-                    </button>
-                  )}
                 </div>
               </motion.div>
             )}

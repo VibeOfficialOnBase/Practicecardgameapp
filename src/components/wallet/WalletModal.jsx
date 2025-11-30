@@ -1,9 +1,13 @@
 /**
  * Wallet Modal Component
  * 
- * A full-screen centered modal for connecting Algorand (Pera) and 
- * EVM/Base (WalletConnect v2) wallets. Features QR code display,
- * mobile deep linking, and responsive design.
+ * A full-screen centered modal for connecting EVM/Base (WalletConnect v2) wallets.
+ * Features QR code display, mobile deep linking, and responsive design.
+ * 
+ * NOTE: Algorand wallet support has been commented out as part of UI simplification.
+ * The UI now presents a single, streamlined wallet connection option for initial use.
+ * To re-enable Algorand support, uncomment the relevant sections marked with
+ * "DISABLED: Algorand wallet support" comments.
  * 
  * @module components/wallet/WalletModal
  */
@@ -15,7 +19,7 @@ import PropTypes from 'prop-types';
 import { 
   Wallet, 
   X, 
-  ArrowLeft, 
+  // ArrowLeft removed - back button disabled in simplified UI
   AlertCircle, 
   ExternalLink,
   Smartphone 
@@ -46,10 +50,12 @@ function isMobile() {
 export default function WalletModal({ isOpen, onClose }) {
   const {
     // State
+    /* DISABLED: Algorand wallet support - uncomment to re-enable
     algoAddress,
     isAlgoConnected,
     isAlgoConnecting,
     algoError,
+    */
     evmAddress,
     isEvmConnected,
     isEvmConnecting,
@@ -57,25 +63,31 @@ export default function WalletModal({ isOpen, onClose }) {
     wcUri,
     
     // Actions
+    /* DISABLED: Algorand wallet support - uncomment to re-enable
     connectAlgorand,
     disconnectAlgorand,
+    */
     connectEVM,
     disconnectEVM,
     clearErrors,
     
     // Utilities
+    /* DISABLED: Algorand wallet support - uncomment to re-enable
     formatAlgoAddress,
+    */
     formatEVMAddress,
     getCoinbaseDeepLink,
   } = useWallet();
   
-  // View state: 'select' | 'algo' | 'evm'
-  const [view, setView] = useState('select');
+  // View state: 'evm' for EVM connection view
+  // NOTE: Previously supported 'select' | 'algo' | 'evm' for multiple wallet options
+  // Simplified to directly show EVM connection
+  const [view, setView] = useState('evm');
   
-  // Reset view when modal opens
+  // Reset view when modal opens - now defaults directly to EVM
   useEffect(() => {
     if (isOpen) {
-      setView('select');
+      setView('evm');
       clearErrors();
     }
   }, [isOpen, clearErrors]);
@@ -83,7 +95,9 @@ export default function WalletModal({ isOpen, onClose }) {
   // Track close timer for cleanup
   const closeTimerRef = useRef(null);
   
-  // Cleanup on unmount
+  /**
+   * Cleanup on unmount
+   */
   useEffect(() => {
     return () => {
       if (closeTimerRef.current) {
@@ -92,9 +106,9 @@ export default function WalletModal({ isOpen, onClose }) {
     };
   }, []);
 
-  /**
+  /* DISABLED: Algorand wallet support - uncomment to re-enable
    * Handle Algorand wallet connection
-   */
+   *
   const handleConnectAlgo = useCallback(async () => {
     setView('algo');
     try {
@@ -106,9 +120,11 @@ export default function WalletModal({ isOpen, onClose }) {
       console.log('Algorand connection error:', error.message);
     }
   }, [connectAlgorand, onClose]);
+  */
 
   /**
    * Handle EVM wallet connection
+   * Initiates connection immediately when modal opens
    */
   const handleConnectEVM = useCallback(async () => {
     setView('evm');
@@ -122,17 +138,17 @@ export default function WalletModal({ isOpen, onClose }) {
     }
   }, [connectEVM, onClose]);
 
-  /**
+  /* DISABLED: Algorand wallet support - uncomment to re-enable
    * Handle disconnect and return to selection
-   */
+   *
   const handleDisconnectAlgo = useCallback(async () => {
     await disconnectAlgorand();
     setView('select');
   }, [disconnectAlgorand]);
+  */
 
   const handleDisconnectEVM = useCallback(async () => {
     await disconnectEVM();
-    setView('select');
   }, [disconnectEVM]);
 
   /**
@@ -140,25 +156,25 @@ export default function WalletModal({ isOpen, onClose }) {
    */
   const handleRetry = useCallback(() => {
     clearErrors();
-    if (view === 'algo') {
-      handleConnectAlgo();
-    } else if (view === 'evm') {
-      handleConnectEVM();
-    }
-  }, [view, clearErrors, handleConnectAlgo, handleConnectEVM]);
+    // Only EVM connection is supported in simplified UI
+    handleConnectEVM();
+  }, [clearErrors, handleConnectEVM]);
 
-  /**
+  /* DISABLED: Back button navigation - no longer needed with single wallet option
    * Go back to selection view
-   */
+   *
   const handleBack = useCallback(() => {
     clearErrors();
     setView('select');
   }, [clearErrors]);
+  */
 
+  /* DISABLED: Wallet selection view - removed as part of UI simplification
+   * Previously showed options for both Algorand and EVM wallets
+   *
   // Render wallet selection view
   const renderSelectView = () => (
     <>
-      {/* Connected Wallets Status */}
       {isAlgoConnected && (
         <div className="wallet-connected">
           <div className="wallet-connected-dot" />
@@ -191,7 +207,6 @@ export default function WalletModal({ isOpen, onClose }) {
         </div>
       )}
       
-      {/* EVM/Base Section */}
       <div className="wallet-section">
         <p className="wallet-section-label">Base Network</p>
         <button
@@ -220,7 +235,6 @@ export default function WalletModal({ isOpen, onClose }) {
         </button>
       </div>
       
-      {/* Algorand Section */}
       <div className="wallet-section">
         <p className="wallet-section-label">Algorand Network</p>
         <button
@@ -246,7 +260,9 @@ export default function WalletModal({ isOpen, onClose }) {
       </div>
     </>
   );
+  */
 
+  /* DISABLED: Algorand connection view - removed as part of UI simplification
   // Render Algorand connection view
   const renderAlgoView = () => (
     <>
@@ -288,16 +304,28 @@ export default function WalletModal({ isOpen, onClose }) {
       ) : null}
     </>
   );
+  */
 
-  // Render EVM connection view
+  // Render EVM connection view - this is now the primary/only wallet connection view
   const renderEVMView = () => (
     <>
-      <button className="wallet-back-btn" onClick={handleBack}>
-        <ArrowLeft size={16} />
-        <span>Back to wallets</span>
-      </button>
-      
-      {evmError ? (
+      {/* Connected state - show wallet info with disconnect option */}
+      {isEvmConnected ? (
+        <div className="wallet-connected">
+          <div className="wallet-connected-dot" />
+          <div className="wallet-connected-info">
+            <p className="wallet-connected-label">Successfully Connected</p>
+            <p className="wallet-connected-address">{formatEVMAddress(evmAddress)}</p>
+          </div>
+          <button 
+            className="wallet-disconnect-btn"
+            onClick={handleDisconnectEVM}
+          >
+            Disconnect
+          </button>
+        </div>
+      ) : evmError ? (
+        /* Error state - show error with retry option */
         <div className="wallet-error">
           <AlertCircle className="wallet-error-icon" size={20} />
           <div className="wallet-error-content">
@@ -306,21 +334,14 @@ export default function WalletModal({ isOpen, onClose }) {
               <button className="wallet-error-btn retry" onClick={handleRetry}>
                 Try Again
               </button>
-              <button className="wallet-error-btn cancel" onClick={handleBack}>
+              <button className="wallet-error-btn cancel" onClick={onClose}>
                 Cancel
               </button>
             </div>
           </div>
         </div>
-      ) : isEvmConnected ? (
-        <div className="wallet-connected">
-          <div className="wallet-connected-dot" />
-          <div className="wallet-connected-info">
-            <p className="wallet-connected-label">Successfully Connected</p>
-            <p className="wallet-connected-address">{formatEVMAddress(evmAddress)}</p>
-          </div>
-        </div>
       ) : wcUri ? (
+        /* QR code display for wallet connection */
         <>
           <div className="wallet-qr-container">
             <div className="wallet-qr-wrapper">
@@ -351,26 +372,41 @@ export default function WalletModal({ isOpen, onClose }) {
           )}
         </>
       ) : isEvmConnecting ? (
+        /* Loading state during connection initialization */
         <div className="wallet-loading">
           <div className="wallet-loading-spinner" />
           <p className="wallet-loading-text">
             Initializing connection...
           </p>
         </div>
-      ) : null}
+      ) : (
+        /* Initial state - show connect button */
+        <div className="wallet-section">
+          <button
+            className="wallet-option"
+            onClick={handleConnectEVM}
+          >
+            <div className="wallet-option-icon evm">
+              <img 
+                src="/assets/vibe-logo.png" 
+                alt="Base" 
+                onError={(e) => { e.target.style.display = 'none'; }}
+              />
+            </div>
+            <div className="wallet-option-info">
+              <p className="wallet-option-name">Connect Base Wallet</p>
+              <p className="wallet-option-desc">WalletConnect v2 • Coinbase Wallet</p>
+            </div>
+          </button>
+        </div>
+      )}
     </>
   );
 
   // Render current view content
+  // Simplified to only render EVM view since we removed other wallet options
   const renderContent = () => {
-    switch (view) {
-      case 'algo':
-        return renderAlgoView();
-      case 'evm':
-        return renderEVMView();
-      default:
-        return renderSelectView();
-    }
+    return renderEVMView();
   };
 
   return (
@@ -412,11 +448,9 @@ export default function WalletModal({ isOpen, onClose }) {
                 Connect Wallet
               </h2>
               <p className="wallet-modal-subtitle">
-                {view === 'select' 
-                  ? 'Choose your wallet to connect and unlock features'
-                  : view === 'algo'
-                  ? 'Connect your Algorand wallet using Pera'
-                  : 'Scan the QR code or use the deep link'
+                {isEvmConnected 
+                  ? 'Your wallet is connected'
+                  : 'Scan the QR code or use your mobile wallet to connect'
                 }
               </p>
             </div>
@@ -432,7 +466,7 @@ export default function WalletModal({ isOpen, onClose }) {
                 className="wallet-cancel-btn"
                 onClick={onClose}
               >
-                {view === 'select' ? 'Close' : 'Cancel'}
+                {isEvmConnected ? 'Done' : 'Cancel'}
               </button>
             </div>
           </motion.div>
